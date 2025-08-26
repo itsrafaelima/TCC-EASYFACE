@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EASYFACE - Interface Acessível - Computador sem Mouse</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🖥️ EASYFACE</h1>
+            <p>Controle seu computador sem mouse - Use teclado, voz ou comandos especiais</p>
+        </div>
+
+        <div class="status-bar">
+            <div class="voice-status">
+                <div class="voice-indicator"></div>
+                <span>Sistema de Voz: Ativo</span>
+            </div>
+            <div>Modo: Navegação por Teclado</div>
+        </div>
+
+        <div class="main-grid">
+            <div class="panel">
+                <h2>⌨️ Controles por Teclado</h2>
+                <div class="command-grid">
+                    <button class="command-btn" tabindex="1" onclick="executeCommand('open-menu')">
+                        Menu Principal<br><small>Alt + M</small>
+                    </button>
+                    <button class="command-btn" tabindex="2" onclick="executeCommand('open-file')">
+                        Abrir Arquivo<br><small>Ctrl + O</small>
+                    </button>
+                    <button class="command-btn" tabindex="3" onclick="executeCommand('switch-window')">
+                        Trocar Janela<br><small>Alt + Tab</small>
+                    </button>
+                    <button class="command-btn" tabindex="4" onclick="executeCommand('minimize')">
+                        Minimizar<br><small>Win + M</small>
+                    </button>
+                </div>
+                <div class="keyboard-nav">
+                    <h3>Navegação Ativa:</h3>
+                    <div class="key-display">
+                        <span class="key">Tab</span>
+                        <span class="key">Enter</span>
+                        <span class="key">Setas</span>
+                        <span class="key">Esc</span>
+                        <span class="key">Espaço</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>🎤 Comandos de Voz</h2>
+                <div class="voice-commands">
+                    <div class="voice-list">
+                        <div class="voice-item">
+                            <strong>"Abrir navegador"</strong> - Inicia o navegador web
+                        </div>
+                        <div class="voice-item">
+                            <strong>"Digitar texto"</strong> - Ativa ditado por voz
+                        </div>
+                        <div class="voice-item">
+                            <strong>"Fechar janela"</strong> - Fecha a janela ativa
+                        </div>
+                        <div class="voice-item">
+                            <strong>"Aumentar volume"</strong> - Controla audio do sistema
+                        </div>
+                        <div class="voice-item">
+                            <strong>"Pausar música"</strong> - Controla reprodução
+                        </div>
+                        <div class="voice-item">
+                            <strong>"Ler tela"</strong> - Ativa leitor de tela
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accessibility-tools">
+            <div class="tool-card">
+                <div class="tool-icon">👁️</div>
+                <h3>Leitor de Tela</h3>
+                <p>Converte texto em fala para navegação auditiva</p>
+                <button class="command-btn" onclick="toggleScreenReader()">Ativar/Desativar</button>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-icon">🔍</div>
+                <h3>Lupa Virtual</h3>
+                <p>Amplia elementos da tela para melhor visualização</p>
+                <button class="command-btn" onclick="toggleMagnifier()">Ativar Zoom</button>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-icon">⌨️</div>
+                <h3>Teclado Virtual</h3>
+                <p>Teclado na tela para entrada de texto</p>
+                <button class="command-btn" onclick="showVirtualKeyboard()">Mostrar Teclado</button>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-icon">👆</div>
+                <h3>Controle por Olhar</h3>
+                <p>Simula cliques através do movimento dos olhos</p>
+                <button class="command-btn" onclick="toggleEyeTracking()">Calibrar</button>
+            </div>
+        </div>
+
+        <div class="feedback-area">
+            <h2>💬 Área de Feedback</h2>
+            <div class="output-display" id="outputDisplay">
+                > Sistema iniciado. Aguardando comandos...<br>
+                > Use Tab para navegar, Enter para ativar, Esc para sair<br>
+                > Diga "Ajuda" para ver todos os comandos de voz<br>
+            </div>
+            <div class="input-area">
+                <input type="text" class="voice-input" placeholder="Digite um comando ou use comando de voz..." id="commandInput">
+                <button class="command-btn" onclick="processCommand()">Executar</button>
+                <button class="command-btn" onclick="startVoiceRecognition()">🎤 Falar</button>
+            </div>
+        </div>
+
+        <div class="help-text">
+            <strong>💡 Dicas de Acessibilidade:</strong><br>
+            • Use Tab e Shift+Tab para navegar entre elementos<br>
+            • Pressione Enter ou Espaço para ativar botões<br>
+            • Use as setas do teclado para navegar em listas<br>
+            • Comandos de voz funcionam em português brasileiro<br>
+            • Todas as funções têm atalhos de teclado alternativos
+        </div>
+    </div>
+
+    <script>
+        let isScreenReaderActive = false;
+        let isVoiceRecognitionActive = false;
+        const outputDisplay = document.getElementById('outputDisplay');
+        const commandInput = document.getElementById('commandInput');
+
+        // Simula feedback para comandos
+        function executeCommand(command) {
+            const messages = {
+                'open-menu': 'Menu principal aberto. Use as setas para navegar.',
+                'open-file': 'Diálogo de abertura de arquivo ativado.',
+                'switch-window': 'Alternando entre janelas abertas.',
+                'minimize': 'Janela minimizada.'
+            };
+            
+            addOutput(`> ${messages[command] || 'Comando executado'}`);
+            
+            // Simula ativação visual da tecla
+            const keys = document.querySelectorAll('.key');
+            keys.forEach(key => {
+                key.classList.add('active');
+                setTimeout(() => key.classList.remove('active'), 300);
+            });
+        }
+
+        function addOutput(message) {
+            outputDisplay.innerHTML += message + '<br>';
+            outputDisplay.scrollTop = outputDisplay.scrollHeight;
+        }
+
+        function processCommand() {
+            const command = commandInput.value.trim().toLowerCase();
+            if (command) {
+                addOutput(`> Comando recebido: "${command}"`);
+                
+                // Simula processamento de comandos comuns
+                if (command.includes('abrir')) {
+                    addOutput('> Abrindo aplicativo...');
+                } else if (command.includes('fechar')) {
+                    addOutput('> Fechando janela atual...');
+                } else if (command.includes('ajuda')) {
+                    addOutput('> Comandos disponíveis: abrir, fechar, navegar, ler, digitar');
+                } else {
+                    addOutput('> Comando não reconhecido. Diga "ajuda" para ver opções.');
+                }
+                
+                commandInput.value = '';
+            }
+        }
+
+        function toggleScreenReader() {
+            isScreenReaderActive = !isScreenReaderActive;
+            addOutput(`> Leitor de tela ${isScreenReaderActive ? 'ativado' : 'desativado'}`);
+        }
+
+        function toggleMagnifier() {
+            addOutput('> Lupa virtual ativada. Use Ctrl + roda do mouse para ajustar zoom.');
+        }
+
+        function showVirtualKeyboard() {
+            addOutput('> Teclado virtual exibido na parte inferior da tela.');
+        }
+
+        function toggleEyeTracking() {
+            addOutput('> Iniciando calibração do controle por olhar. Siga as instruções na tela.');
+        }
+
+        function startVoiceRecognition() {
+            isVoiceRecognitionActive = !isVoiceRecognitionActive;
+            addOutput(`> Reconhecimento de voz ${isVoiceRecognitionActive ? 'ativado' : 'desativado'}`);
+            
+            if (isVoiceRecognitionActive) {
+                addOutput('> Fale agora. Diga "parar" para finalizar.');
+            }
+        }
+
+        // Navegação por teclado aprimorada
+        document.addEventListener('keydown', function(e) {
+            // Feedback visual para teclas pressionadas
+            const keyDisplay = document.querySelector('.key-display');
+            const pressedKey = document.createElement('span');
+            pressedKey.className = 'key active';
+            pressedKey.textContent = e.key;
+            
+            // Atalhos especiais
+            if (e.altKey && e.key === 'm') {
+                e.preventDefault();
+                executeCommand('open-menu');
+            } else if (e.ctrlKey && e.key === 'o') {
+                e.preventDefault();
+                executeCommand('open-file');
+            }
+            
+            // Feedback de tecla pressionada
+            addOutput(`> Tecla pressionada: ${e.key}`);
+        });
+
+        // Entrada por Enter no campo de comando
+        commandInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                processCommand();
+            }
+        });
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            addOutput('> Interface acessível carregada com sucesso!');
+            addOutput('> Todos os recursos de acessibilidade estão disponíveis.');
+            
+            // Foco inicial no primeiro botão
+            document.querySelector('.command-btn').focus();
+        });
+    </script>
+</body>
+</html>
