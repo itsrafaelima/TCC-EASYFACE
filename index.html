@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EASYFACE - Interface Acessível - Computador sem Mouse</title>
+    <title>EASYFACE - Interface Acessível</title>
     <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
@@ -198,12 +198,216 @@
             addOutput('> Iniciando calibração do controle por olhar. Siga as instruções na tela.');
         }
 
+        // Variáveis para reconhecimento de voz real
+        let recognition = null;
+        let isListening = false;
+
+        // Inicializar Web Speech API
+        function initializeSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+            } else if ('SpeechRecognition' in window) {
+                recognition = new SpeechRecognition();
+            } else {
+                addOutput('> ❌ Reconhecimento de voz não suportado neste navegador');
+                addOutput('> Use Chrome, Edge ou Safari para melhor compatibilidade');
+                return false;
+            }
+
+            recognition.lang = 'pt-BR';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = function() {
+                addOutput('> 🎤 Microfone ativado - Fale agora!');
+                isListening = true;
+                updateMicrophoneStatus(true);
+            };
+
+            recognition.onend = function() {
+                addOutput('> 🔇 Microfone desativado');
+                isListening = false;
+                updateMicrophoneStatus(false);
+            };
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript.toLowerCase();
+                addOutput(`> 🗣️ Você disse: "${transcript}"`);
+                processVoiceCommand(transcript);
+            };
+
+            recognition.onerror = function(event) {
+                addOutput(`> ❌ Erro no reconhecimento: ${event.error}`);
+                if (event.error === 'not-allowed') {
+                    addOutput('> ⚠️ Permissão do microfone negada!');
+                    addOutput('> Clique no ícone do microfone na barra do navegador e permita o acesso');
+                }
+                isListening = false;
+                updateMicrophoneStatus(false);
+            };
+
+            return true;
+        }
+
         function startVoiceRecognition() {
-            isVoiceRecognitionActive = !isVoiceRecognitionActive;
-            addOutput(`> Reconhecimento de voz ${isVoiceRecognitionActive ? 'ativado' : 'desativado'}`);
+            if (!recognition && !initializeSpeechRecognition()) {
+                return;
+            }
+
+            if (isListening) {
+                recognition.stop();
+                addOutput('> Parando reconhecimento de voz...');
+            } else {
+                addOutput('> Iniciando reconhecimento de voz...');
+                addOutput('> 📢 Comandos disponíveis: "abrir navegador", "fechar janela", "ajuda", "parar"');
+                try {
+                    recognition.start();
+                } catch (error) {
+                    addOutput('> ❌ Erro ao iniciar reconhecimento: ' + error.message);
+                }
+            }
+        }
+
+        function processVoiceCommand(command) {
+            // Processamento dos comandos de voz com instruções reais
+            if (command.includes('abrir navegador') || command.includes('abrir browser')) {
+                addOutput('> 🌐 Comando: Abrir Navegador');
+                addOutput('> 💡 INSTRUÇÕES REAIS:');
+                addOutput('  • Windows: Pressione Win + R, digite "chrome" ou "firefox"');
+                addOutput('  • Mac: Cmd + Espaço, digite "Safari" ou "Chrome"');
+                addOutput('  • Linux: Alt + F2, digite "firefox"');
+                showRealCommand('Pressione Ctrl + T para nova aba no navegador atual');
+                
+            } else if (command.includes('fechar janela') || command.includes('fechar')) {
+                addOutput('> ❌ Comando: Fechar Janela');
+                addOutput('> 💡 INSTRUÇÕES REAIS:');
+                addOutput('  • Atalho universal: Alt + F4 (Windows/Linux)');
+                addOutput('  • Mac: Cmd + Q (fechar app) ou Cmd + W (fechar aba)');
+                addOutput('  • Ou clique no X da janela');
+                showRealCommand('Use Alt + F4 para fechar a janela atual');
+                
+            } else if (command.includes('abrir arquivo')) {
+                addOutput('> 📁 Comando: Abrir Arquivo');
+                addOutput('> 💡 INSTRUÇÕES REAIS:');
+                addOutput('  • Atalho: Ctrl + O na maioria dos programas');
+                addOutput('  • Windows: Win + E para abrir Explorador de Arquivos');
+                addOutput('  • Mac: Cmd + O ou Cmd + Espaço + "Finder"');
+                showRealCommand('Pressione Ctrl + O para abrir arquivo no programa atual');
+                
+            } else if (command.includes('trocar janela') || command.includes('alternar')) {
+                addOutput('> 🔄 Comando: Trocar Janela');
+                addOutput('> 💡 INSTRUÇÕES REAIS:');
+                addOutput('  • Windows/Linux: Alt + Tab');
+                addOutput('  • Mac: Cmd + Tab');
+                addOutput('  • Windows: Win + Tab (visualização de tarefas)');
+                showRealCommand('Pressione Alt + Tab para alternar entre janelas');
+                
+            } else if (command.includes('minimizar')) {
+                addOutput('> 📉 Comando: Minimizar Janela');
+                addOutput('> 💡 INSTRUÇÕES REAIS:');
+                addOutput('  • Windows: Win + M (minimizar todas) ou Win + D (mostrar desktop)');
+                addOutput('  • Mac: Cmd + M');
+                addOutput('  • Ou clique no botão minimizar (-)');
+                showRealCommand('Pressione Win + D para minimizar todas as janelas');
+                
+            } else if (command.includes('volume') || command.includes('audio')) {
+                addOutput('> 🔊 Comando: Controle de Volume');
+                addOutput('> 💡 INSTRUÇÕES REAIS:');
+                addOutput('  • Windows: Teclas de volume do teclado ou Win + G');
+                addOutput('  • Mac: Teclas F10, F11, F12 ou botões de volume');
+                addOutput('  • Linux: Alsamixer ou controles do sistema');
+                showRealCommand('Use as teclas de volume do seu teclado');
+                
+            } else if (command.includes('calculadora')) {
+                addOutput('> 🔢 Comando: Abrir Calculadora');
+                addOutput('> 💡 INSTRUÇÕES REAIS:');
+                addOutput('  • Windows: Win + R, digite "calc"');
+                addOutput('  • Mac: Cmd + Espaço, digite "Calculator"');
+                addOutput('  • Linux: Alt + F2, digite "gnome-calculator"');
+                tryOpenCalculator();
+                
+            } else if (command.includes('notepad') || command.includes('bloco de notas')) {
+                addOutput('> 📝 Comando: Abrir Editor de Texto');
+                addOutput('> 💡 INSTRUÇÕES REAIS:');
+                addOutput('  • Windows: Win + R, digite "notepad"');
+                addOutput('  • Mac: Cmd + Espaço, digite "TextEdit"');
+                addOutput('  • Linux: Ctrl + Alt + T, digite "gedit"');
+                
+            } else if (command.includes('ajuda') || command.includes('help')) {
+                addOutput('> 💡 COMANDOS DE VOZ DISPONÍVEIS:');
+                addOutput('  - "Abrir navegador" - Instruções para abrir browser');
+                addOutput('  - "Fechar janela" - Como fechar janelas');
+                addOutput('  - "Abrir arquivo" - Abrir diálogos de arquivo');
+                addOutput('  - "Trocar janela" - Alternar entre programas');
+                addOutput('  - "Minimizar" - Minimizar janelas');
+                addOutput('  - "Volume" - Controlar áudio');
+                addOutput('  - "Calculadora" - Abrir calculadora');
+                addOutput('  - "Notepad" - Abrir editor de texto');
+                
+            } else if (command.includes('parar') || command.includes('stop')) {
+                recognition.stop();
+                addOutput('> 🛑 Reconhecimento de voz parado por comando');
+                
+            } else if (command.includes('teste') || command.includes('test')) {
+                addOutput('> ✅ Teste do microfone: FUNCIONANDO!');
+                addOutput('> 🎉 Seu microfone está captando a voz corretamente');
+                addOutput('> 💡 Agora experimente outros comandos como "abrir navegador"');
+                
+            } else {
+                addOutput(`> ❓ Comando não reconhecido: "${command}"`);
+                addOutput('> 💡 Diga "ajuda" para ver comandos disponíveis');
+                addOutput('> 🔧 Ou experimente: "abrir navegador", "fechar janela", "calculadora"');
+            }
+        }
+
+        // Função para mostrar comando real na tela
+        function showRealCommand(instruction) {
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 1000;
+                background: #2d3748; color: white; padding: 15px 20px;
+                border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                max-width: 300px; font-size: 14px; border-left: 4px solid #48bb78;
+            `;
+            popup.innerHTML = `<strong>⌨️ Execute agora:</strong><br>${instruction}`;
             
-            if (isVoiceRecognitionActive) {
-                addOutput('> Fale agora. Diga "parar" para finalizar.');
+            document.body.appendChild(popup);
+            
+            setTimeout(() => {
+                popup.style.opacity = '0';
+                popup.style.transition = 'opacity 0.5s';
+                setTimeout(() => document.body.removeChild(popup), 500);
+            }, 5000);
+        }
+
+        // Tentar abrir calculadora (funciona em alguns casos)
+        function tryOpenCalculator() {
+            // Tenta alguns métodos que podem funcionar dependendo do contexto
+            try {
+                // Método 1: Protocolo personalizado (se configurado)
+                window.open('calculator://', '_blank');
+                addOutput('> 🔧 Tentando método 1...');
+            } catch (e) {
+                addOutput('> ⚠️ Método automático não disponível');
+            }
+            
+            // Instrução manual sempre funciona
+            showRealCommand('Pressione Win + R, digite "calc" e pressione Enter');
+        }
+
+        function updateMicrophoneStatus(active) {
+            const indicator = document.querySelector('.voice-indicator');
+            const statusText = document.querySelector('.voice-status span');
+            
+            if (active) {
+                indicator.style.background = '#e53e3e';
+                indicator.style.animation = 'pulse 0.5s infinite';
+                statusText.textContent = 'Microfone: OUVINDO';
+            } else {
+                indicator.style.background = '#48bb78';
+                indicator.style.animation = 'pulse 2s infinite';
+                statusText.textContent = 'Sistema de Voz: Ativo';
             }
         }
 
@@ -238,6 +442,16 @@
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
             addOutput('> Interface acessível carregada com sucesso!');
+            
+            // Verificar suporte ao reconhecimento de voz
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                addOutput('> ✅ Reconhecimento de voz suportado neste navegador');
+                addOutput('> 🎤 Clique no botão "🎤 Falar" para testar o microfone');
+            } else {
+                addOutput('> ❌ Reconhecimento de voz não suportado');
+                addOutput('> 💡 Use Chrome, Edge ou Safari para melhor experiência');
+            }
+            
             addOutput('> Todos os recursos de acessibilidade estão disponíveis.');
             
             // Foco inicial no primeiro botão
