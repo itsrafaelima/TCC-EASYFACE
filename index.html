@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🖥️ EASYFACE</h1>
+            <h1>🖥️ EASYFACE 🖥️</h1>
             <p>Controle seu computador sem mouse - Use teclado, voz ou comandos especiais</p>
         </div>
 
@@ -81,29 +81,28 @@
             <div class="tool-card">
                 <div class="tool-icon">👁️</div>
                 <h3>Leitor de Tela</h3>
+                <br>
                 <p>Converte texto em fala para navegação auditiva</p>
+                <br>
                 <button class="command-btn" onclick="toggleScreenReader()">Ativar/Desativar</button>
             </div>
 
             <div class="tool-card">
                 <div class="tool-icon">🔍</div>
                 <h3>Lupa Virtual</h3>
+                <br>
                 <p>Amplia elementos da tela para melhor visualização</p>
+                <br>
                 <button class="command-btn" onclick="toggleMagnifier()">Ativar Zoom</button>
             </div>
 
             <div class="tool-card">
                 <div class="tool-icon">⌨️</div>
                 <h3>Teclado Virtual</h3>
+                <br>
                 <p>Teclado na tela para entrada de texto</p>
+                <br>
                 <button class="command-btn" onclick="showVirtualKeyboard()">Mostrar Teclado</button>
-            </div>
-
-            <div class="tool-card">
-                <div class="tool-icon">👆</div>
-                <h3>Controle por Olhar</h3>
-                <p>Simula cliques através do movimento dos olhos</p>
-                <button class="command-btn" onclick="toggleEyeTracking()">Calibrar</button>
             </div>
         </div>
 
@@ -270,130 +269,36 @@
         }
 
         function processVoiceCommand(command) {
-            // Processamento dos comandos de voz com instruções reais
+            // Processamento dos comandos de voz
             if (command.includes('abrir navegador') || command.includes('abrir browser')) {
-                addOutput('> 🌐 Comando: Abrir Navegador');
-                addOutput('> 💡 INSTRUÇÕES REAIS:');
-                addOutput('  • Windows: Pressione Win + R, digite "chrome" ou "firefox"');
-                addOutput('  • Mac: Cmd + Espaço, digite "Safari" ou "Chrome"');
-                addOutput('  • Linux: Alt + F2, digite "firefox"');
-                showRealCommand('Pressione Ctrl + T para nova aba no navegador atual');
-                
+                addOutput('> 🌐 Comando executado: Abrindo navegador...');
+                executeCommand('open-menu');
             } else if (command.includes('fechar janela') || command.includes('fechar')) {
-                addOutput('> ❌ Comando: Fechar Janela');
-                addOutput('> 💡 INSTRUÇÕES REAIS:');
-                addOutput('  • Atalho universal: Alt + F4 (Windows/Linux)');
-                addOutput('  • Mac: Cmd + Q (fechar app) ou Cmd + W (fechar aba)');
-                addOutput('  • Ou clique no X da janela');
-                showRealCommand('Use Alt + F4 para fechar a janela atual');
-                
+                addOutput('> ❌ Comando executado: Fechando janela...');
+                executeCommand('minimize');
             } else if (command.includes('abrir arquivo')) {
-                addOutput('> 📁 Comando: Abrir Arquivo');
-                addOutput('> 💡 INSTRUÇÕES REAIS:');
-                addOutput('  • Atalho: Ctrl + O na maioria dos programas');
-                addOutput('  • Windows: Win + E para abrir Explorador de Arquivos');
-                addOutput('  • Mac: Cmd + O ou Cmd + Espaço + "Finder"');
-                showRealCommand('Pressione Ctrl + O para abrir arquivo no programa atual');
-                
+                addOutput('> 📁 Comando executado: Abrindo arquivo...');
+                executeCommand('open-file');
             } else if (command.includes('trocar janela') || command.includes('alternar')) {
-                addOutput('> 🔄 Comando: Trocar Janela');
-                addOutput('> 💡 INSTRUÇÕES REAIS:');
-                addOutput('  • Windows/Linux: Alt + Tab');
-                addOutput('  • Mac: Cmd + Tab');
-                addOutput('  • Windows: Win + Tab (visualização de tarefas)');
-                showRealCommand('Pressione Alt + Tab para alternar entre janelas');
-                
-            } else if (command.includes('minimizar')) {
-                addOutput('> 📉 Comando: Minimizar Janela');
-                addOutput('> 💡 INSTRUÇÕES REAIS:');
-                addOutput('  • Windows: Win + M (minimizar todas) ou Win + D (mostrar desktop)');
-                addOutput('  • Mac: Cmd + M');
-                addOutput('  • Ou clique no botão minimizar (-)');
-                showRealCommand('Pressione Win + D para minimizar todas as janelas');
-                
-            } else if (command.includes('volume') || command.includes('audio')) {
-                addOutput('> 🔊 Comando: Controle de Volume');
-                addOutput('> 💡 INSTRUÇÕES REAIS:');
-                addOutput('  • Windows: Teclas de volume do teclado ou Win + G');
-                addOutput('  • Mac: Teclas F10, F11, F12 ou botões de volume');
-                addOutput('  • Linux: Alsamixer ou controles do sistema');
-                showRealCommand('Use as teclas de volume do seu teclado');
-                
-            } else if (command.includes('calculadora')) {
-                addOutput('> 🔢 Comando: Abrir Calculadora');
-                addOutput('> 💡 INSTRUÇÕES REAIS:');
-                addOutput('  • Windows: Win + R, digite "calc"');
-                addOutput('  • Mac: Cmd + Espaço, digite "Calculator"');
-                addOutput('  • Linux: Alt + F2, digite "gnome-calculator"');
-                tryOpenCalculator();
-                
-            } else if (command.includes('notepad') || command.includes('bloco de notas')) {
-                addOutput('> 📝 Comando: Abrir Editor de Texto');
-                addOutput('> 💡 INSTRUÇÕES REAIS:');
-                addOutput('  • Windows: Win + R, digite "notepad"');
-                addOutput('  • Mac: Cmd + Espaço, digite "TextEdit"');
-                addOutput('  • Linux: Ctrl + Alt + T, digite "gedit"');
-                
+                addOutput('> 🔄 Comando executado: Trocando janela...');
+                executeCommand('switch-window');
             } else if (command.includes('ajuda') || command.includes('help')) {
-                addOutput('> 💡 COMANDOS DE VOZ DISPONÍVEIS:');
-                addOutput('  - "Abrir navegador" - Instruções para abrir browser');
-                addOutput('  - "Fechar janela" - Como fechar janelas');
-                addOutput('  - "Abrir arquivo" - Abrir diálogos de arquivo');
-                addOutput('  - "Trocar janela" - Alternar entre programas');
-                addOutput('  - "Minimizar" - Minimizar janelas');
-                addOutput('  - "Volume" - Controlar áudio');
-                addOutput('  - "Calculadora" - Abrir calculadora');
-                addOutput('  - "Notepad" - Abrir editor de texto');
-                
+                addOutput('> 💡 Comandos disponíveis:');
+                addOutput('  - "Abrir navegador"');
+                addOutput('  - "Fechar janela"');
+                addOutput('  - "Abrir arquivo"');
+                addOutput('  - "Trocar janela"');
+                addOutput('  - "Parar" (para desativar o microfone)');
             } else if (command.includes('parar') || command.includes('stop')) {
                 recognition.stop();
                 addOutput('> 🛑 Reconhecimento de voz parado por comando');
-                
             } else if (command.includes('teste') || command.includes('test')) {
                 addOutput('> ✅ Teste do microfone: FUNCIONANDO!');
                 addOutput('> 🎉 Seu microfone está captando a voz corretamente');
-                addOutput('> 💡 Agora experimente outros comandos como "abrir navegador"');
-                
             } else {
                 addOutput(`> ❓ Comando não reconhecido: "${command}"`);
-                addOutput('> 💡 Diga "ajuda" para ver comandos disponíveis');
-                addOutput('> 🔧 Ou experimente: "abrir navegador", "fechar janela", "calculadora"');
+                addOutput('> Diga "ajuda" para ver comandos disponíveis');
             }
-        }
-
-        // Função para mostrar comando real na tela
-        function showRealCommand(instruction) {
-            const popup = document.createElement('div');
-            popup.style.cssText = `
-                position: fixed; top: 20px; right: 20px; z-index: 1000;
-                background: #2d3748; color: white; padding: 15px 20px;
-                border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-                max-width: 300px; font-size: 14px; border-left: 4px solid #48bb78;
-            `;
-            popup.innerHTML = `<strong>⌨️ Execute agora:</strong><br>${instruction}`;
-            
-            document.body.appendChild(popup);
-            
-            setTimeout(() => {
-                popup.style.opacity = '0';
-                popup.style.transition = 'opacity 0.5s';
-                setTimeout(() => document.body.removeChild(popup), 500);
-            }, 5000);
-        }
-
-        // Tentar abrir calculadora (funciona em alguns casos)
-        function tryOpenCalculator() {
-            // Tenta alguns métodos que podem funcionar dependendo do contexto
-            try {
-                // Método 1: Protocolo personalizado (se configurado)
-                window.open('calculator://', '_blank');
-                addOutput('> 🔧 Tentando método 1...');
-            } catch (e) {
-                addOutput('> ⚠️ Método automático não disponível');
-            }
-            
-            // Instrução manual sempre funciona
-            showRealCommand('Pressione Win + R, digite "calc" e pressione Enter');
         }
 
         function updateMicrophoneStatus(active) {
