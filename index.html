@@ -17,22 +17,22 @@
     <div class="main-container">
         <div class="sidebar">
             <h2>🎯 Menu Principal</h2>
-            <button class="menu-button" onclick="showTextEditor()" tabindex="1">
+            <button class="menu-button scannable" onclick="showTextEditor()" tabindex="1">
                 📝 Editor de Texto
             </button>
-            <button class="menu-button" onclick="showCalculator()" tabindex="2">
+            <button class="menu-button scannable" onclick="showCalculator()" tabindex="2">
                 🔢 Calculadora
             </button>
-            <button class="menu-button" onclick="showVirtualKeyboard()" tabindex="3">
+            <button class="menu-button scannable" onclick="showVirtualKeyboard()" tabindex="3">
                 ⌨️ Teclado Virtual
             </button>
-            <button class="menu-button" onclick="showWebBrowser()" tabindex="4">
+            <button class="menu-button scannable" onclick="showWebBrowser()" tabindex="4">
                 🌐 Navegador Web
             </button>
-            <button class="menu-button" onclick="showAccessibilitySettings()" tabindex="5">
+            <button class="menu-button scannable" onclick="showAccessibilitySettings()" tabindex="5">
                 ⚙️ Configurações
             </button>
-            <button class="menu-button" onclick="showHelp()" tabindex="6">
+            <button class="menu-button scannable" onclick="showHelp()" tabindex="6">
                 ❓ Ajuda
             </button>
         </div>
@@ -41,112 +41,112 @@
             <!-- Editor de Texto -->
             <div id="text-editor" class="hidden">
                 <h2>📝 Editor de Texto</h2>
-                <textarea id="text-area" class="text-input" rows="10" 
+                <textarea id="text-area" class="text-input scannable" rows="10" 
                     placeholder="Digite seu texto aqui... Use TAB para navegar pelos botões abaixo."
                     tabindex="7"></textarea>
-                <button class="action-button" onclick="saveText()" tabindex="8">💾 Salvar Texto</button>
-                <button class="action-button" onclick="clearText()" tabindex="9">🗑️ Limpar</button>
-                <button class="action-button" onclick="speakText()" tabindex="10">🔊 Ler Texto</button>
+                <button class="action-button scannable" onclick="saveText()" tabindex="8">💾 Salvar Texto</button>
+                <button class="action-button scannable" onclick="clearText()" tabindex="9">🗑️ Limpar</button>
+                <button class="action-button scannable" onclick="speakText()" tabindex="10">🔊 Ler Texto</button>
             </div>
 
             <!-- Calculadora -->
             <div id="calculator-app" class="hidden">
                 <h2>🔢 Calculadora</h2>
                 <div class="calc-display" id="calc-display">0</div>
-                <div class="calculator active">
-                    <button class="calc-button" onclick="clearCalc()" tabindex="11">C</button>
-                    <button class="calc-button" onclick="deleteLast()" tabindex="12">⌫</button>
-                    <button class="calc-button operator" onclick="addToCalc('/')" tabindex="13">÷</button>
-                    <button class="calc-button operator" onclick="addToCalc('*')" tabindex="14">×</button>
+                <div class="calculator">
+                    <button class="calc-button scannable" onclick="clearCalc()" tabindex="11">C</button>
+                    <button class="calc-button scannable" onclick="deleteLast()" tabindex="12">⌫</button>
+                    <button class="calc-button operator scannable" onclick="addToCalc('/')" tabindex="13">÷</button>
+                    <button class="calc-button operator scannable" onclick="addToCalc('*')" tabindex="14">×</button>
                     
-                    <button class="calc-button" onclick="addToCalc('7')" tabindex="15">7</button>
-                    <button class="calc-button" onclick="addToCalc('8')" tabindex="16">8</button>
-                    <button class="calc-button" onclick="addToCalc('9')" tabindex="17">9</button>
-                    <button class="calc-button operator" onclick="addToCalc('-')" tabindex="18">-</button>
+                    <button class="calc-button scannable" onclick="addToCalc('7')" tabindex="15">7</button>
+                    <button class="calc-button scannable" onclick="addToCalc('8')" tabindex="16">8</button>
+                    <button class="calc-button scannable" onclick="addToCalc('9')" tabindex="17">9</button>
+                    <button class="calc-button operator scannable" onclick="addToCalc('-')" tabindex="18">-</button>
                     
-                    <button class="calc-button" onclick="addToCalc('4')" tabindex="19">4</button>
-                    <button class="calc-button" onclick="addToCalc('5')" tabindex="20">5</button>
-                    <button class="calc-button" onclick="addToCalc('6')" tabindex="21">6</button>
-                    <button class="calc-button operator" onclick="addToCalc('+')" tabindex="22">+</button>
+                    <button class="calc-button scannable" onclick="addToCalc('4')" tabindex="19">4</button>
+                    <button class="calc-button scannable" onclick="addToCalc('5')" tabindex="20">5</button>
+                    <button class="calc-button scannable" onclick="addToCalc('6')" tabindex="21">6</button>
+                    <button class="calc-button operator scannable" onclick="addToCalc('+')" tabindex="22">+</button>
                     
-                    <button class="calc-button" onclick="addToCalc('1')" tabindex="23">1</button>
-                    <button class="calc-button" onclick="addToCalc('2')" tabindex="24">2</button>
-                    <button class="calc-button" onclick="addToCalc('3')" tabindex="25">3</button>
-                    <button class="calc-button equals" onclick="calculateResult()" tabindex="26" rowspan="2">=</button>
+                    <button class="calc-button scannable" onclick="addToCalc('1')" tabindex="23">1</button>
+                    <button class="calc-button scannable" onclick="addToCalc('2')" tabindex="24">2</button>
+                    <button class="calc-button scannable" onclick="addToCalc('3')" tabindex="25">3</button>
+                    <button class="calc-button equals scannable" onclick="calculateResult()" tabindex="26">=</button>
                     
-                    <button class="calc-button" onclick="addToCalc('0')" tabindex="27" style="grid-column: span 2;">0</button>
-                    <button class="calc-button" onclick="addToCalc('.')" tabindex="28">.</button>
+                    <button class="calc-button scannable" onclick="addToCalc('0')" tabindex="27" style="grid-column: span 2;">0</button>
+                    <button class="calc-button scannable" onclick="addToCalc('.')" tabindex="28">.</button>
                 </div>
             </div>
 
             <!-- Teclado Virtual -->
             <div id="virtual-keyboard-app" class="hidden">
                 <h2>⌨️ Teclado Virtual</h2>
-                <input type="text" id="keyboard-input" class="text-input" 
+                <input type="text" id="keyboard-input" class="text-input scannable" 
                     placeholder="O texto digitado aparecerá aqui..." tabindex="29">
-                <div class="virtual-keyboard active" id="virtual-keyboard">
+                <div class="virtual-keyboard">
                     <!-- Primeira linha -->
-                    <button class="key" onclick="typeKey('1')" tabindex="30">1</button>
-                    <button class="key" onclick="typeKey('2')" tabindex="31">2</button>
-                    <button class="key" onclick="typeKey('3')" tabindex="32">3</button>
-                    <button class="key" onclick="typeKey('4')" tabindex="33">4</button>
-                    <button class="key" onclick="typeKey('5')" tabindex="34">5</button>
-                    <button class="key" onclick="typeKey('6')" tabindex="35">6</button>
-                    <button class="key" onclick="typeKey('7')" tabindex="36">7</button>
-                    <button class="key" onclick="typeKey('8')" tabindex="37">8</button>
-                    <button class="key" onclick="typeKey('9')" tabindex="38">9</button>
-                    <button class="key" onclick="typeKey('0')" tabindex="39">0</button>
+                    <button class="key scannable" onclick="typeKey('1')" tabindex="30">1</button>
+                    <button class="key scannable" onclick="typeKey('2')" tabindex="31">2</button>
+                    <button class="key scannable" onclick="typeKey('3')" tabindex="32">3</button>
+                    <button class="key scannable" onclick="typeKey('4')" tabindex="33">4</button>
+                    <button class="key scannable" onclick="typeKey('5')" tabindex="34">5</button>
+                    <button class="key scannable" onclick="typeKey('6')" tabindex="35">6</button>
+                    <button class="key scannable" onclick="typeKey('7')" tabindex="36">7</button>
+                    <button class="key scannable" onclick="typeKey('8')" tabindex="37">8</button>
+                    <button class="key scannable" onclick="typeKey('9')" tabindex="38">9</button>
+                    <button class="key scannable" onclick="typeKey('0')" tabindex="39">0</button>
                     
                     <!-- Segunda linha -->
-                    <button class="key" onclick="typeKey('Q')" tabindex="40">Q</button>
-                    <button class="key" onclick="typeKey('W')" tabindex="41">W</button>
-                    <button class="key" onclick="typeKey('E')" tabindex="42">E</button>
-                    <button class="key" onclick="typeKey('R')" tabindex="43">R</button>
-                    <button class="key" onclick="typeKey('T')" tabindex="44">T</button>
-                    <button class="key" onclick="typeKey('Y')" tabindex="45">Y</button>
-                    <button class="key" onclick="typeKey('U')" tabindex="46">U</button>
-                    <button class="key" onclick="typeKey('I')" tabindex="47">I</button>
-                    <button class="key" onclick="typeKey('O')" tabindex="48">O</button>
-                    <button class="key" onclick="typeKey('P')" tabindex="49">P</button>
+                    <button class="key scannable" onclick="typeKey('Q')" tabindex="40">Q</button>
+                    <button class="key scannable" onclick="typeKey('W')" tabindex="41">W</button>
+                    <button class="key scannable" onclick="typeKey('E')" tabindex="42">E</button>
+                    <button class="key scannable" onclick="typeKey('R')" tabindex="43">R</button>
+                    <button class="key scannable" onclick="typeKey('T')" tabindex="44">T</button>
+                    <button class="key scannable" onclick="typeKey('Y')" tabindex="45">Y</button>
+                    <button class="key scannable" onclick="typeKey('U')" tabindex="46">U</button>
+                    <button class="key scannable" onclick="typeKey('I')" tabindex="47">I</button>
+                    <button class="key scannable" onclick="typeKey('O')" tabindex="48">O</button>
+                    <button class="key scannable" onclick="typeKey('P')" tabindex="49">P</button>
                     
                     <!-- Terceira linha -->
-                    <button class="key" onclick="typeKey('A')" tabindex="50">A</button>
-                    <button class="key" onclick="typeKey('S')" tabindex="51">S</button>
-                    <button class="key" onclick="typeKey('D')" tabindex="52">D</button>
-                    <button class="key" onclick="typeKey('F')" tabindex="53">F</button>
-                    <button class="key" onclick="typeKey('G')" tabindex="54">G</button>
-                    <button class="key" onclick="typeKey('H')" tabindex="55">H</button>
-                    <button class="key" onclick="typeKey('J')" tabindex="56">J</button>
-                    <button class="key" onclick="typeKey('K')" tabindex="57">K</button>
-                    <button class="key" onclick="typeKey('L')" tabindex="58">L</button>
-                    <button class="key" onclick="typeKey('Ç')" tabindex="59">Ç</button>
+                    <button class="key scannable" onclick="typeKey('A')" tabindex="50">A</button>
+                    <button class="key scannable" onclick="typeKey('S')" tabindex="51">S</button>
+                    <button class="key scannable" onclick="typeKey('D')" tabindex="52">D</button>
+                    <button class="key scannable" onclick="typeKey('F')" tabindex="53">F</button>
+                    <button class="key scannable" onclick="typeKey('G')" tabindex="54">G</button>
+                    <button class="key scannable" onclick="typeKey('H')" tabindex="55">H</button>
+                    <button class="key scannable" onclick="typeKey('J')" tabindex="56">J</button>
+                    <button class="key scannable" onclick="typeKey('K')" tabindex="57">K</button>
+                    <button class="key scannable" onclick="typeKey('L')" tabindex="58">L</button>
+                    <button class="key scannable" onclick="typeKey('Ç')" tabindex="59">Ç</button>
                     
                     <!-- Quarta linha -->
-                    <button class="key" onclick="typeKey('Z')" tabindex="60">Z</button>
-                    <button class="key" onclick="typeKey('X')" tabindex="61">X</button>
-                    <button class="key" onclick="typeKey('C')" tabindex="62">C</button>
-                    <button class="key" onclick="typeKey('V')" tabindex="63">V</button>
-                    <button class="key" onclick="typeKey('B')" tabindex="64">B</button>
-                    <button class="key" onclick="typeKey('N')" tabindex="65">N</button>
-                    <button class="key" onclick="typeKey('M')" tabindex="66">M</button>
-                    <button class="key" onclick="typeKey(',')" tabindex="67">,</button>
-                    <button class="key" onclick="typeKey('.')" tabindex="68">.</button>
-                    <button class="key" onclick="typeKey(';')" tabindex="69">;</button>
+                    <button class="key scannable" onclick="typeKey('Z')" tabindex="60">Z</button>
+                    <button class="key scannable" onclick="typeKey('X')" tabindex="61">X</button>
+                    <button class="key scannable" onclick="typeKey('C')" tabindex="62">C</button>
+                    <button class="key scannable" onclick="typeKey('V')" tabindex="63">V</button>
+                    <button class="key scannable" onclick="typeKey('B')" tabindex="64">B</button>
+                    <button class="key scannable" onclick="typeKey('N')" tabindex="65">N</button>
+                    <button class="key scannable" onclick="typeKey('M')" tabindex="66">M</button>
+                    <button class="key scannable" onclick="typeKey(',')" tabindex="67">,</button>
+                    <button class="key scannable" onclick="typeKey('.')" tabindex="68">.</button>
+                    <button class="key scannable" onclick="typeKey(';')" tabindex="69">;</button>
                     
                     <!-- Última linha -->
-                    <button class="key space" onclick="typeKey(' ')" tabindex="70">ESPAÇO</button>
-                    <button class="key backspace" onclick="backspaceKey()" tabindex="71">⌫</button>
-                    <button class="key enter" onclick="enterKey()" tabindex="72">ENTER</button>
-                    <button class="key" onclick="clearKeyboard()" tabindex="73">LIMPAR</button>
+                    <button class="key space scannable" onclick="typeKey(' ')" tabindex="70">ESPAÇO</button>
+                    <button class="key backspace scannable" onclick="backspaceKey()" tabindex="71">⌫</button>
+                    <button class="key enter scannable" onclick="enterKey()" tabindex="72">ENTER</button>
+                    <button class="key scannable" onclick="clearKeyboard()" tabindex="73">LIMPAR</button>
                 </div>
             </div>
 
             <!-- Navegador Web -->
             <div id="web-browser" class="hidden">
                 <h2>🌐 Navegador Simples</h2>
-                <input type="url" id="url-input" class="text-input" 
+                <input type="url" id="url-input" class="text-input scannable" 
                     placeholder="Digite uma URL (ex: https://google.com)" tabindex="74">
-                <button class="action-button" onclick="loadWebsite()" tabindex="75">🔍 Carregar Site</button>
+                <button class="action-button scannable" onclick="loadWebsite()" tabindex="75">🔍 Carregar Site</button>
                 <div id="web-content" class="web-content">
                     <p class="web-placeholder">
                         Digite uma URL acima e clique em "Carregar Site" para navegar na web.
@@ -159,16 +159,24 @@
                 <h2>⚙️ Configurações de Acessibilidade</h2>
                 <div class="settings-section">
                     <label class="settings-label">Tamanho da Fonte:</label>
-                    <button class="action-button" onclick="changeFontSize('small')" tabindex="76">📝 Pequena</button>
-                    <button class="action-button" onclick="changeFontSize('medium')" tabindex="77">📖 Média</button>
-                    <button class="action-button" onclick="changeFontSize('large')" tabindex="78">📘 Grande</button>
+                    <button class="action-button scannable" onclick="changeFontSize('small')" tabindex="76">🔍 Pequena</button>
+                    <button class="action-button scannable" onclick="changeFontSize('medium')" tabindex="77">🔖 Média</button>
+                    <button class="action-button scannable" onclick="changeFontSize('large')" tabindex="78">🔘 Grande</button>
                 </div>
                 <div class="settings-section">
                     <label class="settings-label">Contraste:</label>
-                    <button class="action-button" onclick="toggleContrast()" tabindex="79">🎨 Alto Contraste</button>
+                    <button class="action-button scannable" onclick="toggleContrast()" tabindex="79">🎨 Alto Contraste</button>
                 </div>
                 <div class="settings-section">
-                    <button class="action-button" onclick="toggleSounds()" tabindex="80">🔊 Sons de Feedback</button>
+                    <label class="settings-label">Sons:</label>
+                    <button class="action-button scannable" onclick="toggleSounds()" tabindex="80">🔊 Sons de Feedback</button>
+                </div>
+                <div class="settings-section">
+                    <label class="settings-label">Varredura Automática:</label>
+                    <button class="action-button scannable" onclick="toggleScanMode()" tabindex="81" id="scan-toggle">🔄 Ativar Varredura</button>
+                    <button class="action-button scannable" onclick="setScanSpeed(3000)" tabindex="82">🐌 Lenta</button>
+                    <button class="action-button scannable" onclick="setScanSpeed(2000)" tabindex="83">🚶 Normal</button>
+                    <button class="action-button scannable" onclick="setScanSpeed(1000)" tabindex="84">🏃 Rápida</button>
                 </div>
             </div>
 
@@ -189,7 +197,7 @@
                         <h3>🛠️ Funcionalidades:</h3>
                         <p><strong>Editor de Texto:</strong> Escreva e salve documentos</p>
                         <p><strong>Calculadora:</strong> Realize cálculos matemáticos</p>
-                        <p><strong>Teclado Virtual:</strong> Digite usando apenas o mouse ou teclado</p>
+                        <p><strong>Teclado Virtual:</strong> Digite usando apenas o mouse</p>
                         <p><strong>Navegador:</strong> Acesse sites da internet</p>
                     </div>
                     
@@ -199,6 +207,16 @@
                         <p><strong>• Feedback Sonoro:</strong> Sons confirmam ações</p>
                         <p><strong>• Alto Contraste:</strong> Melhora visibilidade</p>
                         <p><strong>• Texto Grande:</strong> Facilita leitura</p>
+                        <p><strong>• Varredura Automática:</strong> Navegação sem mouse ou teclado</p>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>🔄 Modo de Varredura Automática:</h3>
+                        <p><strong>Ativar:</strong> Vá em Configurações ou use Ctrl+S</p>
+                        <p><strong>Selecionar:</strong> Pressione ENTER quando o elemento desejado estiver destacado</p>
+                        <p><strong>Pausar:</strong> Pressione ESPAÇO para pausar/retomar</p>
+                        <p><strong>Velocidade:</strong> Configure em Configurações (lenta, normal, rápida)</p>
+                        <p><strong>Desativar:</strong> Pressione ESC ou vá em Configurações</p>
                     </div>
                 </div>
             </div>
@@ -222,23 +240,87 @@
         EASYFACE carregado! Use TAB para navegar pelos elementos.
     </div>
 
+    <!-- Indicador de Modo de Varredura -->
+    <div id="scan-indicator" class="scan-mode-indicator" style="display: none;">
+        🔄 MODO VARREDURA ATIVO - Pressione ENTER para selecionar
+    </div>
+
+    <!-- Controles de Varredura -->
+    <div id="scan-controls" class="scan-controls" style="display: none;">
+        <h4>🔄 Controles de Varredura</h4>
+        <button class="scan-control-button" onclick="pauseScanning()" id="pause-scan">⏸️ Pausar</button>
+        <button class="scan-control-button" onclick="toggleScanMode()">❌ Desativar</button>
+    </div>
+
     <script>
-        // Estado global da aplicação
+        // ===== VARIÁVEIS GLOBAIS =====
         let currentApp = 'welcome';
         let calcDisplay = '0';
         let calcExpression = '';
         let soundsEnabled = true;
         let highContrast = false;
+        
+        // Variáveis para varredura automática
+        let scanMode = false;
+        let scanInterval = null;
+        let scanElements = [];
+        let currentScanIndex = 0;
+        let scanSpeed = 2000;
+        let scanPaused = false;
 
-        // Funções de navegação e controle
+        // Lista de domínios seguros
+        const safeDomains = [
+            'google.com', 'google.com.br', 
+            'wikipedia.org', 'pt.wikipedia.org',
+            'gov.br', 'edu.br', 'youtube.com',
+            'github.com', 'stackoverflow.com'
+        ];
+
+        // ===== FUNÇÕES DE CONFIGURAÇÃO =====
+        function loadUserSettings() {
+            try {
+                const saved = JSON.parse(localStorage.getItem('easyface-settings') || '{}');
+                
+                if (saved.fontSize) changeFontSize(saved.fontSize);
+                if (saved.highContrast) toggleContrast();
+                if (saved.soundsEnabled !== undefined) soundsEnabled = saved.soundsEnabled;
+                if (saved.scanSpeed) scanSpeed = saved.scanSpeed;
+                
+                updateStatus('Configurações carregadas');
+            } catch (error) {
+                updateStatus('Configurações padrão aplicadas');
+            }
+        }
+
+        function saveUserSettings() {
+            try {
+                const settings = {
+                    fontSize: getCurrentFontSize(),
+                    highContrast: highContrast,
+                    soundsEnabled: soundsEnabled,
+                    scanSpeed: scanSpeed
+                };
+                localStorage.setItem('easyface-settings', JSON.stringify(settings));
+                updateStatus('Configurações salvas automaticamente');
+            } catch (error) {
+                console.log('Não foi possível salvar configurações');
+            }
+        }
+
+        function getCurrentFontSize() {
+            const size = parseInt(document.body.style.fontSize);
+            if (size <= 16) return 'small';
+            if (size <= 18) return 'medium';
+            return 'large';
+        }
+
+        // ===== FUNÇÕES DE NAVEGAÇÃO =====
         function showApp(appId) {
-            // Esconde todas as apps
             const apps = ['text-editor', 'calculator-app', 'virtual-keyboard-app', 'web-browser', 'accessibility-settings', 'help', 'welcome'];
             apps.forEach(app => {
                 document.getElementById(app).classList.add('hidden');
             });
             
-            // Mostra a app selecionada
             document.getElementById(appId).classList.remove('hidden');
             currentApp = appId;
             updateStatus(`${getAppName(appId)} ativo`);
@@ -265,7 +347,7 @@
         function showAccessibilitySettings() { showApp('accessibility-settings'); }
         function showHelp() { showApp('help'); }
 
-        // Funções do Editor de Texto
+        // ===== FUNÇÕES DO EDITOR DE TEXTO =====
         function saveText() {
             const text = document.getElementById('text-area').value;
             if (text.trim()) {
@@ -300,7 +382,7 @@
             }
         }
 
-        // Funções da Calculadora
+        // ===== FUNÇÕES DA CALCULADORA =====
         function addToCalc(value) {
             if (calcDisplay === '0' && !isNaN(value)) {
                 calcDisplay = value;
@@ -325,6 +407,7 @@
                 calcExpression = '';
                 document.getElementById('calc-display').textContent = calcDisplay;
                 updateStatus('Erro no cálculo');
+                playErrorSound();
             }
         }
 
@@ -348,7 +431,7 @@
             playFeedbackSound();
         }
 
-        // Funções do Teclado Virtual
+        // ===== FUNÇÕES DO TECLADO VIRTUAL =====
         function typeKey(key) {
             const input = document.getElementById('keyboard-input');
             input.value += key;
@@ -374,25 +457,61 @@
             playFeedbackSound();
         }
 
-        // Função do Navegador
-        function loadWebsite() {
-            const url = document.getElementById('url-input').value;
-            const webContent = document.getElementById('web-content');
-            
-            if (url.trim()) {
-                webContent.innerHTML = `
-                    <iframe src="${url}" class="browser-iframe">
-                        Carregando site...
-                    </iframe>
-                `;
-                updateStatus('Site carregado!');
-                playFeedbackSound();
-            } else {
-                updateStatus('Por favor, digite uma URL válida.');
+        // ===== FUNÇÕES DO NAVEGADOR =====
+        function isUrlSafe(url) {
+            try {
+                const urlObj = new URL(url.startsWith('http') ? url : 'https://' + url);
+                const hostname = urlObj.hostname.toLowerCase();
+                
+                return safeDomains.some(domain => 
+                    hostname === domain || hostname.endsWith('.' + domain)
+                );
+            } catch (error) {
+                return false;
             }
         }
 
-        // Funções de Acessibilidade
+        function loadWebsite() {
+            const url = document.getElementById('url-input').value.trim();
+            const webContent = document.getElementById('web-content');
+            
+            if (!url) {
+                updateStatus('Por favor, digite uma URL válida.');
+                return;
+            }
+            
+            if (!isUrlSafe(url)) {
+                webContent.innerHTML = `
+                    <div class="alert-warning">
+                        <strong>⚠️ URL Bloqueada por Segurança</strong><br>
+                        Por questões de segurança, apenas sites confiáveis são permitidos.<br><br>
+                        <strong>Sites seguros permitidos:</strong><br>
+                        • Google (google.com)<br>
+                        • Wikipedia (wikipedia.org)<br>
+                        • Sites governamentais (.gov.br)<br>
+                        • Sites educacionais (.edu.br)<br>
+                        • GitHub, Stack Overflow, YouTube<br><br>
+                        Tente uma URL de um destes domínios.
+                    </div>
+                `;
+                updateStatus('URL bloqueada por segurança');
+                playErrorSound();
+                return;
+            }
+            
+            const finalUrl = url.startsWith('http') ? url : 'https://' + url;
+            webContent.innerHTML = `
+                <iframe src="${finalUrl}" class="browser-iframe" 
+                        title="Navegador web incorporado"
+                        aria-label="Conteúdo do site carregado">
+                    Carregando site...
+                </iframe>
+            `;
+            updateStatus('Site seguro carregado!');
+            playFeedbackSound();
+        }
+
+        // ===== FUNÇÕES DE ACESSIBILIDADE =====
         function changeFontSize(size) {
             const body = document.body;
             body.classList.remove('font-small', 'font-medium', 'font-large');
@@ -407,6 +526,8 @@
                 body.style.fontSize = '22px';
                 updateStatus('Fonte grande aplicada');
             }
+            
+            saveUserSettings();
             playFeedbackSound();
         }
 
@@ -419,61 +540,291 @@
                 document.body.style.filter = 'none';
                 updateStatus('Alto contraste desativado');
             }
+            
+            saveUserSettings();
             playFeedbackSound();
         }
 
         function toggleSounds() {
             soundsEnabled = !soundsEnabled;
             updateStatus(soundsEnabled ? 'Sons ativados' : 'Sons desativados');
+            
+            saveUserSettings();
             if (soundsEnabled) playFeedbackSound();
         }
 
-        // Função de feedback sonoro
-        function playFeedbackSound() {
-            if (soundsEnabled) {
-                try {
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    const oscillator = audioContext.createOscillator();
-                    const gainNode = audioContext.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-                    
-                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                    
-                    oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.1);
-                } catch (error) {
-                    // Fallback silencioso se o áudio não estiver disponível
-                }
+        // ===== FUNÇÕES DE VARREDURA AUTOMÁTICA =====
+        function toggleScanMode() {
+            scanMode = !scanMode;
+            const button = document.getElementById('scan-toggle');
+            const indicator = document.getElementById('scan-indicator');
+            const controls = document.getElementById('scan-controls');
+            
+            if (scanMode) {
+                startScanning();
+                button.textContent = '⏹️ Parar Varredura';
+                button.setAttribute('aria-label', 'Parar modo de varredura automática');
+                indicator.style.display = 'block';
+                controls.style.display = 'block';
+                updateStatus('Modo de varredura ativado - Use ENTER para selecionar');
+            } else {
+                stopScanning();
+                button.textContent = '🔄 Ativar Varredura';
+                button.setAttribute('aria-label', 'Ativar modo de varredura automática');
+                indicator.style.display = 'none';
+                controls.style.display = 'none';
+                updateStatus('Modo de varredura desativado');
+            }
+            
+            saveUserSettings();
+        }
+
+        function startScanning() {
+            scanElements = document.querySelectorAll('.scannable:not([disabled])');
+            currentScanIndex = 0;
+            scanPaused = false;
+            
+            if (scanElements.length > 0) {
+                scanInterval = setInterval(nextScanElement, scanSpeed);
+                highlightCurrentElement();
             }
         }
 
-        // Função para atualizar status
+        function stopScanning() {
+            if (scanInterval) {
+                clearInterval(scanInterval);
+                scanInterval = null;
+            }
+            
+            scanElements.forEach(el => el.classList.remove('scan-active'));
+            scanElements = [];
+            currentScanIndex = 0;
+        }
+
+        function nextScanElement() {
+            if (scanPaused) return;
+            
+            if (scanElements[currentScanIndex]) {
+                scanElements[currentScanIndex].classList.remove('scan-active');
+            }
+            
+            currentScanIndex = (currentScanIndex + 1) % scanElements.length;
+            highlightCurrentElement();
+        }
+
+        function highlightCurrentElement() {
+            if (scanElements[currentScanIndex]) {
+                const element = scanElements[currentScanIndex];
+                element.classList.add('scan-active');
+                
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                if (soundsEnabled) {
+                    playDifferentSound(800);
+                }
+                
+                const label = element.getAttribute('aria-label') || element.textContent;
+                updateStatus(`Selecionando: ${label.trim()}`);
+            }
+        }
+
+        function selectCurrentScanElement() {
+            if (scanElements[currentScanIndex] && scanMode) {
+                const element = scanElements[currentScanIndex];
+                element.classList.remove('scan-active');
+                element.click();
+                playFeedbackSound();
+                return true;
+            }
+            return false;
+        }
+
+        function pauseScanning() {
+            scanPaused = !scanPaused;
+            const button = document.getElementById('pause-scan');
+            
+            if (scanPaused) {
+                button.textContent = '▶️ Continuar';
+                updateStatus('Varredura pausada');
+            } else {
+                button.textContent = '⏸️ Pausar';
+                updateStatus('Varredura retomada');
+            }
+        }
+
+        function setScanSpeed(speed) {
+            scanSpeed = speed;
+            updateStatus(`Velocidade definida: ${speed/1000} segundos`);
+            
+            if (scanMode) {
+                stopScanning();
+                startScanning();
+            }
+            
+            saveUserSettings();
+        }
+
+        // ===== FUNÇÕES DE SOM =====
+        function playFeedbackSound() {
+            playDifferentSound(800, 0.1);
+        }
+
+        function playErrorSound() {
+            playDifferentSound(300, 0.2);
+        }
+
+        function playDifferentSound(frequency, duration = 0.1) {
+            if (!soundsEnabled) return;
+            
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration);
+            } catch (error) {
+                console.log('Erro ao reproduzir som');
+            }
+        }
+
+        // ===== FUNÇÕES DE STATUS =====
         function updateStatus(message) {
-            document.getElementById('status-bar').textContent = message;
+            const statusBar = document.getElementById('status-bar');
+            statusBar.textContent = message;
+            statusBar.setAttribute('aria-live', 'polite');
+            
             setTimeout(() => {
-                document.getElementById('status-bar').textContent = 'EASYFACE ativo - Use TAB para navegar';
+                if (!scanMode) {
+                    statusBar.textContent = 'EASYFACE ativo - Use TAB para navegar';
+                } else {
+                    statusBar.textContent = 'EASYFACE - Modo varredura ativo - ENTER para selecionar';
+                }
             }, 3000);
         }
 
-        // Event listeners para teclado
-        document.addEventListener('keydown', function(e) {
-            // ESC volta ao menu principal
-            if (e.key === 'Escape') {
-                showApp('welcome');
-                document.querySelector('.menu-button').focus();
+        // ===== FUNÇÕES DE RECONHECIMENTO DE VOZ =====
+        function checkVoiceRecognitionSupport() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                const voiceWarning = document.createElement('div');
+                voiceWarning.className = 'alert-warning';
+                voiceWarning.innerHTML = `
+                    <strong>⚠️ Comando de Voz Indisponível</strong><br>
+                    Seu navegador não suporta reconhecimento de voz. 
+                    Recomendamos usar Google Chrome para ter acesso a todos os recursos.
+                `;
+                
+                const settingsDiv = document.getElementById('accessibility-settings');
+                if (settingsDiv) {
+                    settingsDiv.appendChild(voiceWarning);
+                }
+                return false;
+            }
+            return true;
+        }
+
+        function setupVoiceRecognition() {
+            if (!checkVoiceRecognitionSupport()) return;
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'pt-BR';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            
+            function startVoiceCommand() {
+                try {
+                    recognition.start();
+                    updateStatus('Escutando comando de voz... Diga: "editor", "calculadora", etc.');
+                } catch (error) {
+                    updateStatus('Erro ao iniciar reconhecimento de voz');
+                    playErrorSound();
+                }
             }
             
-            // Enter e Espaço ativam elementos focados
-            if (e.key === 'Enter' || e.key === ' ') {
+            recognition.onresult = function(event) {
+                const command = event.results[0][0].transcript.toLowerCase().trim();
+                updateStatus(`Comando reconhecido: ${command}`);
+                
+                if (command.includes('editor') || command.includes('texto')) {
+                    showTextEditor();
+                } else if (command.includes('calculadora') || command.includes('calcular')) {
+                    showCalculator();
+                } else if (command.includes('teclado')) {
+                    showVirtualKeyboard();
+                } else if (command.includes('navegador') || command.includes('internet')) {
+                    showWebBrowser();
+                } else if (command.includes('configurações') || command.includes('configurar')) {
+                    showAccessibilitySettings();
+                } else if (command.includes('ajuda') || command.includes('socorro')) {
+                    showHelp();
+                } else if (command.includes('varredura') || command.includes('escanear')) {
+                    toggleScanMode();
+                } else {
+                    updateStatus('Comando não reconhecido. Tente: "editor", "calculadora", "configurações"...');
+                    playErrorSound();
+                }
+            };
+            
+            recognition.onerror = function(event) {
+                updateStatus('Erro no reconhecimento de voz: ' + event.error);
+                playErrorSound();
+            };
+            
+            // Adicionar botão de comando de voz
+            const voiceButton = document.createElement('button');
+            voiceButton.className = 'menu-button scannable';
+            voiceButton.innerHTML = '🎤 Comando de Voz';
+            voiceButton.onclick = startVoiceCommand;
+            voiceButton.tabIndex = 90;
+            voiceButton.setAttribute('aria-label', 'Ativar comando de voz - Diga o nome da funcionalidade desejada');
+            document.querySelector('.sidebar').appendChild(voiceButton);
+        }
+
+        // ===== EVENT LISTENERS =====
+        document.addEventListener('keydown', function(e) {
+            // Se estiver no modo de varredura, ENTER seleciona o elemento destacado
+            if (scanMode && e.key === 'Enter') {
+                e.preventDefault();
+                if (selectCurrentScanElement()) {
+                    return;
+                }
+            }
+            
+            // ESC volta ao menu principal
+            if (e.key === 'Escape') {
+                if (scanMode) {
+                    toggleScanMode();
+                } else {
+                    showApp('welcome');
+                    document.querySelector('.menu-button').focus();
+                }
+            }
+            
+            // Barra de espaço para pausar varredura
+            if (scanMode && e.key === ' ') {
+                e.preventDefault();
+                pauseScanning();
+                return;
+            }
+            
+            // Enter e Espaço ativam elementos focados (apenas se não estiver em modo varredura)
+            if (!scanMode && (e.key === 'Enter' || e.key === ' ')) {
                 const focused = document.activeElement;
                 if (focused.classList.contains('menu-button') || 
                     focused.classList.contains('action-button') || 
                     focused.classList.contains('calc-button') ||
-                    focused.classList.contains('key')) {
+                    focused.classList.contains('key') ||
+                    focused.classList.contains('scannable')) {
                     e.preventDefault();
                     focused.click();
                 }
@@ -506,13 +857,17 @@
                         e.preventDefault();
                         showHelp();
                         break;
+                    case 's':
+                        e.preventDefault();
+                        toggleScanMode();
+                        break;
                 }
             }
         });
 
-        // Adicionar feedback visual em todos os elementos interativos
+        // ===== INICIALIZAÇÃO =====
         document.addEventListener('DOMContentLoaded', function() {
-            const interactiveElements = document.querySelectorAll('.menu-button, .action-button, .calc-button, .key');
+            const interactiveElements = document.querySelectorAll('.menu-button, .action-button, .calc-button, .key, .scannable');
             
             interactiveElements.forEach(element => {
                 element.addEventListener('click', function() {
@@ -523,82 +878,30 @@
                 });
                 
                 element.addEventListener('focus', function() {
-                    updateStatus(`Foco em: ${this.textContent || this.innerText}`);
+                    if (!scanMode) {
+                        const label = this.getAttribute('aria-label') || this.textContent || this.innerText;
+                        updateStatus(`Foco em: ${label.trim()}`);
+                    }
                 });
             });
         });
 
-        // Inicialização
         window.addEventListener('load', function() {
+            // Verificar e configurar reconhecimento de voz
+            setupVoiceRecognition();
+            
+            // Carregar configurações salvas
+            loadUserSettings();
+            
             updateStatus('EASYFACE carregado e pronto para uso!');
-            // Foco inicial no primeiro botão do menu
+            
+            // Foco inicial no primeiro botão do menu após um delay
             setTimeout(() => {
-                document.querySelector('.menu-button').focus();
-            }, 500);
-        });
-
-        // Suporte a comandos de voz (se disponível)
-        if ('webkitSpeechRecognition' in window) {
-            const recognition = new webkitSpeechRecognition();
-            recognition.lang = 'pt-BR';
-            recognition.continuous = false;
-            
-            function startVoiceCommand() {
-                recognition.start();
-                updateStatus('Escutando comando de voz...');
-            }
-            
-            recognition.onresult = function(event) {
-                const command = event.results[0][0].transcript.toLowerCase();
-                updateStatus(`Comando: ${command}`);
-                
-                if (command.includes('editor')) {
-                    showTextEditor();
-                } else if (command.includes('calculadora')) {
-                    showCalculator();
-                } else if (command.includes('teclado')) {
-                    showVirtualKeyboard();
-                } else if (command.includes('navegador')) {
-                    showWebBrowser();
-                } else if (command.includes('configurações')) {
-                    showAccessibilitySettings();
-                } else if (command.includes('ajuda')) {
-                    showHelp();
-                } else {
-                    updateStatus('Comando não reconhecido');
+                if (!scanMode) {
+                    document.querySelector('.menu-button').focus();
                 }
-            };
-            
-            // Adicionar botão de comando de voz ao menu
-            window.addEventListener('load', function() {
-                const voiceButton = document.createElement('button');
-                voiceButton.className = 'menu-button';
-                voiceButton.innerHTML = '🎤 Comando de Voz';
-                voiceButton.onclick = startVoiceCommand;
-                voiceButton.tabIndex = 7;
-                document.querySelector('.sidebar').appendChild(voiceButton);
-            });
-        }
-
-        // Configurações do usuário (simuladas)
-        let userSettings = {
-            fontSize: 'medium',
-            highContrast: false,
-            soundsEnabled: true
-        };
-
-        function saveSettings() {
-            updateStatus('Configurações salvas!');
-        }
-
-        function loadSettings() {
-            changeFontSize(userSettings.fontSize);
-            if (userSettings.highContrast) toggleContrast();
-            soundsEnabled = userSettings.soundsEnabled;
-        }
-
-        // Carrega configurações ao iniciar
-        setTimeout(loadSettings, 1000);
+            }, 1000);
+        });
     </script>
 </body>
 </html>
