@@ -7,361 +7,598 @@
     <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🖥️ EASYFACE 🖥️</h1>
-            <p>Controle seu computador sem mouse - Use teclado, voz ou comandos especiais</p>
-        </div>
-
-        <div class="status-bar">
-            <div class="voice-status">
-                <div class="voice-indicator"></div>
-                <span>Sistema de Voz: Ativo</span>
-            </div>
-            <div>Modo: Navegação por Teclado</div>
-        </div>
-
-        <div class="main-grid">
-            <div class="panel">
-                <h2>⌨️ Controles por Teclado</h2>
-                <div class="command-grid">
-                    <button class="command-btn" tabindex="1" onclick="executeCommand('open-menu')">
-                        Menu Principal<br><small>Alt + M</small>
-                    </button>
-                    <button class="command-btn" tabindex="2" onclick="executeCommand('open-file')">
-                        Abrir Arquivo<br><small>Ctrl + O</small>
-                    </button>
-                    <button class="command-btn" tabindex="3" onclick="executeCommand('switch-window')">
-                        Trocar Janela<br><small>Alt + Tab</small>
-                    </button>
-                    <button class="command-btn" tabindex="4" onclick="executeCommand('minimize')">
-                        Minimizar<br><small>Win + M</small>
-                    </button>
-                </div>
-                <div class="keyboard-nav">
-                    <h3>Navegação Ativa:</h3>
-                    <div class="key-display">
-                        <span class="key">Tab</span>
-                        <span class="key">Enter</span>
-                        <span class="key">Setas</span>
-                        <span class="key">Esc</span>
-                        <span class="key">Espaço</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel">
-                <h2>🎤 Comandos de Voz</h2>
-                <div class="voice-commands">
-                    <div class="voice-list">
-                        <div class="voice-item">
-                            <strong>"Abrir navegador"</strong> - Inicia o navegador web
-                        </div>
-                        <div class="voice-item">
-                            <strong>"Digitar texto"</strong> - Ativa ditado por voz
-                        </div>
-                        <div class="voice-item">
-                            <strong>"Fechar janela"</strong> - Fecha a janela ativa
-                        </div>
-                        <div class="voice-item">
-                            <strong>"Aumentar volume"</strong> - Controla audio do sistema
-                        </div>
-                        <div class="voice-item">
-                            <strong>"Pausar música"</strong> - Controla reprodução
-                        </div>
-                        <div class="voice-item">
-                            <strong>"Ler tela"</strong> - Ativa leitor de tela
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="accessibility-tools">
-            <div class="tool-card">
-                <div class="tool-icon">👁️</div>
-                <h3>Leitor de Tela</h3>
-                <br>
-                <p>Converte texto em fala para navegação auditiva</p>
-                <br>
-                <button class="command-btn" onclick="toggleScreenReader()">Ativar/Desativar</button>
-            </div>
-
-            <div class="tool-card">
-                <div class="tool-icon">🔍</div>
-                <h3>Lupa Virtual</h3>
-                <br>
-                <p>Amplia elementos da tela para melhor visualização</p>
-                <br>
-                <button class="command-btn" onclick="toggleMagnifier()">Ativar Zoom</button>
-            </div>
-
-            <div class="tool-card">
-                <div class="tool-icon">⌨️</div>
-                <h3>Teclado Virtual</h3>
-                <br>
-                <p>Teclado na tela para entrada de texto</p>
-                <br>
-                <button class="command-btn" onclick="showVirtualKeyboard()">Mostrar Teclado</button>
-            </div>
-        </div>
-
-        <div class="feedback-area">
-            <h2>💬 Área de Feedback</h2>
-            <div class="output-display" id="outputDisplay">
-                > Sistema iniciado. Aguardando comandos...<br>
-                > Use Tab para navegar, Enter para ativar, Esc para sair<br>
-                > Diga "Ajuda" para ver todos os comandos de voz<br>
-            </div>
-            <div class="input-area">
-                <input type="text" class="voice-input" placeholder="Digite um comando ou use comando de voz..." id="commandInput">
-                <button class="command-btn" onclick="processCommand()">Executar</button>
-                <button class="command-btn" onclick="startVoiceRecognition()">🎤 Falar</button>
-            </div>
-        </div>
-
-        <div class="help-text">
-            <strong>💡 Dicas de Acessibilidade:</strong><br>
-            • Use Tab e Shift+Tab para navegar entre elementos<br>
-            • Pressione Enter ou Espaço para ativar botões<br>
-            • Use as setas do teclado para navegar em listas<br>
-            • Comandos de voz funcionam em português brasileiro<br>
-            • Todas as funções têm atalhos de teclado alternativos
+    <div class="header">
+        <h1>💻 EASYFACE</h1>
+        <div class="instructions">
+            🔍 Use TAB para navegar | ENTER ou ESPAÇO para ativar | ESC para voltar | Setas para mover
         </div>
     </div>
 
+    <div class="main-container">
+        <div class="sidebar">
+            <h2>🎯 Menu Principal</h2>
+            <button class="menu-button" onclick="showTextEditor()" tabindex="1">
+                📝 Editor de Texto
+            </button>
+            <button class="menu-button" onclick="showCalculator()" tabindex="2">
+                🔢 Calculadora
+            </button>
+            <button class="menu-button" onclick="showVirtualKeyboard()" tabindex="3">
+                ⌨️ Teclado Virtual
+            </button>
+            <button class="menu-button" onclick="showWebBrowser()" tabindex="4">
+                🌐 Navegador Web
+            </button>
+            <button class="menu-button" onclick="showAccessibilitySettings()" tabindex="5">
+                ⚙️ Configurações
+            </button>
+            <button class="menu-button" onclick="showHelp()" tabindex="6">
+                ❓ Ajuda
+            </button>
+        </div>
+
+        <div class="content-area">
+            <!-- Editor de Texto -->
+            <div id="text-editor" class="hidden">
+                <h2>📝 Editor de Texto</h2>
+                <textarea id="text-area" class="text-input" rows="10" 
+                    placeholder="Digite seu texto aqui... Use TAB para navegar pelos botões abaixo."
+                    tabindex="7"></textarea>
+                <button class="action-button" onclick="saveText()" tabindex="8">💾 Salvar Texto</button>
+                <button class="action-button" onclick="clearText()" tabindex="9">🗑️ Limpar</button>
+                <button class="action-button" onclick="speakText()" tabindex="10">🔊 Ler Texto</button>
+            </div>
+
+            <!-- Calculadora -->
+            <div id="calculator-app" class="hidden">
+                <h2>🔢 Calculadora</h2>
+                <div class="calc-display" id="calc-display">0</div>
+                <div class="calculator active">
+                    <button class="calc-button" onclick="clearCalc()" tabindex="11">C</button>
+                    <button class="calc-button" onclick="deleteLast()" tabindex="12">⌫</button>
+                    <button class="calc-button operator" onclick="addToCalc('/')" tabindex="13">÷</button>
+                    <button class="calc-button operator" onclick="addToCalc('*')" tabindex="14">×</button>
+                    
+                    <button class="calc-button" onclick="addToCalc('7')" tabindex="15">7</button>
+                    <button class="calc-button" onclick="addToCalc('8')" tabindex="16">8</button>
+                    <button class="calc-button" onclick="addToCalc('9')" tabindex="17">9</button>
+                    <button class="calc-button operator" onclick="addToCalc('-')" tabindex="18">-</button>
+                    
+                    <button class="calc-button" onclick="addToCalc('4')" tabindex="19">4</button>
+                    <button class="calc-button" onclick="addToCalc('5')" tabindex="20">5</button>
+                    <button class="calc-button" onclick="addToCalc('6')" tabindex="21">6</button>
+                    <button class="calc-button operator" onclick="addToCalc('+')" tabindex="22">+</button>
+                    
+                    <button class="calc-button" onclick="addToCalc('1')" tabindex="23">1</button>
+                    <button class="calc-button" onclick="addToCalc('2')" tabindex="24">2</button>
+                    <button class="calc-button" onclick="addToCalc('3')" tabindex="25">3</button>
+                    <button class="calc-button equals" onclick="calculateResult()" tabindex="26" rowspan="2">=</button>
+                    
+                    <button class="calc-button" onclick="addToCalc('0')" tabindex="27" style="grid-column: span 2;">0</button>
+                    <button class="calc-button" onclick="addToCalc('.')" tabindex="28">.</button>
+                </div>
+            </div>
+
+            <!-- Teclado Virtual -->
+            <div id="virtual-keyboard-app" class="hidden">
+                <h2>⌨️ Teclado Virtual</h2>
+                <input type="text" id="keyboard-input" class="text-input" 
+                    placeholder="O texto digitado aparecerá aqui..." tabindex="29">
+                <div class="virtual-keyboard active" id="virtual-keyboard">
+                    <!-- Primeira linha -->
+                    <button class="key" onclick="typeKey('1')" tabindex="30">1</button>
+                    <button class="key" onclick="typeKey('2')" tabindex="31">2</button>
+                    <button class="key" onclick="typeKey('3')" tabindex="32">3</button>
+                    <button class="key" onclick="typeKey('4')" tabindex="33">4</button>
+                    <button class="key" onclick="typeKey('5')" tabindex="34">5</button>
+                    <button class="key" onclick="typeKey('6')" tabindex="35">6</button>
+                    <button class="key" onclick="typeKey('7')" tabindex="36">7</button>
+                    <button class="key" onclick="typeKey('8')" tabindex="37">8</button>
+                    <button class="key" onclick="typeKey('9')" tabindex="38">9</button>
+                    <button class="key" onclick="typeKey('0')" tabindex="39">0</button>
+                    
+                    <!-- Segunda linha -->
+                    <button class="key" onclick="typeKey('Q')" tabindex="40">Q</button>
+                    <button class="key" onclick="typeKey('W')" tabindex="41">W</button>
+                    <button class="key" onclick="typeKey('E')" tabindex="42">E</button>
+                    <button class="key" onclick="typeKey('R')" tabindex="43">R</button>
+                    <button class="key" onclick="typeKey('T')" tabindex="44">T</button>
+                    <button class="key" onclick="typeKey('Y')" tabindex="45">Y</button>
+                    <button class="key" onclick="typeKey('U')" tabindex="46">U</button>
+                    <button class="key" onclick="typeKey('I')" tabindex="47">I</button>
+                    <button class="key" onclick="typeKey('O')" tabindex="48">O</button>
+                    <button class="key" onclick="typeKey('P')" tabindex="49">P</button>
+                    
+                    <!-- Terceira linha -->
+                    <button class="key" onclick="typeKey('A')" tabindex="50">A</button>
+                    <button class="key" onclick="typeKey('S')" tabindex="51">S</button>
+                    <button class="key" onclick="typeKey('D')" tabindex="52">D</button>
+                    <button class="key" onclick="typeKey('F')" tabindex="53">F</button>
+                    <button class="key" onclick="typeKey('G')" tabindex="54">G</button>
+                    <button class="key" onclick="typeKey('H')" tabindex="55">H</button>
+                    <button class="key" onclick="typeKey('J')" tabindex="56">J</button>
+                    <button class="key" onclick="typeKey('K')" tabindex="57">K</button>
+                    <button class="key" onclick="typeKey('L')" tabindex="58">L</button>
+                    <button class="key" onclick="typeKey('Ç')" tabindex="59">Ç</button>
+                    
+                    <!-- Quarta linha -->
+                    <button class="key" onclick="typeKey('Z')" tabindex="60">Z</button>
+                    <button class="key" onclick="typeKey('X')" tabindex="61">X</button>
+                    <button class="key" onclick="typeKey('C')" tabindex="62">C</button>
+                    <button class="key" onclick="typeKey('V')" tabindex="63">V</button>
+                    <button class="key" onclick="typeKey('B')" tabindex="64">B</button>
+                    <button class="key" onclick="typeKey('N')" tabindex="65">N</button>
+                    <button class="key" onclick="typeKey('M')" tabindex="66">M</button>
+                    <button class="key" onclick="typeKey(',')" tabindex="67">,</button>
+                    <button class="key" onclick="typeKey('.')" tabindex="68">.</button>
+                    <button class="key" onclick="typeKey(';')" tabindex="69">;</button>
+                    
+                    <!-- Última linha -->
+                    <button class="key space" onclick="typeKey(' ')" tabindex="70">ESPAÇO</button>
+                    <button class="key backspace" onclick="backspaceKey()" tabindex="71">⌫</button>
+                    <button class="key enter" onclick="enterKey()" tabindex="72">ENTER</button>
+                    <button class="key" onclick="clearKeyboard()" tabindex="73">LIMPAR</button>
+                </div>
+            </div>
+
+            <!-- Navegador Web -->
+            <div id="web-browser" class="hidden">
+                <h2>🌐 Navegador Simples</h2>
+                <input type="url" id="url-input" class="text-input" 
+                    placeholder="Digite uma URL (ex: https://google.com)" tabindex="74">
+                <button class="action-button" onclick="loadWebsite()" tabindex="75">🔍 Carregar Site</button>
+                <div id="web-content" class="web-content">
+                    <p class="web-placeholder">
+                        Digite uma URL acima e clique em "Carregar Site" para navegar na web.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Configurações de Acessibilidade -->
+            <div id="accessibility-settings" class="hidden">
+                <h2>⚙️ Configurações de Acessibilidade</h2>
+                <div class="settings-section">
+                    <label class="settings-label">Tamanho da Fonte:</label>
+                    <button class="action-button" onclick="changeFontSize('small')" tabindex="76">📝 Pequena</button>
+                    <button class="action-button" onclick="changeFontSize('medium')" tabindex="77">📖 Média</button>
+                    <button class="action-button" onclick="changeFontSize('large')" tabindex="78">📘 Grande</button>
+                </div>
+                <div class="settings-section">
+                    <label class="settings-label">Contraste:</label>
+                    <button class="action-button" onclick="toggleContrast()" tabindex="79">🎨 Alto Contraste</button>
+                </div>
+                <div class="settings-section">
+                    <button class="action-button" onclick="toggleSounds()" tabindex="80">🔊 Sons de Feedback</button>
+                </div>
+            </div>
+
+            <!-- Central de Ajuda -->
+            <div id="help" class="hidden">
+                <h2>❓ Central de Ajuda</h2>
+                <div class="help-content">
+                    <div class="help-section">
+                        <h3>🎯 Navegação por Teclado:</h3>
+                        <p><strong>TAB:</strong> Move para o próximo elemento</p>
+                        <p><strong>SHIFT + TAB:</strong> Move para o elemento anterior</p>
+                        <p><strong>ENTER ou ESPAÇO:</strong> Ativa botões e links</p>
+                        <p><strong>ESC:</strong> Volta ao menu principal</p>
+                        <p><strong>Setas:</strong> Navegar em menus e listas</p>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h3>🛠️ Funcionalidades:</h3>
+                        <p><strong>Editor de Texto:</strong> Escreva e salve documentos</p>
+                        <p><strong>Calculadora:</strong> Realize cálculos matemáticos</p>
+                        <p><strong>Teclado Virtual:</strong> Digite usando apenas o mouse ou teclado</p>
+                        <p><strong>Navegador:</strong> Acesse sites da internet</p>
+                    </div>
+                    
+                    <div class="help-section">
+                        <h3>♿ Recursos de Acessibilidade:</h3>
+                        <p><strong>• Foco Visual:</strong> Borda amarela destaca o elemento ativo</p>
+                        <p><strong>• Feedback Sonoro:</strong> Sons confirmam ações</p>
+                        <p><strong>• Alto Contraste:</strong> Melhora visibilidade</p>
+                        <p><strong>• Texto Grande:</strong> Facilita leitura</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tela de Boas-vindas -->
+            <div id="welcome" class="welcome-content">
+                <h2 class="welcome-title">Bem-vindo ao EASYFACE! 🎯</h2>
+                <p class="welcome-text">
+                    Esta interface foi criada especialmente para pessoas com mobilidade reduzida.<br>
+                    Use o <strong>TAB</strong> para navegar e <strong>ENTER</strong> para selecionar.
+                </p>
+                <div class="welcome-box">
+                    <h3>🚀 Comece agora:</h3>
+                    <p>Pressione <strong>TAB</strong> para ir ao menu lateral e escolha uma funcionalidade!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar" id="status-bar">
+        EASYFACE carregado! Use TAB para navegar pelos elementos.
+    </div>
+
     <script>
-        let isScreenReaderActive = false;
-        let isVoiceRecognitionActive = false;
-        const outputDisplay = document.getElementById('outputDisplay');
-        const commandInput = document.getElementById('commandInput');
+        // Estado global da aplicação
+        let currentApp = 'welcome';
+        let calcDisplay = '0';
+        let calcExpression = '';
+        let soundsEnabled = true;
+        let highContrast = false;
 
-        // Simula feedback para comandos
-        function executeCommand(command) {
-            const messages = {
-                'open-menu': 'Menu principal aberto. Use as setas para navegar.',
-                'open-file': 'Diálogo de abertura de arquivo ativado.',
-                'switch-window': 'Alternando entre janelas abertas.',
-                'minimize': 'Janela minimizada.'
-            };
-            
-            addOutput(`> ${messages[command] || 'Comando executado'}`);
-            
-            // Simula ativação visual da tecla
-            const keys = document.querySelectorAll('.key');
-            keys.forEach(key => {
-                key.classList.add('active');
-                setTimeout(() => key.classList.remove('active'), 300);
+        // Funções de navegação e controle
+        function showApp(appId) {
+            // Esconde todas as apps
+            const apps = ['text-editor', 'calculator-app', 'virtual-keyboard-app', 'web-browser', 'accessibility-settings', 'help', 'welcome'];
+            apps.forEach(app => {
+                document.getElementById(app).classList.add('hidden');
             });
+            
+            // Mostra a app selecionada
+            document.getElementById(appId).classList.remove('hidden');
+            currentApp = appId;
+            updateStatus(`${getAppName(appId)} ativo`);
+            playFeedbackSound();
         }
 
-        function addOutput(message) {
-            outputDisplay.innerHTML += message + '<br>';
-            outputDisplay.scrollTop = outputDisplay.scrollHeight;
+        function getAppName(appId) {
+            const names = {
+                'text-editor': 'Editor de Texto',
+                'calculator-app': 'Calculadora',
+                'virtual-keyboard-app': 'Teclado Virtual',
+                'web-browser': 'Navegador Web',
+                'accessibility-settings': 'Configurações',
+                'help': 'Central de Ajuda',
+                'welcome': 'Tela Inicial'
+            };
+            return names[appId] || appId;
         }
 
-        function processCommand() {
-            const command = commandInput.value.trim().toLowerCase();
-            if (command) {
-                addOutput(`> Comando recebido: "${command}"`);
-                
-                // Simula processamento de comandos comuns
-                if (command.includes('abrir')) {
-                    addOutput('> Abrindo aplicativo...');
-                } else if (command.includes('fechar')) {
-                    addOutput('> Fechando janela atual...');
-                } else if (command.includes('ajuda')) {
-                    addOutput('> Comandos disponíveis: abrir, fechar, navegar, ler, digitar');
-                } else {
-                    addOutput('> Comando não reconhecido. Diga "ajuda" para ver opções.');
-                }
-                
-                commandInput.value = '';
-            }
-        }
+        function showTextEditor() { showApp('text-editor'); }
+        function showCalculator() { showApp('calculator-app'); }
+        function showVirtualKeyboard() { showApp('virtual-keyboard-app'); }
+        function showWebBrowser() { showApp('web-browser'); }
+        function showAccessibilitySettings() { showApp('accessibility-settings'); }
+        function showHelp() { showApp('help'); }
 
-        function toggleScreenReader() {
-            isScreenReaderActive = !isScreenReaderActive;
-            addOutput(`> Leitor de tela ${isScreenReaderActive ? 'ativado' : 'desativado'}`);
-        }
-
-        function toggleMagnifier() {
-            addOutput('> Lupa virtual ativada. Use Ctrl + roda do mouse para ajustar zoom.');
-        }
-
-        function showVirtualKeyboard() {
-            addOutput('> Teclado virtual exibido na parte inferior da tela.');
-        }
-
-        function toggleEyeTracking() {
-            addOutput('> Iniciando calibração do controle por olhar. Siga as instruções na tela.');
-        }
-
-        // Variáveis para reconhecimento de voz real
-        let recognition = null;
-        let isListening = false;
-
-        // Inicializar Web Speech API
-        function initializeSpeechRecognition() {
-            if ('webkitSpeechRecognition' in window) {
-                recognition = new webkitSpeechRecognition();
-            } else if ('SpeechRecognition' in window) {
-                recognition = new SpeechRecognition();
+        // Funções do Editor de Texto
+        function saveText() {
+            const text = document.getElementById('text-area').value;
+            if (text.trim()) {
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'easyface-texto.txt';
+                a.click();
+                updateStatus('Texto salvo com sucesso!');
+                playFeedbackSound();
             } else {
-                addOutput('> ❌ Reconhecimento de voz não suportado neste navegador');
-                addOutput('> Use Chrome, Edge ou Safari para melhor compatibilidade');
-                return false;
+                updateStatus('Nenhum texto para salvar.');
             }
-
-            recognition.lang = 'pt-BR';
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.maxAlternatives = 1;
-
-            recognition.onstart = function() {
-                addOutput('> 🎤 Microfone ativado - Fale agora!');
-                isListening = true;
-                updateMicrophoneStatus(true);
-            };
-
-            recognition.onend = function() {
-                addOutput('> 🔇 Microfone desativado');
-                isListening = false;
-                updateMicrophoneStatus(false);
-            };
-
-            recognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript.toLowerCase();
-                addOutput(`> 🗣️ Você disse: "${transcript}"`);
-                processVoiceCommand(transcript);
-            };
-
-            recognition.onerror = function(event) {
-                addOutput(`> ❌ Erro no reconhecimento: ${event.error}`);
-                if (event.error === 'not-allowed') {
-                    addOutput('> ⚠️ Permissão do microfone negada!');
-                    addOutput('> Clique no ícone do microfone na barra do navegador e permita o acesso');
-                }
-                isListening = false;
-                updateMicrophoneStatus(false);
-            };
-
-            return true;
         }
 
-        function startVoiceRecognition() {
-            if (!recognition && !initializeSpeechRecognition()) {
-                return;
-            }
+        function clearText() {
+            document.getElementById('text-area').value = '';
+            updateStatus('Texto limpo.');
+            playFeedbackSound();
+        }
 
-            if (isListening) {
-                recognition.stop();
-                addOutput('> Parando reconhecimento de voz...');
+        function speakText() {
+            const text = document.getElementById('text-area').value;
+            if (text.trim() && 'speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'pt-BR';
+                speechSynthesis.speak(utterance);
+                updateStatus('Lendo texto...');
             } else {
-                addOutput('> Iniciando reconhecimento de voz...');
-                addOutput('> 📢 Comandos disponíveis: "abrir navegador", "fechar janela", "ajuda", "parar"');
+                updateStatus('Nenhum texto para ler ou recurso não disponível.');
+            }
+        }
+
+        // Funções da Calculadora
+        function addToCalc(value) {
+            if (calcDisplay === '0' && !isNaN(value)) {
+                calcDisplay = value;
+            } else {
+                calcDisplay += value;
+            }
+            calcExpression += value;
+            document.getElementById('calc-display').textContent = calcDisplay;
+            playFeedbackSound();
+        }
+
+        function calculateResult() {
+            try {
+                const result = eval(calcExpression.replace(/×/g, '*').replace(/÷/g, '/'));
+                calcDisplay = result.toString();
+                calcExpression = result.toString();
+                document.getElementById('calc-display').textContent = calcDisplay;
+                updateStatus(`Resultado: ${calcDisplay}`);
+                playFeedbackSound();
+            } catch (error) {
+                calcDisplay = 'Erro';
+                calcExpression = '';
+                document.getElementById('calc-display').textContent = calcDisplay;
+                updateStatus('Erro no cálculo');
+            }
+        }
+
+        function clearCalc() {
+            calcDisplay = '0';
+            calcExpression = '';
+            document.getElementById('calc-display').textContent = calcDisplay;
+            updateStatus('Calculadora limpa');
+            playFeedbackSound();
+        }
+
+        function deleteLast() {
+            if (calcDisplay.length > 1) {
+                calcDisplay = calcDisplay.slice(0, -1);
+                calcExpression = calcExpression.slice(0, -1);
+            } else {
+                calcDisplay = '0';
+                calcExpression = '';
+            }
+            document.getElementById('calc-display').textContent = calcDisplay;
+            playFeedbackSound();
+        }
+
+        // Funções do Teclado Virtual
+        function typeKey(key) {
+            const input = document.getElementById('keyboard-input');
+            input.value += key;
+            input.focus();
+            playFeedbackSound();
+        }
+
+        function backspaceKey() {
+            const input = document.getElementById('keyboard-input');
+            input.value = input.value.slice(0, -1);
+            playFeedbackSound();
+        }
+
+        function enterKey() {
+            const input = document.getElementById('keyboard-input');
+            input.value += '\n';
+            playFeedbackSound();
+        }
+
+        function clearKeyboard() {
+            document.getElementById('keyboard-input').value = '';
+            updateStatus('Texto limpo');
+            playFeedbackSound();
+        }
+
+        // Função do Navegador
+        function loadWebsite() {
+            const url = document.getElementById('url-input').value;
+            const webContent = document.getElementById('web-content');
+            
+            if (url.trim()) {
+                webContent.innerHTML = `
+                    <iframe src="${url}" class="browser-iframe">
+                        Carregando site...
+                    </iframe>
+                `;
+                updateStatus('Site carregado!');
+                playFeedbackSound();
+            } else {
+                updateStatus('Por favor, digite uma URL válida.');
+            }
+        }
+
+        // Funções de Acessibilidade
+        function changeFontSize(size) {
+            const body = document.body;
+            body.classList.remove('font-small', 'font-medium', 'font-large');
+            
+            if (size === 'small') {
+                body.style.fontSize = '16px';
+                updateStatus('Fonte pequena aplicada');
+            } else if (size === 'medium') {
+                body.style.fontSize = '18px';
+                updateStatus('Fonte média aplicada');
+            } else if (size === 'large') {
+                body.style.fontSize = '22px';
+                updateStatus('Fonte grande aplicada');
+            }
+            playFeedbackSound();
+        }
+
+        function toggleContrast() {
+            highContrast = !highContrast;
+            if (highContrast) {
+                document.body.style.filter = 'contrast(150%) brightness(110%)';
+                updateStatus('Alto contraste ativado');
+            } else {
+                document.body.style.filter = 'none';
+                updateStatus('Alto contraste desativado');
+            }
+            playFeedbackSound();
+        }
+
+        function toggleSounds() {
+            soundsEnabled = !soundsEnabled;
+            updateStatus(soundsEnabled ? 'Sons ativados' : 'Sons desativados');
+            if (soundsEnabled) playFeedbackSound();
+        }
+
+        // Função de feedback sonoro
+        function playFeedbackSound() {
+            if (soundsEnabled) {
                 try {
-                    recognition.start();
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.1);
                 } catch (error) {
-                    addOutput('> ❌ Erro ao iniciar reconhecimento: ' + error.message);
+                    // Fallback silencioso se o áudio não estiver disponível
                 }
             }
         }
 
-        function processVoiceCommand(command) {
-            // Processamento dos comandos de voz
-            if (command.includes('abrir navegador') || command.includes('abrir browser')) {
-                addOutput('> 🌐 Comando executado: Abrindo navegador...');
-                executeCommand('open-menu');
-            } else if (command.includes('fechar janela') || command.includes('fechar')) {
-                addOutput('> ❌ Comando executado: Fechando janela...');
-                executeCommand('minimize');
-            } else if (command.includes('abrir arquivo')) {
-                addOutput('> 📁 Comando executado: Abrindo arquivo...');
-                executeCommand('open-file');
-            } else if (command.includes('trocar janela') || command.includes('alternar')) {
-                addOutput('> 🔄 Comando executado: Trocando janela...');
-                executeCommand('switch-window');
-            } else if (command.includes('ajuda') || command.includes('help')) {
-                addOutput('> 💡 Comandos disponíveis:');
-                addOutput('  - "Abrir navegador"');
-                addOutput('  - "Fechar janela"');
-                addOutput('  - "Abrir arquivo"');
-                addOutput('  - "Trocar janela"');
-                addOutput('  - "Parar" (para desativar o microfone)');
-            } else if (command.includes('parar') || command.includes('stop')) {
-                recognition.stop();
-                addOutput('> 🛑 Reconhecimento de voz parado por comando');
-            } else if (command.includes('teste') || command.includes('test')) {
-                addOutput('> ✅ Teste do microfone: FUNCIONANDO!');
-                addOutput('> 🎉 Seu microfone está captando a voz corretamente');
-            } else {
-                addOutput(`> ❓ Comando não reconhecido: "${command}"`);
-                addOutput('> Diga "ajuda" para ver comandos disponíveis');
-            }
+        // Função para atualizar status
+        function updateStatus(message) {
+            document.getElementById('status-bar').textContent = message;
+            setTimeout(() => {
+                document.getElementById('status-bar').textContent = 'EASYFACE ativo - Use TAB para navegar';
+            }, 3000);
         }
 
-        function updateMicrophoneStatus(active) {
-            const indicator = document.querySelector('.voice-indicator');
-            const statusText = document.querySelector('.voice-status span');
-            
-            if (active) {
-                indicator.style.background = '#e53e3e';
-                indicator.style.animation = 'pulse 0.5s infinite';
-                statusText.textContent = 'Microfone: OUVINDO';
-            } else {
-                indicator.style.background = '#48bb78';
-                indicator.style.animation = 'pulse 2s infinite';
-                statusText.textContent = 'Sistema de Voz: Ativo';
-            }
-        }
-
-        // Navegação por teclado aprimorada
+        // Event listeners para teclado
         document.addEventListener('keydown', function(e) {
-            // Feedback visual para teclas pressionadas
-            const keyDisplay = document.querySelector('.key-display');
-            const pressedKey = document.createElement('span');
-            pressedKey.className = 'key active';
-            pressedKey.textContent = e.key;
-            
-            // Atalhos especiais
-            if (e.altKey && e.key === 'm') {
-                e.preventDefault();
-                executeCommand('open-menu');
-            } else if (e.ctrlKey && e.key === 'o') {
-                e.preventDefault();
-                executeCommand('open-file');
+            // ESC volta ao menu principal
+            if (e.key === 'Escape') {
+                showApp('welcome');
+                document.querySelector('.menu-button').focus();
             }
             
-            // Feedback de tecla pressionada
-            addOutput(`> Tecla pressionada: ${e.key}`);
+            // Enter e Espaço ativam elementos focados
+            if (e.key === 'Enter' || e.key === ' ') {
+                const focused = document.activeElement;
+                if (focused.classList.contains('menu-button') || 
+                    focused.classList.contains('action-button') || 
+                    focused.classList.contains('calc-button') ||
+                    focused.classList.contains('key')) {
+                    e.preventDefault();
+                    focused.click();
+                }
+            }
+            
+            // Atalhos de teclado para apps (Ctrl + número)
+            if (e.ctrlKey) {
+                switch(e.key) {
+                    case '1':
+                        e.preventDefault();
+                        showTextEditor();
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        showCalculator();
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        showVirtualKeyboard();
+                        break;
+                    case '4':
+                        e.preventDefault();
+                        showWebBrowser();
+                        break;
+                    case '5':
+                        e.preventDefault();
+                        showAccessibilitySettings();
+                        break;
+                    case '6':
+                        e.preventDefault();
+                        showHelp();
+                        break;
+                }
+            }
         });
 
-        // Entrada por Enter no campo de comando
-        commandInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                processCommand();
-            }
+        // Adicionar feedback visual em todos os elementos interativos
+        document.addEventListener('DOMContentLoaded', function() {
+            const interactiveElements = document.querySelectorAll('.menu-button, .action-button, .calc-button, .key');
+            
+            interactiveElements.forEach(element => {
+                element.addEventListener('click', function() {
+                    this.classList.add('pulse');
+                    setTimeout(() => {
+                        this.classList.remove('pulse');
+                    }, 300);
+                });
+                
+                element.addEventListener('focus', function() {
+                    updateStatus(`Foco em: ${this.textContent || this.innerText}`);
+                });
+            });
         });
 
         // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
-            addOutput('> Interface acessível carregada com sucesso!');
+        window.addEventListener('load', function() {
+            updateStatus('EASYFACE carregado e pronto para uso!');
+            // Foco inicial no primeiro botão do menu
+            setTimeout(() => {
+                document.querySelector('.menu-button').focus();
+            }, 500);
+        });
+
+        // Suporte a comandos de voz (se disponível)
+        if ('webkitSpeechRecognition' in window) {
+            const recognition = new webkitSpeechRecognition();
+            recognition.lang = 'pt-BR';
+            recognition.continuous = false;
             
-            // Verificar suporte ao reconhecimento de voz
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                addOutput('> ✅ Reconhecimento de voz suportado neste navegador');
-                addOutput('> 🎤 Clique no botão "🎤 Falar" para testar o microfone');
-            } else {
-                addOutput('> ❌ Reconhecimento de voz não suportado');
-                addOutput('> 💡 Use Chrome, Edge ou Safari para melhor experiência');
+            function startVoiceCommand() {
+                recognition.start();
+                updateStatus('Escutando comando de voz...');
             }
             
-            addOutput('> Todos os recursos de acessibilidade estão disponíveis.');
+            recognition.onresult = function(event) {
+                const command = event.results[0][0].transcript.toLowerCase();
+                updateStatus(`Comando: ${command}`);
+                
+                if (command.includes('editor')) {
+                    showTextEditor();
+                } else if (command.includes('calculadora')) {
+                    showCalculator();
+                } else if (command.includes('teclado')) {
+                    showVirtualKeyboard();
+                } else if (command.includes('navegador')) {
+                    showWebBrowser();
+                } else if (command.includes('configurações')) {
+                    showAccessibilitySettings();
+                } else if (command.includes('ajuda')) {
+                    showHelp();
+                } else {
+                    updateStatus('Comando não reconhecido');
+                }
+            };
             
-            // Foco inicial no primeiro botão
-            document.querySelector('.command-btn').focus();
-        });
+            // Adicionar botão de comando de voz ao menu
+            window.addEventListener('load', function() {
+                const voiceButton = document.createElement('button');
+                voiceButton.className = 'menu-button';
+                voiceButton.innerHTML = '🎤 Comando de Voz';
+                voiceButton.onclick = startVoiceCommand;
+                voiceButton.tabIndex = 7;
+                document.querySelector('.sidebar').appendChild(voiceButton);
+            });
+        }
+
+        // Configurações do usuário (simuladas)
+        let userSettings = {
+            fontSize: 'medium',
+            highContrast: false,
+            soundsEnabled: true
+        };
+
+        function saveSettings() {
+            updateStatus('Configurações salvas!');
+        }
+
+        function loadSettings() {
+            changeFontSize(userSettings.fontSize);
+            if (userSettings.highContrast) toggleContrast();
+            soundsEnabled = userSettings.soundsEnabled;
+        }
+
+        // Carrega configurações ao iniciar
+        setTimeout(loadSettings, 1000);
     </script>
 </body>
 </html>
