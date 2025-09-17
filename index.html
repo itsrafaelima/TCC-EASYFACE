@@ -40,7 +40,6 @@
         </div>
 
         <div class="content-area" id="main-content" tabindex="-1">
-            <!-- Editor de Texto -->
             <div id="text-editor" class="hidden">
                 <h2>📝 Editor de Texto</h2>
                 <textarea id="text-area" class="text-input scannable" rows="10" 
@@ -51,7 +50,6 @@
                 <button class="action-button scannable" onclick="speakText()" tabindex="10" aria-label="Ler texto em voz alta">🔊 Ler Texto</button>
             </div>
 
-            <!-- Calculadora -->
             <div id="calculator-app" class="hidden">
                 <h2>🔢 Calculadora</h2>
                 <div class="calc-display" id="calc-display" aria-live="polite">0</div>
@@ -81,13 +79,11 @@
                 </div>
             </div>
 
-            <!-- Teclado Virtual -->
             <div id="virtual-keyboard-app" class="hidden">
                 <h2>⌨️ Teclado Virtual</h2>
                 <input type="text" id="keyboard-input" class="text-input scannable" 
                     placeholder="O texto digitado aparecerá aqui..." tabindex="29" aria-label="Entrada do teclado virtual">
                 <div class="virtual-keyboard">
-                    <!-- Primeira linha -->
                     <button class="key scannable" onclick="typeKey('1')" tabindex="30" aria-label="Tecla 1">1</button>
                     <button class="key scannable" onclick="typeKey('2')" tabindex="31" aria-label="Tecla 2">2</button>
                     <button class="key scannable" onclick="typeKey('3')" tabindex="32" aria-label="Tecla 3">3</button>
@@ -99,7 +95,6 @@
                     <button class="key scannable" onclick="typeKey('9')" tabindex="38" aria-label="Tecla 9">9</button>
                     <button class="key scannable" onclick="typeKey('0')" tabindex="39" aria-label="Tecla 0">0</button>
                     
-                    <!-- Segunda linha -->
                     <button class="key scannable" onclick="typeKey('Q')" tabindex="40" aria-label="Tecla Q">Q</button>
                     <button class="key scannable" onclick="typeKey('W')" tabindex="41" aria-label="Tecla W">W</button>
                     <button class="key scannable" onclick="typeKey('E')" tabindex="42" aria-label="Tecla E">E</button>
@@ -111,7 +106,6 @@
                     <button class="key scannable" onclick="typeKey('O')" tabindex="48" aria-label="Tecla O">O</button>
                     <button class="key scannable" onclick="typeKey('P')" tabindex="49" aria-label="Tecla P">P</button>
                     
-                    <!-- Terceira linha -->
                     <button class="key scannable" onclick="typeKey('A')" tabindex="50" aria-label="Tecla A">A</button>
                     <button class="key scannable" onclick="typeKey('S')" tabindex="51" aria-label="Tecla S">S</button>
                     <button class="key scannable" onclick="typeKey('D')" tabindex="52" aria-label="Tecla D">D</button>
@@ -123,7 +117,6 @@
                     <button class="key scannable" onclick="typeKey('L')" tabindex="58" aria-label="Tecla L">L</button>
                     <button class="key scannable" onclick="typeKey('Ç')" tabindex="59" aria-label="Tecla Ç">Ç</button>
                     
-                    <!-- Quarta linha -->
                     <button class="key scannable" onclick="typeKey('Z')" tabindex="60" aria-label="Tecla Z">Z</button>
                     <button class="key scannable" onclick="typeKey('X')" tabindex="61" aria-label="Tecla X">X</button>
                     <button class="key scannable" onclick="typeKey('C')" tabindex="62" aria-label="Tecla C">C</button>
@@ -135,7 +128,6 @@
                     <button class="key scannable" onclick="typeKey('.')" tabindex="68" aria-label="Tecla Ponto">.</button>
                     <button class="key scannable" onclick="typeKey(';')" tabindex="69" aria-label="Tecla Ponto e Vírgula">;</button>
                     
-                    <!-- Última linha -->
                     <button class="key space scannable" onclick="typeKey(' ')" tabindex="70" aria-label="Barra de Espaço">ESPAÇO</button>
                     <button class="key backspace scannable" onclick="backspaceKey()" tabindex="71" aria-label="Apagar caractere">⌫</button>
                     <button class="key enter scannable" onclick="enterKey()" tabindex="72" aria-label="Tecla Enter">ENTER</button>
@@ -143,7 +135,6 @@
                 </div>
             </div>
 
-            <!-- Navegador Web -->
             <div id="web-browser" class="hidden">
                 <h2>🌐 Navegador Simples</h2>
                 <input type="url" id="url-input" class="text-input scannable" 
@@ -156,7 +147,6 @@
                 </div>
             </div>
 
-            <!-- Configurações de Acessibilidade -->
             <div id="accessibility-settings" class="hidden">
                 <h2>⚙️ Configurações de Acessibilidade</h2>
                 <div class="settings-section">
@@ -182,7 +172,6 @@
                 </div>
             </div>
 
-            <!-- Central de Ajuda -->
             <div id="help" class="hidden">
                 <h2>❓ Central de Ajuda</h2>
                 <div class="help-content">
@@ -223,7 +212,6 @@
                 </div>
             </div>
 
-            <!-- Tela de Boas-vindas -->
             <div id="welcome" class="welcome-content">
                 <h2 class="welcome-title">Bem-vindo ao EASYFACE! 🎯</h2>
                 <p class="welcome-text">
@@ -242,12 +230,10 @@
         EASYFACE carregado! Use TAB para navegar pelos elementos.
     </div>
 
-    <!-- Indicador de Modo de Varredura -->
     <div id="scan-indicator" class="scan-mode-indicator" style="display: none;">
         🔄 MODO VARREDURA ATIVO - Pressione ENTER para selecionar
     </div>
 
-    <!-- Controles de Varredura -->
     <div id="scan-controls" class="scan-controls" style="display: none;">
         <h4>🔄 Controles de Varredura</h4>
         <button class="scan-control-button" onclick="pauseScanning()" id="pause-scan" aria-label="Pausar varredura">⏸️ Pausar</button>
@@ -350,16 +336,16 @@
         
         function showCalculator() { 
             showApp('calculator-app'); 
-            // Foca na calculadora quando aberta
+            // Foca no botão 7 quando a calculadora é aberta
             setTimeout(() => {
-                const button = document.querySelector('.calc-button[tabindex="11"]');
-                if (button) {
-                    button.focus();
-                    calcFocus = { row: 0, col: 0 };
+                const firstNumber = document.querySelector('.calc-button[data-key="7"]');
+                if (firstNumber) {
+                    firstNumber.focus();
+                    calcFocus = { row: 1, col: 0 }; // Posição do número 7 na grade
                     document.querySelectorAll('.calc-button').forEach(btn => {
                         btn.classList.remove('navigation-focus');
                     });
-                    button.classList.add('navigation-focus');
+                    firstNumber.classList.add('navigation-focus');
                 }
             }, 100);
         }
@@ -428,8 +414,13 @@
         }
 
         function calculateResult() {
+            if (calcExpression.trim() === '') {
+                calcDisplay = '0';
+                document.getElementById('calc-display').textContent = calcDisplay;
+                return;
+            }
+            
             try {
-                // Substitui os símbolos visuais pelos operadores matemáticos reais
                 const expressionToEval = calcExpression
                     .replace(/×/g, '*')
                     .replace(/÷/g, '/')
@@ -489,64 +480,6 @@
                     btn.classList.remove('navigation-focus');
                 });
                 element.classList.add('navigation-focus');
-                
-                console.log(`Movido para: linha ${newRow}, coluna ${newCol}, tabIndex ${tabIndex}`); // Debug
-            }
-        }
-
-        function handleCalculatorKeyPress(e) {
-            if (currentApp !== 'calculator-app') return;
-            
-            const key = e.key;
-            
-            // Navegação com setas
-            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
-                e.preventDefault();
-                
-                if (key === 'ArrowRight') moveCalcFocus(0, 1);
-                if (key === 'ArrowLeft') moveCalcFocus(0, -1);
-                if (key === 'ArrowDown') moveCalcFocus(1, 0);
-                if (key === 'ArrowUp') moveCalcFocus(-1, 0);
-                
-                return;
-            }
-            
-            // Teclas numéricas e operadores
-            if ('0123456789.+-*/'.includes(key)) {
-                e.preventDefault();
-                addToCalc(key);
-                return;
-            }
-            
-            // Tecla Enter (calcular)
-            if (key === 'Enter') {
-                e.preventDefault();
-                calculateResult();
-                return;
-            }
-            
-            // Tecla Escape (limpar)
-            if (key === 'Escape') {
-                e.preventDefault();
-                clearCalc();
-                return;
-            }
-            
-            // Tecla Backspace (apagar)
-            if (key === 'Backspace') {
-                e.preventDefault();
-                deleteLast();
-                return;
-            }
-            
-            // Tecla de espaço (clicar no botão com foco)
-            if (key === ' ') {
-                e.preventDefault();
-                const tabIndex = calcGrid[calcFocus.row][calcFocus.col];
-                const element = document.querySelector(`.calc-button[tabindex="${tabIndex}"]`);
-                if (element) {
-                    element.click();
-                }
             }
         }
 
@@ -911,50 +844,19 @@
 
         // ===== INICIALIZAÇÃO DA CALCULADORA =====
         function initCalculator() {
-            // Quando a calculadora ganha foco, posiciona no botão C
             const calculatorApp = document.getElementById('calculator-app');
-            if (calculatorApp) {
-                calculatorApp.addEventListener('focusin', function() {
-                    calcFocus = { row: 0, col: 0 };
-                    setTimeout(() => {
-                        const button = document.querySelector('.calc-button[tabindex="11"]');
-                        if (button) {
-                            button.focus();
-                            document.querySelectorAll('.calc-button').forEach(btn => {
-                                btn.classList.remove('navigation-focus');
-                            });
-                            button.classList.add('navigation-focus');
-                        }
-                    }, 50);
-                });
-            }
-            
-            // Quando um botão é clicado com mouse, atualiza o foco de navegação
+            if (!calculatorApp) return;
+
+            // Atualiza calcFocus quando um botão ganha foco
             document.querySelectorAll('.calc-button').forEach(button => {
-                button.addEventListener('click', function() {
-                    // Encontra a posição deste botão na grade
+                button.addEventListener('focus', function () {
                     for (let row = 0; row < calcGrid.length; row++) {
                         for (let col = 0; col < calcGrid[row].length; col++) {
                             if (calcGrid[row][col] === parseInt(this.getAttribute('tabindex'))) {
                                 calcFocus = { row, col };
+                                document.querySelectorAll('.calc-button').forEach(btn => btn.classList.remove('navigation-focus'));
                                 this.classList.add('navigation-focus');
-                                break;
-                            }
-                        }
-                    }
-                });
-                
-                button.addEventListener('focus', function() {
-                    // Atualiza o foco quando um botão recebe foco via TAB
-                    for (let row = 0; row < calcGrid.length; row++) {
-                        for (let col = 0; col < calcGrid[row].length; col++) {
-                            if (calcGrid[row][col] === parseInt(this.getAttribute('tabindex'))) {
-                                calcFocus = { row, col };
-                                document.querySelectorAll('.calc-button').forEach(btn => {
-                                    btn.classList.remove('navigation-focus');
-                                });
-                                this.classList.add('navigation-focus');
-                                break;
+                                return;
                             }
                         }
                     }
@@ -962,9 +864,47 @@
             });
         }
 
-        // ===== EVENT LISTENERS =====
+        // ===== EVENT LISTENERS GERAL (ÚNICO E CONSOLIDADO) =====
         document.addEventListener('keydown', function(e) {
-            // Se estiver no modo de varredura, ENTER seleciona o elemento destacado
+            const focused = document.activeElement;
+            const isCalcButtonFocused = focused && focused.classList.contains('calc-button');
+            
+            // Lógica de navegação da calculadora com setas e outras teclas
+            if (currentApp === 'calculator-app' && isCalcButtonFocused) {
+                const key = e.key;
+                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+                    e.preventDefault();
+                    if (key === 'ArrowRight') moveCalcFocus(0, 1);
+                    else if (key === 'ArrowLeft') moveCalcFocus(0, -1);
+                    else if (key === 'ArrowDown') moveCalcFocus(1, 0);
+                    else if (key === 'ArrowUp') moveCalcFocus(-1, 0);
+                    return;
+                }
+                
+                if ('0123456789.+-*/'.includes(key)) {
+                    e.preventDefault();
+                    addToCalc(key);
+                    return;
+                } else if (key === 'Enter') {
+                    e.preventDefault();
+                    if (focused && focused.classList.contains('calc-button')) {
+                        focused.click();
+                    } else {
+                        calculateResult();
+                    }
+                    return;
+                } else if (key === 'Escape') {
+                    e.preventDefault();
+                    clearCalc();
+                    return;
+                } else if (key === 'Backspace') {
+                    e.preventDefault();
+                    deleteLast();
+                    return;
+                }
+            }
+
+            // Lógica de varredura automática (após a calculadora)
             if (scanMode && e.key === 'Enter') {
                 e.preventDefault();
                 if (selectCurrentScanElement()) {
@@ -981,6 +921,8 @@
                     const firstButton = document.querySelector('.menu-button');
                     if (firstButton) firstButton.focus();
                 }
+                e.preventDefault();
+                return;
             }
             
             // Barra de espaço para pausar varredura
@@ -988,30 +930,6 @@
                 e.preventDefault();
                 pauseScanning();
                 return;
-            }
-            
-            // Enter e Espaço ativam elementos focados (apenas se não estiver em modo varredura)
-            if (!scanMode && (e.key === 'Enter' || e.key === ' ')) {
-                const focused = document.activeElement;
-                
-                // Não interceptar espaço em campos de texto
-                if (e.key === ' ' && (focused.tagName === 'TEXTAREA' || focused.tagName === 'INPUT')) {
-                    return; // Permite comportamento normal do espaço em campos de texto
-                }
-                
-                // Não interceptar setas na calculadora - deixa para handleCalculatorKeyPress
-                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) && currentApp === 'calculator-app') {
-                    return;
-                }
-                
-                if (focused.classList.contains('menu-button') || 
-                    focused.classList.contains('action-button') || 
-                    focused.classList.contains('calc-button') ||
-                    focused.classList.contains('key') ||
-                    focused.classList.contains('scannable')) {
-                    e.preventDefault();
-                    focused.click();
-                }
             }
             
             // Atalhos de teclado para apps (Ctrl + número)
@@ -1053,9 +971,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Inicializar a calculadora
             initCalculator();
-            
-            // Adiciona listener para teclas da calculadora
-            document.addEventListener('keydown', handleCalculatorKeyPress);
         });
 
         window.addEventListener('load', function() {
