@@ -28,9 +28,6 @@
             <button class="menu-button scannable" onclick="showCalculator()" tabindex="3" aria-label="Abrir Calculadora">
                 🔢 Calculadora
             </button>
-            <button class="menu-button scannable" onclick="showVirtualKeyboard()" tabindex="4" aria-label="Abrir Teclado Virtual">
-                ⌨️ Teclado Virtual
-            </button>
             <button class="menu-button scannable" onclick="showSiteLauncher()" tabindex="5" aria-label="Abrir Launcher de Sites">
                 🌐 Sites Seguros
             </button>
@@ -106,62 +103,6 @@
                     
                     <button class="calc-button scannable" onclick="addToCalc('0')" tabindex="27" style="grid-column: span 2;" data-key="0">0</button>
                     <button class="calc-button scannable" onclick="addToCalc('.')" tabindex="28" data-key=".">.</button>
-                </div>
-            </div>
-
-            <div id="virtual-keyboard-app" class="app-container hidden">
-                <h2>⌨️ Teclado Virtual</h2>
-                <input type="text" id="keyboard-input" class="text-input scannable" 
-                    placeholder="O texto digitado aparecerá aqui..." tabindex="29" aria-label="Entrada do teclado virtual">
-                <div class="virtual-keyboard">
-                    <button class="key scannable" onclick="typeKey('1')" tabindex="30" aria-label="Tecla 1">1</button>
-                    <button class="key scannable" onclick="typeKey('2')" tabindex="31" aria-label="Tecla 2">2</button>
-                    <button class="key scannable" onclick="typeKey('3')" tabindex="32" aria-label="Tecla 3">3</button>
-                    <button class="key scannable" onclick="typeKey('4')" tabindex="33" aria-label="Tecla 4">4</button>
-                    <button class="key scannable" onclick="typeKey('5')" tabindex="34" aria-label="Tecla 5">5</button>
-                    <button class="key scannable" onclick="typeKey('6')" tabindex="35" aria-label="Tecla 6">6</button>
-                    <button class="key scannable" onclick="typeKey('7')" tabindex="36" aria-label="Tecla 7">7</button>
-                    <button class="key scannable" onclick="typeKey('8')" tabindex="37" aria-label="Tecla 8">8</button>
-                    <button class="key scannable" onclick="typeKey('9')" tabindex="38" aria-label="Tecla 9">9</button>
-                    <button class="key scannable" onclick="typeKey('0')" tabindex="39" aria-label="Tecla 0">0</button>
-                    
-                    <button class="key scannable" onclick="typeKey('Q')" tabindex="40" aria-label="Tecla Q">Q</button>
-                    <button class="key scannable" onclick="typeKey('W')" tabindex="41" aria-label="Tecla W">W</button>
-                    <button class="key scannable" onclick="typeKey('E')" tabindex="42" aria-label="Tecla E">E</button>
-                    <button class="key scannable" onclick="typeKey('R')" tabindex="43" aria-label="Tecla R">R</button>
-                    <button class="key scannable" onclick="typeKey('T')" tabindex="44" aria-label="Tecla T">T</button>
-                    <button class="key scannable" onclick="typeKey('Y')" tabindex="45" aria-label="Tecla Y">Y</button>
-                    <button class="key scannable" onclick="typeKey('U')" tabindex="46" aria-label="Tecla U">U</button>
-                    <button class="key scannable" onclick="typeKey('I')" tabindex="47" aria-label="Tecla I">I</button>
-                    <button class="key scannable" onclick="typeKey('O')" tabindex="48" aria-label="Tecla O">O</button>
-                    <button class="key scannable" onclick="typeKey('P')" tabindex="49" aria-label="Tecla P">P</button>
-                    
-                    <button class="key scannable" onclick="typeKey('A')" tabindex="50" aria-label="Tecla A">A</button>
-                    <button class="key scannable" onclick="typeKey('S')" tabindex="51" aria-label="Tecla S">S</button>
-                    <button class="key scannable" onclick="typeKey('D')" tabindex="52" aria-label="Tecla D">D</button>
-                    <button class="key scannable" onclick="typeKey('F')" tabindex="53" aria-label="Tecla F">F</button>
-                    <button class="key scannable" onclick="typeKey('G')" tabindex="54" aria-label="Tecla G">G</button>
-                    <button class="key scannable" onclick="typeKey('H')" tabindex="55" aria-label="Tecla H">H</button>
-                    <button class="key scannable" onclick="typeKey('J')" tabindex="56" aria-label="Tecla J">J</button>
-                    <button class="key scannable" onclick="typeKey('K')" tabindex="57" aria-label="Tecla K">K</button>
-                    <button class="key scannable" onclick="typeKey('L')" tabindex="58" aria-label="Tecla L">L</button>
-                    <button class="key scannable" onclick="typeKey('Ç')" tabindex="59" aria-label="Tecla Ç">Ç</button>
-                    
-                    <button class="key scannable" onclick="typeKey('Z')" tabindex="60" aria-label="Tecla Z">Z</button>
-                    <button class="key scannable" onclick="typeKey('X')" tabindex="61" aria-label="Tecla X">X</button>
-                    <button class="key scannable" onclick="typeKey('C')" tabindex="62" aria-label="Tecla C">C</button>
-                    <button class="key scannable" onclick="typeKey('V')" tabindex="63" aria-label="Tecla V">V</button>
-                    <button class="key scannable" onclick="typeKey('B')" tabindex="64" aria-label="Tecla B">B</button>
-                    <button class="key scannable" onclick="typeKey('N')" tabindex="65" aria-label="Tecla N">N</button>
-                    <button class="key scannable" onclick="typeKey('M')" tabindex="66" aria-label="Tecla M">M</button>
-                    <button class="key scannable" onclick="typeKey(',')" tabindex="67" aria-label="Tecla Vírgula">,</button>
-                    <button class="key scannable" onclick="typeKey('.')" tabindex="68" aria-label="Tecla Ponto">.</button>
-                    <button class="key scannable" onclick="typeKey(';')" tabindex="69" aria-label="Tecla Ponto e Vírgula">;</button>
-                    
-                    <button class="key space scannable" onclick="typeKey(' ')" tabindex="70" aria-label="Barra de Espaço">ESPAÇO</button>
-                    <button class="key backspace scannable" onclick="backspaceKey()" tabindex="71" aria-label="Apagar caractere">⌫</button>
-                    <button class="key enter scannable" onclick="enterKey()" tabindex="72" aria-label="Tecla Enter">ENTER</button>
-                    <button class="key scannable" onclick="clearKeyboard()" tabindex="73" aria-label="Limpar texto">LIMPAR</button>
                 </div>
             </div>
 
@@ -492,10 +433,6 @@
                     firstNumber.classList.add('navigation-focus');
                 }
             }, 100);
-        }
-        
-        function showVirtualKeyboard() { 
-            showApp('virtual-keyboard-app'); 
         }
         
         function showSiteLauncher() { 
@@ -877,32 +814,6 @@
                 });
                 element.classList.add('navigation-focus');
             }
-        }
-
-        // ===== FUNÇÕES DO TECLADO VIRTUAL =====
-        function typeKey(key) {
-            const input = document.getElementById('keyboard-input');
-            input.value += key;
-            input.focus();
-            playFeedbackSound();
-        }
-
-        function backspaceKey() {
-            const input = document.getElementById('keyboard-input');
-            input.value = input.value.slice(0, -1);
-            playFeedbackSound();
-        }
-
-        function enterKey() {
-            const input = document.getElementById('keyboard-input');
-            input.value += '\n';
-            playFeedbackSound();
-        }
-
-        function clearKeyboard() {
-            document.getElementById('keyboard-input').value = '';
-            updateStatus('Texto limpo');
-            playFeedbackSound();
         }
 
         // ===== FUNÇÕES DO LAUNCHER DE SITE =====
@@ -1380,19 +1291,35 @@ function launchCustomSite() {
                         break;
                     case '3':
                         e.preventDefault();
-                        showVirtualKeyboard();
+                        showSiteLauncher();
                         break;
                     case '4':
                         e.preventDefault();
-                        showWebBrowser();
+                        showAccessibilitySettings();
                         break;
                     case '5':
                         e.preventDefault();
-                        showAccessibilitySettings();
-                        break;
-                    case '6':
-                        e.preventDefault();
                         showHelp();
+                        break;
+                    case '6': 
+                        e.preventDefault();
+                        showFileManager();
+                        break;
+                    case '7':
+                        e.preventDefault();
+                        showCommunicationAid();
+                        break;
+                    case '7':
+                        e.preventDefault();
+                        showMediaPlayer();
+                        break;
+                    case '8':
+                        e.preventDefault();
+                        showPdfReader();
+                        break;
+                    case '9':
+                        e.preventDefault();
+                        showEmailIntegration();
                         break;
                     case 's':
                         e.preventDefault();
