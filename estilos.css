@@ -411,3 +411,208 @@ body {
 .font-large {
     font-size: 22px;
 }
+
+/* Gerenciador de Arquivos */
+.file-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.file-content {
+    margin: 15px 0;
+}
+
+.file-info, .media-info, .pdf-info {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    margin: 10px 0;
+    min-height: 20px;
+}
+
+/* Reprodutor de Mídia */
+.media-controls {
+    margin-bottom: 15px;
+}
+
+.media-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.media-container audio, .media-container video {
+    width: 100%;
+    border-radius: 8px;
+}
+
+/* Leitor de PDF */
+.pdf-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.pdf-container {
+    width: 100%;
+    overflow: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 15px 0;
+    background: #f0f0f0;
+    min-height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#pdf-canvas {
+    margin: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Ferramenta de Comunicação Alternativa */
+.communication-output {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.communication-display {
+    min-height: 80px;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: #f8f9fa;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.communication-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.category-button {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+}
+
+.phrases-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.phrase-button {
+    padding: 15px 10px;
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.phrase-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Integração de E-mail */
+.email-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.email-compose {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.email-compose h3 {
+    margin-bottom: 15px;
+    color: #4a5568;
+}
+
+/* Personalização de Atalhos */
+.shortcut-settings {
+    margin: 15px 0;
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.shortcut-item label {
+    width: 200px;
+    font-weight: normal;
+}
+
+.shortcut-input {
+    width: 50px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Melhorias de responsividade */
+@media (max-width: 768px) {
+    .pdf-controls, .communication-categories, .email-options {
+        flex-direction: column;
+    }
+    
+    .phrases-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .shortcut-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .shortcut-item label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}
+
+/* Melhorias de alto contraste para novos elementos */
+.high-contrast .phrase-button,
+.high-contrast .category-button,
+.high-contrast .shortcut-input {
+    border: 2px solid yellow !important;
+}
+
+.high-contrast .communication-display {
+    border: 3px solid yellow;
+    background: black;
+    color: yellow;
+}
+
+.high-contrast .file-info,
+.high-contrast .media-info,
+.high-contrast .pdf-info {
+    border: 2px solid yellow;
+    background: black;
+    color: yellow;
+}

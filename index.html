@@ -22,19 +22,34 @@
             <button class="menu-button scannable" onclick="showTextEditor()" tabindex="1" aria-label="Abrir Editor de Texto">
                 📝 Editor de Texto
             </button>
-            <button class="menu-button scannable" onclick="showCalculator()" tabindex="2" aria-label="Abrir Calculadora">
+            <button class="menu-button scannable" onclick="showFileManager()" tabindex="2" aria-label="Abrir Gerenciador de Arquivos">
+                📁 Gerenciador de Arquivos
+            </button>
+            <button class="menu-button scannable" onclick="showCalculator()" tabindex="3" aria-label="Abrir Calculadora">
                 🔢 Calculadora
             </button>
-            <button class="menu-button scannable" onclick="showVirtualKeyboard()" tabindex="3" aria-label="Abrir Teclado Virtual">
+            <button class="menu-button scannable" onclick="showVirtualKeyboard()" tabindex="4" aria-label="Abrir Teclado Virtual">
                 ⌨️ Teclado Virtual
             </button>
-            <button class="menu-button scannable" onclick="showWebBrowser()" tabindex="4" aria-label="Abrir Navegador Web">
+            <button class="menu-button scannable" onclick="showWebBrowser()" tabindex="5" aria-label="Abrir Navegador Web">
                 🌐 Navegador Web
             </button>
-            <button class="menu-button scannable" onclick="showAccessibilitySettings()" tabindex="5" aria-label="Abrir Configurações de Acessibilidade">
+            <button class="menu-button scannable" onclick="showMediaPlayer()" tabindex="6" aria-label="Abrir Reprodutor de Mídia">
+                🎵 Reprodutor de Mídia
+            </button>
+            <button class="menu-button scannable" onclick="showPdfReader()" tabindex="7" aria-label="Abrir Leitor de PDF">
+                📄 Leitor de PDF
+            </button>
+            <button class="menu-button scannable" onclick="showCommunicationAid()" tabindex="8" aria-label="Abrir Ferramenta de Comunicação">
+                💬 Comunicação Alternativa
+            </button>
+            <button class="menu-button scannable" onclick="showEmailIntegration()" tabindex="9" aria-label="Abrir Integração de E-mail">
+                ✉️ Integração de E-mail
+            </button>
+            <button class="menu-button scannable" onclick="showAccessibilitySettings()" tabindex="10" aria-label="Abrir Configurações de Acessibilidade">
                 ⚙️ Configurações
             </button>
-            <button class="menu-button scannable" onclick="showHelp()" tabindex="6" aria-label="Abrir Ajuda">
+            <button class="menu-button scannable" onclick="showHelp()" tabindex="11" aria-label="Abrir Ajuda">
                 ❓ Ajuda
             </button>
         </div>
@@ -44,10 +59,25 @@
                 <h2>📝 Editor de Texto</h2>
                 <textarea id="text-area" class="text-input scannable" rows="10" 
                     placeholder="Digite seu texto aqui... Use TAB para navegar pelos botões abaixo."
-                    tabindex="7" aria-label="Área de edição de texto"></textarea>
-                <button class="action-button scannable" onclick="saveText()" tabindex="8" aria-label="Salvar texto">💾 Salvar Texto</button>
-                <button class="action-button scannable" onclick="clearText()" tabindex="9" aria-label="Limpar texto">🗑️ Limpar</button>
-                <button class="action-button scannable" onclick="speakText()" tabindex="10" aria-label="Ler texto em voz alta">🔊 Ler Texto</button>
+                    tabindex="12" aria-label="Área de edição de texto"></textarea>
+                <button class="action-button scannable" onclick="saveText()" tabindex="13" aria-label="Salvar texto">💾 Salvar Texto</button>
+                <button class="action-button scannable" onclick="clearText()" tabindex="14" aria-label="Limpar texto">🗑️ Limpar</button>
+                <button class="action-button scannable" onclick="speakText()" tabindex="15" aria-label="Ler texto em voz alta">🔊 Ler Texto</button>
+            </div>
+
+            <div id="file-manager" class="hidden">
+                <h2>📁 Gerenciador de Arquivos</h2>
+                <div class="file-actions">
+                    <input type="file" id="file-input" class="hidden" accept=".txt">
+                    <button class="action-button scannable" onclick="document.getElementById('file-input').click()" tabindex="16" aria-label="Abrir arquivo de texto">📂 Abrir Arquivo</button>
+                    <button class="action-button scannable" onclick="saveTextFile()" tabindex="17" aria-label="Salvar arquivo de texto">💾 Salvar Como</button>
+                </div>
+                <div id="file-content" class="file-content">
+                    <textarea id="file-text-area" class="text-input scannable" rows="10" 
+                        placeholder="Conteúdo do arquivo aparecerá aqui..."
+                        tabindex="18" aria-label="Conteúdo do arquivo"></textarea>
+                </div>
+                <div id="file-info" class="file-info" aria-live="polite"></div>
             </div>
 
             <div id="calculator-app" class="hidden">
@@ -147,28 +177,109 @@
                 </div>
             </div>
 
+            <div id="media-player" class="hidden">
+                <h2>🎵 Reprodutor de Mídia</h2>
+                <div class="media-controls">
+                    <input type="file" id="media-input" class="hidden" accept="audio/*,video/*">
+                    <button class="action-button scannable" onclick="document.getElementById('media-input').click()" tabindex="19" aria-label="Selecionar arquivo de mídia">📁 Selecionar Mídia</button>
+                </div>
+                <div class="media-container">
+                    <audio id="audio-player" controls class="hidden" aria-label="Reprodutor de áudio"></audio>
+                    <video id="video-player" controls class="hidden" aria-label="Reprodutor de vídeo"></video>
+                </div>
+                <div id="media-info" class="media-info" aria-live="polite"></div>
+            </div>
+
+            <div id="pdf-reader" class="hidden">
+                <h2>📄 Leitor de PDF</h2>
+                <div class="pdf-controls">
+                    <input type="file" id="pdf-input" class="hidden" accept=".pdf">
+                    <button class="action-button scannable" onclick="document.getElementById('pdf-input').click()" tabindex="20" aria-label="Abrir arquivo PDF">📂 Abrir PDF</button>
+                    <button class="action-button scannable" onclick="prevPage()" tabindex="21" aria-label="Página anterior">⬅️ Anterior</button>
+                    <button class="action-button scannable" onclick="nextPage()" tabindex="22" aria-label="Próxima página">➡️ Próxima</button>
+                    <button class="action-button scannable" onclick="zoomIn()" tabindex="23" aria-label="Aumentar zoom">➕ Zoom +</button>
+                    <button class="action-button scannable" onclick="zoomOut()" tabindex="24" aria-label="Diminuir zoom">➖ Zoom -</button>
+                </div>
+                <div id="pdf-container" class="pdf-container">
+                    <canvas id="pdf-canvas" aria-label="Visualização do documento PDF"></canvas>
+                </div>
+                <div id="pdf-info" class="pdf-info" aria-live="polite">Página 0 de 0</div>
+            </div>
+
+            <div id="communication-aid" class="hidden">
+                <h2>💬 Comunicação Alternativa</h2>
+                <div class="communication-output">
+                    <div id="communication-display" class="communication-display" aria-live="polite">
+                        Sua mensagem aparecerá aqui...
+                    </div>
+                    <button class="action-button scannable" onclick="speakCommunication()" tabindex="25" aria-label="Falar mensagem">🔊 Falar</button>
+                    <button class="action-button scannable" onclick="clearCommunication()" tabindex="26" aria-label="Limpar mensagem">🗑️ Limpar</button>
+                </div>
+                <div class="communication-categories">
+                    <button class="category-button scannable" onclick="showPhrases('saudacoes')" tabindex="27" aria-label="Saudações">👋 Saudações</button>
+                    <button class="category-button scannable" onclick="showPhrases('necessidades')" tabindex="28" aria-label="Necessidades">🍽️ Necessidades</button>
+                    <button class="category-button scannable" onclick="showPhrases('sentimentos')" tabindex="29" aria-label="Sentimentos">❤️ Sentimentos</button>
+                    <button class="category-button scannable" onclick="showPhrases('emergencia')" tabindex="30" aria-label="Emergência">🚨 Emergência</button>
+                </div>
+                <div id="phrases-container" class="phrases-container">
+                </div>
+            </div>
+
+            <div id="email-integration" class="hidden">
+                <h2>✉️ Integração de E-mail</h2>
+                <div class="email-options">
+                    <button class="action-button scannable" onclick="openGmail()" tabindex="31" aria-label="Abrir Gmail">📧 Abrir Gmail</button>
+                    <button class="action-button scannable" onclick="openWhatsApp()" tabindex="32" aria-label="Abrir WhatsApp">💬 Abrir WhatsApp</button>
+                </div>
+                <div class="email-compose">
+                    <h3>Enviar Mensagem Rápida</h3>
+                    <input type="email" id="email-to" class="text-input scannable" placeholder="Para (e-mail)" tabindex="33" aria-label="Destinatário do e-mail">
+                    <input type="text" id="email-subject" class="text-input scannable" placeholder="Assunto" tabindex="34" aria-label="Assunto do e-mail">
+                    <textarea id="email-body" class="text-input scannable" rows="5" placeholder="Mensagem..." tabindex="35" aria-label="Corpo do e-mail"></textarea>
+                    <button class="action-button scannable" onclick="sendEmail()" tabindex="36" aria-label="Enviar e-mail">📤 Enviar</button>
+                </div>
+            </div>
+
             <div id="accessibility-settings" class="hidden">
                 <h2>⚙️ Configurações de Acessibilidade</h2>
                 <div class="settings-section">
                     <label class="settings-label">Tamanho da Fonte:</label>
-                    <button class="action-button scannable" onclick="changeFontSize('small')" tabindex="76" aria-label="Definir fonte pequena">🔍 Pequena</button>
-                    <button class="action-button scannable" onclick="changeFontSize('medium')" tabindex="77" aria-label="Definir fonte média">📖 Média</button>
-                    <button class="action-button scannable" onclick="changeFontSize('large')" tabindex="78" aria-label="Definir fonte grande">📘 Grande</button>
+                    <button class="action-button scannable" onclick="changeFontSize('small')" tabindex="37" aria-label="Definir fonte pequena">🔍 Pequena</button>
+                    <button class="action-button scannable" onclick="changeFontSize('medium')" tabindex="38" aria-label="Definir fonte média">📖 Média</button>
+                    <button class="action-button scannable" onclick="changeFontSize('large')" tabindex="39" aria-label="Definir fonte grande">📘 Grande</button>
                 </div>
                 <div class="settings-section">
                     <label class="settings-label">Contraste:</label>
-                    <button class="action-button scannable" onclick="toggleContrast()" tabindex="79" aria-label="Alternar alto contraste">🎨 Alto Contraste</button>
+                    <button class="action-button scannable" onclick="toggleContrast()" tabindex="40" aria-label="Alternar alto contraste">🎨 Alto Contraste</button>
                 </div>
                 <div class="settings-section">
                     <label class="settings-label">Sons:</label>
-                    <button class="action-button scannable" onclick="toggleSounds()" tabindex="80" aria-label="Alternar sons de feedback">🔊 Sons de Feedback</button>
+                    <button class="action-button scannable" onclick="toggleSounds()" tabindex="41" aria-label="Alternar sons de feedback">🔊 Sons de Feedback</button>
                 </div>
                 <div class="settings-section">
                     <label class="settings-label">Varredura Automática:</label>
-                    <button class="action-button scannable" onclick="toggleScanMode()" tabindex="81" id="scan-toggle" aria-label="Ativar modo de varredura automática">🔄 Ativar Varredura</button>
-                    <button class="action-button scannable" onclick="setScanSpeed(3000)" tabindex="82" aria-label="Definir velocidade lenta de varredura">🌊 Lenta</button>
-                    <button class="action-button scannable" onclick="setScanSpeed(2000)" tabindex="83" aria-label="Definir velocidade normal de varredura">🚶 Normal</button>
-                    <button class="action-button scannable" onclick="setScanSpeed(1000)" tabindex="84" aria-label="Definir velocidade rápida de varredura">🏃 Rápida</button>
+                    <button class="action-button scannable" onclick="toggleScanMode()" tabindex="42" id="scan-toggle" aria-label="Ativar modo de varredura automática">🔄 Ativar Varredura</button>
+                    <button class="action-button scannable" onclick="setScanSpeed(3000)" tabindex="43" aria-label="Definir velocidade lenta de varredura">🌊 Lenta</button>
+                    <button class="action-button scannable" onclick="setScanSpeed(2000)" tabindex="44" aria-label="Definir velocidade normal de varredura">🚶 Normal</button>
+                    <button class="action-button scannable" onclick="setScanSpeed(1000)" tabindex="45" aria-label="Definir velocidade rápida de varredura">🏃 Rápida</button>
+                </div>
+                <div class="settings-section">
+                    <h3>⌨️ Personalizar Atalhos</h3>
+                    <div class="shortcut-settings">
+                        <div class="shortcut-item">
+                            <label>Editor de Texto:</label>
+                            <input type="text" class="shortcut-input" id="shortcut-text" maxlength="2" value="1" aria-label="Atalho para Editor de Texto">
+                        </div>
+                        <div class="shortcut-item">
+                            <label>Gerenciador de Arquivos:</label>
+                            <input type="text" class="shortcut-input" id="shortcut-file" maxlength="2" value="2" aria-label="Atalho para Gerenciador de Arquivos">
+                        </div>
+                        <div class="shortcut-item">
+                            <label>Calculadora:</label>
+                            <input type="text" class="shortcut-input" id="shortcut-calc" maxlength="2" value="3" aria-label="Atalho para Calculadora">
+                        </div>
+                    </div>
+                    <button class="action-button scannable" onclick="saveShortcuts()" tabindex="46" aria-label="Salvar atalhos personalizados">💾 Salvar Atalhos</button>
                 </div>
             </div>
 
@@ -240,6 +351,8 @@
         <button class="scan-control-button" onclick="toggleScanMode()" aria-label="Desativar varredura">⏹ Desativar</button>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+
     <script>
         // ===== VARIÁVEIS GLOBAIS =====
         let currentApp = 'welcome';
@@ -265,6 +378,19 @@
             [23, 24, 25, 26],   // 1, 2, 3, =
             [27, 27, 28, 26]    // 0 (span 2), ., = (duplicado para mapeamento)
         ];
+
+        // Variáveis Novas Funcionalidades
+        let currentPdf = null;
+        let currentPage = 1;
+        let pdfTotalPages = 0;
+        let pdfScale = 1.5;
+        let customShortcuts = {};
+        let communicationPhrases = {
+            saudacoes: ["Olá", "Bom dia", "Boa tarde", "Boa noite", "Tudo bem?", "Prazer em conhecê-lo"],
+            necessidades: ["Estou com fome", "Estou com sede", "Preciso ir ao banheiro", "Estou com dor", "Preciso de ajuda"],
+            sentimentos: ["Estou feliz", "Estou triste", "Estou cansado", "Estou com medo", "Estou com raiva"],
+            emergencia: ["Preciso de ajuda urgente", "Chame um médico", "Ligue para minha família", "Não estou me sentindo bem"]
+        };
 
         // Lista de domínios seguros
         const safeDomains = [
@@ -364,6 +490,258 @@
         
         function showHelp() { 
             showApp('help'); 
+        }
+
+        // ===== FUNÇÕES EXPLORADOR DE ARQUIVOS =====
+        function showFileManager() {
+            showApp('file-manager');
+        }
+
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('file-text-area').value = e.target.result;
+                    document.getElementById('file-info').textContent = `Arquivo "${file.name}" carregado com sucesso.`;
+                    speakFeedback(`Arquivo ${file.name} carregado com sucesso`);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function saveTextFile() {
+            const text = document.getElementById('file-text-area').value;
+            if (text.trim()) {
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'documento.txt';
+                a.click();
+                document.getElementById('file-info').textContent = 'Arquivo salvo com sucesso!';
+                speakFeedback('Arquivo salvo com sucesso');
+            } else {
+                document.getElementById('file-info').textContent = 'Nenhum texto para salvar.';
+            }
+        }
+
+        // ===== FUNÇÕES REPRODUTOR AÚDIO =====
+
+        function showMediaPlayer() {
+            showApp('media-player');
+        }
+
+        document.getElementById('media-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                if (file.type.startsWith('audio/')) {
+                    document.getElementById('audio-player').classList.remove('hidden');
+                    document.getElementById('video-player').classList.add('hidden');
+                    document.getElementById('audio-player').src = url;
+                } else if (file.type.startsWith('video/')) {
+                    document.getElementById('video-player').classList.remove('hidden');
+                    document.getElementById('audio-player').classList.add('hidden');
+                    document.getElementById('video-player').src = url;
+                }
+                document.getElementById('media-info').textContent = `Mídia "${file.name}" carregada.`;
+                speakFeedback(`Mídia ${file.name} carregada`);
+            }
+        });
+
+        // ===== FUNÇÕES LEITOR PDF =====
+
+        function showPdfReader() {
+            showApp('pdf-reader');
+            // Inicializar PDF.js
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
+        }
+
+        document.getElementById('pdf-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                const fileReader = new FileReader();
+                fileReader.onload = function() {
+                    const typedarray = new Uint8Array(this.result);
+                    loadPdf(typedarray);
+                };
+                fileReader.readAsArrayBuffer(file);
+                document.getElementById('pdf-info').textContent = `PDF "${file.name}" carregado.`;
+                speakFeedback(`PDF ${file.name} carregado`);
+            }
+        });
+
+        function loadPdf(data) {
+            pdfjsLib.getDocument(data).promise.then(function(pdf) {
+                currentPdf = pdf;
+                pdfTotalPages = pdf.numPages;
+                currentPage = 1;
+                renderPage(currentPage);
+            });
+        }
+
+        function renderPage(pageNum) {
+            if (!currentPdf) return;
+            
+            currentPdf.getPage(pageNum).then(function(page) {
+                const viewport = page.getViewport({ scale: pdfScale });
+                const canvas = document.getElementById('pdf-canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                
+                page.render(renderContext).promise.then(function() {
+                    document.getElementById('pdf-info').textContent = `Página ${pageNum} de ${pdfTotalPages}`;
+                    speakFeedback(`Página ${pageNum} de ${pdfTotalPages}`);
+                });
+            });
+        }
+
+        function prevPage() {
+            if (currentPdf && currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
+        }
+
+        function nextPage() {
+            if (currentPdf && currentPage < pdfTotalPages) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        }
+
+        function zoomIn() {
+            pdfScale += 0.25;
+            if (currentPdf) renderPage(currentPage);
+        }
+
+        function zoomOut() {
+            if (pdfScale > 0.5) {
+                pdfScale -= 0.25;
+                if (currentPdf) renderPage(currentPage);
+            }
+        }
+
+        // ===== FUNÇÕES COMUNICAÇÃO ALTERNATIVA =====
+
+        function showCommunicationAid() {
+            showApp('communication-aid');
+        }
+
+        function showPhrases(category) {
+            const container = document.getElementById('phrases-container');
+            container.innerHTML = '';
+            
+            communicationPhrases[category].forEach((phrase, index) => {
+                const button = document.createElement('button');
+                button.className = 'phrase-button scannable';
+                button.textContent = phrase;
+                button.tabIndex = 50 + index;
+                button.setAttribute('aria-label', `Selecionar frase: ${phrase}`);
+                button.onclick = function() {
+                    document.getElementById('communication-display').textContent = phrase;
+                    speakFeedback(`Frase selecionada: ${phrase}`);
+                };
+                container.appendChild(button);
+            });
+        }
+
+        function speakCommunication() {
+            const text = document.getElementById('communication-display').textContent;
+            if (text && text !== 'Sua mensagem aparecerá aqui...' && 'speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'pt-BR';
+                speechSynthesis.speak(utterance);
+                speakFeedback('Mensagem falada');
+            }
+        }
+
+        function clearCommunication() {
+            document.getElementById('communication-display').textContent = 'Sua mensagem aparecerá aqui...';
+            speakFeedback('Mensagem limpa');
+        }
+
+        // FUNÇÕES EMAIL-WHATSAPP
+
+        function showEmailIntegration() {
+            showApp('email-integration');
+        }
+
+        function openGmail() {
+            window.open('https://mail.google.com', '_blank');
+            speakFeedback('Abrindo Gmail');
+        }
+
+        function openWhatsApp() {
+            window.open('https://web.whatsapp.com', '_blank');
+            speakFeedback('Abrindo WhatsApp');
+        }
+
+        function sendEmail() {
+            const to = document.getElementById('email-to').value;
+            const subject = document.getElementById('email-subject').value;
+            const body = document.getElementById('email-body').value;
+            
+            if (to && subject && body) {
+                const mailtoLink = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                window.location.href = mailtoLink;
+                speakFeedback('E-mail preparado para envio');
+            } else {
+                speakFeedback('Preencha todos os campos para enviar o e-mail');
+            }
+        }
+
+        // ===== PERSONALIZAÇÃO ATALHOS =====
+
+        function loadShortcuts() {
+            try {
+                const saved = JSON.parse(localStorage.getItem('easyface-shortcuts') || '{}');
+                customShortcuts = saved;
+                
+                // Aplicar atalhos salvos
+                if (saved.text) document.getElementById('shortcut-text').value = saved.text;
+                if (saved.file) document.getElementById('shortcut-file').value = saved.file;
+                if (saved.calc) document.getElementById('shortcut-calc').value = saved.calc;
+                // Carregar outros atalhos...
+            } catch (error) {
+                console.log('Não foi possível carregar atalhos personalizados');
+            }
+        }
+
+        function saveShortcuts() {
+            try {
+                customShortcuts = {
+                    text: document.getElementById('shortcut-text').value,
+                    file: document.getElementById('shortcut-file').value,
+                    calc: document.getElementById('shortcut-calc').value,
+                    // Outros atalhos...
+                };
+                
+                localStorage.setItem('easyface-shortcuts', JSON.stringify(customShortcuts));
+                updateStatus('Atalhos personalizados salvos');
+                speakFeedback('Atalhos personalizados salvos');
+            } catch (error) {
+                console.log('Não foi possível salvar atalhos personalizados');
+            }
+        }
+
+        // ===== LEITOR DE TELA =====
+
+        function speakFeedback(message) {
+            if (soundsEnabled && 'speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(message);
+                utterance.volume = 0.8;
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+            }
         }
 
         // ===== FUNÇÕES DO EDITOR DE TEXTO =====
@@ -904,6 +1282,73 @@
                 }
             }
 
+            if (e.ctrlKey) {
+                // Verificar atalhos personalizados primeiro
+                if (customShortcuts.text && e.key === customShortcuts.text) {
+                    e.preventDefault();
+                    showTextEditor();
+                    return;
+                }
+                if (customShortcuts.file && e.key === customShortcuts.file) {
+                    e.preventDefault();
+                    showFileManager();
+                    return;
+                }
+                if (customShortcuts.calc && e.key === customShortcuts.calc) {
+                    e.preventDefault();
+                    showCalculator();
+                    return;
+                }
+                
+                // Atalhos padrão como fallback
+                switch(e.key) {
+                    case '1':
+                        e.preventDefault();
+                        showTextEditor();
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        showFileManager();
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        showCalculator();
+                        break;
+                    case '4':
+                        e.preventDefault();
+                        showVirtualKeyboard();
+                        break;
+                    case '5':
+                        e.preventDefault();
+                        showWebBrowser();
+                        break;
+                    case '6':
+                        e.preventDefault();
+                        showMediaPlayer();
+                        break;
+                    case '7':
+                        e.preventDefault();
+                        showPdfReader();
+                        break;
+                    case '8':
+                        e.preventDefault();
+                        showCommunicationAid();
+                        break;
+                    case '9':
+                        e.preventDefault();
+                        showEmailIntegration();
+                        break;
+                    case '0':
+                        e.preventDefault();
+                        showAccessibilitySettings();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        toggleScanMode();
+                        break;
+                }
+            }
+
             // Lógica de varredura automática (após a calculadora)
             if (scanMode && e.key === 'Enter') {
                 e.preventDefault();
@@ -981,6 +1426,12 @@
             loadUserSettings();
             
             updateStatus('EASYFACE carregado e pronto para uso!');
+
+            // Carregar atalhos personalizados
+            loadShortcuts();
+            
+            // Configurar eventos para os novos inputs de arquivo
+            setupFileInputs();
             
             // Foco inicial no primeiro botão do menu após um delay
             setTimeout(() => {
@@ -990,6 +1441,13 @@
                 }
             }, 1000);
         });
+
+        function setupFileInputs() {
+            // Configurar aria-labels para inputs de arquivo
+            document.getElementById('file-input').setAttribute('aria-label', 'Selecionar arquivo de texto');
+            document.getElementById('media-input').setAttribute('aria-label', 'Selecionar arquivo de mídia');
+            document.getElementById('pdf-input').setAttribute('aria-label', 'Selecionar arquivo PDF');
+        }
     </script>
 </body>
 </html>
