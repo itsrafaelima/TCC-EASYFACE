@@ -55,7 +55,7 @@
         </div>
 
         <div class="content-area" id="main-content" tabindex="-1">
-            <div id="text-editor" class="hidden">
+            <div id="text-editor" class="app-container hidden">
                 <h2>📝 Editor de Texto</h2>
                 <textarea id="text-area" class="text-input scannable" rows="10" 
                     placeholder="Digite seu texto aqui... Use TAB para navegar pelos botões abaixo."
@@ -65,7 +65,7 @@
                 <button class="action-button scannable" onclick="speakText()" tabindex="15" aria-label="Ler texto em voz alta">🔊 Ler Texto</button>
             </div>
 
-            <div id="file-manager" class="hidden">
+            <div id="file-manager" class="app-container hidden">
                 <h2>📁 Gerenciador de Arquivos</h2>
                 <div class="file-actions">
                     <input type="file" id="file-input" class="hidden" accept=".txt">
@@ -80,7 +80,7 @@
                 <div id="file-info" class="file-info" aria-live="polite"></div>
             </div>
 
-            <div id="calculator-app" class="hidden">
+            <div id="calculator-app" class="app-container hidden">
                 <h2>🔢 Calculadora</h2>
                 <div class="calc-display" id="calc-display" aria-live="polite">0</div>
                 <div class="calculator" id="calculator-grid">
@@ -109,7 +109,7 @@
                 </div>
             </div>
 
-            <div id="virtual-keyboard-app" class="hidden">
+            <div id="virtual-keyboard-app" class="app-container hidden">
                 <h2>⌨️ Teclado Virtual</h2>
                 <input type="text" id="keyboard-input" class="text-input scannable" 
                     placeholder="O texto digitado aparecerá aqui..." tabindex="29" aria-label="Entrada do teclado virtual">
@@ -165,7 +165,7 @@
                 </div>
             </div>
 
-            <div id="web-browser" class="hidden">
+            <div id="web-browser" class="app-container hidden">
                 <h2>🌐 Navegador Simples</h2>
                 <input type="url" id="url-input" class="text-input scannable" 
                     placeholder="Digite uma URL (ex: https://google.com)" tabindex="74" aria-label="Digite o endereço do site">
@@ -177,7 +177,7 @@
                 </div>
             </div>
 
-            <div id="media-player" class="hidden">
+            <div id="media-player" class="app-container hidden">
                 <h2>🎵 Reprodutor de Mídia</h2>
                 <div class="media-controls">
                     <input type="file" id="media-input" class="hidden" accept="audio/*,video/*">
@@ -190,7 +190,7 @@
                 <div id="media-info" class="media-info" aria-live="polite"></div>
             </div>
 
-            <div id="pdf-reader" class="hidden">
+            <div id="pdf-reader" class="app-container hidden">
                 <h2>📄 Leitor de PDF</h2>
                 <div class="pdf-controls">
                     <input type="file" id="pdf-input" class="hidden" accept=".pdf">
@@ -206,7 +206,7 @@
                 <div id="pdf-info" class="pdf-info" aria-live="polite">Página 0 de 0</div>
             </div>
 
-            <div id="communication-aid" class="hidden">
+            <div id="communication-aid" class="app-container hidden">
                 <h2>💬 Comunicação Alternativa</h2>
                 <div class="communication-output">
                     <div id="communication-display" class="communication-display" aria-live="polite">
@@ -225,7 +225,7 @@
                 </div>
             </div>
 
-            <div id="email-integration" class="hidden">
+            <div id="email-integration" class="app-container hidden">
                 <h2>✉️ Integração de E-mail</h2>
                 <div class="email-options">
                     <button class="action-button scannable" onclick="openGmail()" tabindex="31" aria-label="Abrir Gmail">📧 Abrir Gmail</button>
@@ -240,7 +240,7 @@
                 </div>
             </div>
 
-            <div id="accessibility-settings" class="hidden">
+            <div id="accessibility-settings" class="app-container hidden">
                 <h2>⚙️ Configurações de Acessibilidade</h2>
                 <div class="settings-section">
                     <label class="settings-label">Tamanho da Fonte:</label>
@@ -283,7 +283,7 @@
                 </div>
             </div>
 
-            <div id="help" class="hidden">
+            <div id="help" class="app-container hidden">
                 <h2>❓ Central de Ajuda</h2>
                 <div class="help-content">
                     <div class="help-section">
@@ -440,20 +440,17 @@
 
         // ===== FUNÇÕES DE NAVEGAÇÃO =====
         function showApp(appId) {
-            const apps = ['text-editor', 'calculator-app', 'virtual-keyboard-app', 'web-browser', 'accessibility-settings', 'help', 'welcome'];
+            const apps = document.querySelectorAll('.app-container');
             apps.forEach(app => {
-                const element = document.getElementById(app);
-                if (element) {
-                    element.classList.add('hidden');
-                }
+                app.classList.add('hidden');
             });
             
             const currentAppElement = document.getElementById(appId);
-            if (currentAppElement) {
-                currentAppElement.classList.remove('hidden');
-            }
-            currentApp = appId;
-            playFeedbackSound();
+    if (currentAppElement) {
+        currentAppElement.classList.remove('hidden');
+    }
+    currentApp = appId;
+    playFeedbackSound();
         }
 
         function showTextEditor() { 
