@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EASYFACE - Interface Acessível</title>
     <link rel="stylesheet" href="estilos.css">
 </head>
+
 <body>
     <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
-    
+
     <div class="header">
         <h1>💻 EASYFACE</h1>
         <div class="instructions">
@@ -19,31 +21,40 @@
     <div class="main-container">
         <div class="sidebar">
             <h2>🎯 Menu Principal</h2>
-            <button class="menu-button scannable" onclick="showTextEditor()" tabindex="1" aria-label="Abrir Editor de Texto">
+            <button class="menu-button scannable" onclick="showTextEditor()" tabindex="1"
+                aria-label="Abrir Editor de Texto">
                 📝 Editor de Texto
             </button>
-            <button class="menu-button scannable" onclick="showFileManager()" tabindex="2" aria-label="Abrir Gerenciador de Arquivos">
+            <button class="menu-button scannable" onclick="showFileManager()" tabindex="2"
+                aria-label="Abrir Gerenciador de Arquivos">
                 📁 Gerenciador de Arquivos
             </button>
-            <button class="menu-button scannable" onclick="showCalculator()" tabindex="3" aria-label="Abrir Calculadora">
+            <button class="menu-button scannable" onclick="showCalculator()" tabindex="3"
+                aria-label="Abrir Calculadora">
                 🔢 Calculadora
             </button>
-            <button class="menu-button scannable" onclick="showSiteLauncher()" tabindex="5" aria-label="Abrir Launcher de Sites">
+            <button class="menu-button scannable" onclick="showSiteLauncher()" tabindex="5"
+                aria-label="Abrir Launcher de Sites">
                 🌐 Sites Seguros
             </button>
-            <button class="menu-button scannable" onclick="showMediaPlayer()" tabindex="6" aria-label="Abrir Reprodutor de Mídia">
+            <button class="menu-button scannable" onclick="showMediaPlayer()" tabindex="6"
+                aria-label="Abrir Reprodutor de Mídia">
                 🎵 Reprodutor de Mídia
             </button>
-            <button class="menu-button scannable" onclick="showPdfReader()" tabindex="7" aria-label="Abrir Leitor de PDF">
+            <button class="menu-button scannable" onclick="showPdfReader()" tabindex="7"
+                aria-label="Abrir Leitor de PDF">
                 📄 Leitor de PDF
             </button>
-            <button class="menu-button scannable" onclick="showCommunicationAid()" tabindex="8" aria-label="Abrir Ferramenta de Comunicação">
+            <button class="menu-button scannable" onclick="showCommunicationAid()" tabindex="8"
+                aria-label="Abrir Ferramenta de Comunicação">
                 💬 Comunicação Alternativa
             </button>
-            <button class="menu-button scannable" onclick="showEmailIntegration()" tabindex="9" aria-label="Abrir Integração de E-mail">
+            <button class="menu-button scannable" onclick="showEmailIntegration()" tabindex="9"
+                aria-label="Abrir Integração de E-mail">
                 ✉️ Integração de E-mail
             </button>
-            <button class="menu-button scannable" onclick="showAccessibilitySettings()" tabindex="10" aria-label="Abrir Configurações de Acessibilidade">
+            <button class="menu-button scannable" onclick="showAccessibilitySettings()" tabindex="10"
+                aria-label="Abrir Configurações de Acessibilidade">
                 ⚙️ Configurações
             </button>
             <button class="menu-button scannable" onclick="showHelp()" tabindex="11" aria-label="Abrir Ajuda">
@@ -54,25 +65,30 @@
         <div class="content-area" id="main-content" tabindex="-1">
             <div id="text-editor" class="app-container hidden">
                 <h2>📝 Editor de Texto</h2>
-                <textarea id="text-area" class="text-input scannable" rows="10" 
-                    placeholder="Digite seu texto aqui... Use TAB para navegar pelos botões abaixo."
-                    tabindex="12" aria-label="Área de edição de texto"></textarea>
-                <button class="action-button scannable" onclick="saveText()" tabindex="13" aria-label="Salvar texto">💾 Salvar Texto</button>
-                <button class="action-button scannable" onclick="clearText()" tabindex="14" aria-label="Limpar texto">🗑️ Limpar</button>
-                <button class="action-button scannable" onclick="speakText()" tabindex="15" aria-label="Ler texto em voz alta">🔊 Ler Texto</button>
+                <textarea id="text-area" class="text-input scannable" rows="10"
+                    placeholder="Digite seu texto aqui... Use TAB para navegar pelos botões abaixo." tabindex="12"
+                    aria-label="Área de edição de texto"></textarea>
+                <button class="action-button scannable" onclick="saveText()" tabindex="13" aria-label="Salvar texto">💾
+                    Salvar Texto</button>
+                <button class="action-button scannable" onclick="clearText()" tabindex="14"
+                    aria-label="Limpar texto">🗑️ Limpar</button>
+                <button class="action-button scannable" onclick="speakText()" tabindex="15"
+                    aria-label="Ler texto em voz alta">🔊 Ler Texto</button>
             </div>
 
             <div id="file-manager" class="app-container hidden">
                 <h2>📁 Gerenciador de Arquivos</h2>
                 <div class="file-actions">
                     <input type="file" id="file-input" class="hidden" accept=".txt">
-                    <button class="action-button scannable" onclick="document.getElementById('file-input').click()" tabindex="16" aria-label="Abrir arquivo de texto">📂 Abrir Arquivo</button>
-                    <button class="action-button scannable" onclick="saveTextFile()" tabindex="17" aria-label="Salvar arquivo de texto">💾 Salvar Como</button>
+                    <button class="action-button scannable" onclick="document.getElementById('file-input').click()"
+                        tabindex="16" aria-label="Abrir arquivo de texto">📂 Abrir Arquivo</button>
+                    <button class="action-button scannable" onclick="saveTextFile()" tabindex="17"
+                        aria-label="Salvar arquivo de texto">💾 Salvar Como</button>
                 </div>
                 <div id="file-content" class="file-content">
-                    <textarea id="file-text-area" class="text-input scannable" rows="10" 
-                        placeholder="Conteúdo do arquivo aparecerá aqui..."
-                        tabindex="18" aria-label="Conteúdo do arquivo"></textarea>
+                    <textarea id="file-text-area" class="text-input scannable" rows="10"
+                        placeholder="Conteúdo do arquivo aparecerá aqui..." tabindex="18"
+                        aria-label="Conteúdo do arquivo"></textarea>
                 </div>
                 <div id="file-info" class="file-info" aria-live="polite"></div>
             </div>
@@ -81,77 +97,93 @@
                 <h2>🔢 Calculadora</h2>
                 <div class="calc-display" id="calc-display" aria-live="polite">0</div>
                 <div class="calculator" id="calculator-grid">
-                    <button class="calc-button scannable" onclick="clearCalc()" tabindex="11" data-key="Escape">C</button>
-                    <button class="calc-button scannable" onclick="deleteLast()" tabindex="12" data-key="Backspace">⌫</button>
-                    <button class="calc-button operator scannable" onclick="addToCalc('/')" tabindex="13" data-key="/">÷</button>
-                    <button class="calc-button operator scannable" onclick="addToCalc('*')" tabindex="14" data-key="*">×</button>
-                    
+                    <button class="calc-button scannable" onclick="clearCalc()" tabindex="11"
+                        data-key="Escape">C</button>
+                    <button class="calc-button scannable" onclick="deleteLast()" tabindex="12"
+                        data-key="Backspace">⌫</button>
+                    <button class="calc-button operator scannable" onclick="addToCalc('/')" tabindex="13"
+                        data-key="/">÷</button>
+                    <button class="calc-button operator scannable" onclick="addToCalc('*')" tabindex="14"
+                        data-key="*">×</button>
+
                     <button class="calc-button scannable" onclick="addToCalc('7')" tabindex="15" data-key="7">7</button>
                     <button class="calc-button scannable" onclick="addToCalc('8')" tabindex="16" data-key="8">8</button>
                     <button class="calc-button scannable" onclick="addToCalc('9')" tabindex="17" data-key="9">9</button>
-                    <button class="calc-button operator scannable" onclick="addToCalc('-')" tabindex="18" data-key="-">-</button>
-                    
+                    <button class="calc-button operator scannable" onclick="addToCalc('-')" tabindex="18"
+                        data-key="-">-</button>
+
                     <button class="calc-button scannable" onclick="addToCalc('4')" tabindex="19" data-key="4">4</button>
                     <button class="calc-button scannable" onclick="addToCalc('5')" tabindex="20" data-key="5">5</button>
                     <button class="calc-button scannable" onclick="addToCalc('6')" tabindex="21" data-key="6">6</button>
-                    <button class="calc-button operator scannable" onclick="addToCalc('+')" tabindex="22" data-key="+">+</button>
-                    
+                    <button class="calc-button operator scannable" onclick="addToCalc('+')" tabindex="22"
+                        data-key="+">+</button>
+
                     <button class="calc-button scannable" onclick="addToCalc('1')" tabindex="23" data-key="1">1</button>
                     <button class="calc-button scannable" onclick="addToCalc('2')" tabindex="24" data-key="2">2</button>
                     <button class="calc-button scannable" onclick="addToCalc('3')" tabindex="25" data-key="3">3</button>
-                    <button class="calc-button equals scannable" onclick="calculateResult()" tabindex="26" data-key="Enter">=</button>
-                    
-                    <button class="calc-button scannable" onclick="addToCalc('0')" tabindex="27" style="grid-column: span 2;" data-key="0">0</button>
+                    <button class="calc-button equals scannable" onclick="calculateResult()" tabindex="26"
+                        data-key="Enter">=</button>
+
+                    <button class="calc-button scannable" onclick="addToCalc('0')" tabindex="27"
+                        style="grid-column: span 2;" data-key="0">0</button>
                     <button class="calc-button scannable" onclick="addToCalc('.')" tabindex="28" data-key=".">.</button>
                 </div>
             </div>
 
             <div id="site-launcher" class="app-container hidden">
                 <h2>🌐 Sites Seguros</h2>
-                <p class="launcher-description">Clique em um dos sites abaixo para abrir em uma nova janela de forma segura:</p>
-    
-    <div class="sites-grid">
-        <button class="site-button scannable" onclick="launchSite('https://www.google.com')" tabindex="50" aria-label="Abrir Google">
-            <span class="site-icon">🔍</span>
-            <span class="site-name">Google</span>
-        </button>
-        
-        <button class="site-button scannable" onclick="launchSite('https://www.wikipedia.org')" tabindex="51" aria-label="Abrir Wikipedia">
-            <span class="site-icon">📚</span>
-            <span class="site-name">Wikipedia</span>
-        </button>
-        
-        <button class="site-button scannable" onclick="launchSite('https://www.youtube.com')" tabindex="52" aria-label="Abrir YouTube">
-            <span class="site-icon">▶️</span>
-            <span class="site-name">YouTube</span>
-        </button>
-        
-        <button class="site-button scannable" onclick="launchSite('https://web.whatsapp.com')" tabindex="53" aria-label="Abrir WhatsApp Web">
-            <span class="site-icon">💬</span>
-            <span class="site-name">WhatsApp Web</span>
-        </button>
-        
-        <button class="site-button scannable" onclick="launchSite('https://mail.google.com')" tabindex="54" aria-label="Abrir Gmail">
-            <span class="site-icon">📧</span>
-            <span class="site-name">Gmail</span>
-        </button>
-    </div>
-    
-    <div class="custom-site">
-        <h3>Outro site</h3>
-        <input type="text" id="custom-site-url" class="text-input scannable" 
-            placeholder="Digite uma URL (ex: exemplo.com)" tabindex="56" aria-label="URL personalizada">
-        <button class="action-button scannable" onclick="launchCustomSite()" tabindex="57" aria-label="Abrir site personalizado">
-            🔗 Abrir Site
-        </button>
-    </div>
+                <p class="launcher-description">Clique em um dos sites abaixo para abrir em uma nova janela de forma
+                    segura:</p>
+
+                <div class="sites-grid">
+                    <button class="site-button scannable" onclick="launchSite('https://www.google.com')" tabindex="50"
+                        aria-label="Abrir Google">
+                        <span class="site-icon">🔍</span>
+                        <span class="site-name">Google</span>
+                    </button>
+
+                    <button class="site-button scannable" onclick="launchSite('https://www.wikipedia.org')"
+                        tabindex="51" aria-label="Abrir Wikipedia">
+                        <span class="site-icon">📚</span>
+                        <span class="site-name">Wikipedia</span>
+                    </button>
+
+                    <button class="site-button scannable" onclick="launchSite('https://www.youtube.com')" tabindex="52"
+                        aria-label="Abrir YouTube">
+                        <span class="site-icon">▶️</span>
+                        <span class="site-name">YouTube</span>
+                    </button>
+
+                    <button class="site-button scannable" onclick="launchSite('https://web.whatsapp.com')" tabindex="53"
+                        aria-label="Abrir WhatsApp Web">
+                        <span class="site-icon">💬</span>
+                        <span class="site-name">WhatsApp Web</span>
+                    </button>
+
+                    <button class="site-button scannable" onclick="launchSite('https://mail.google.com')" tabindex="54"
+                        aria-label="Abrir Gmail">
+                        <span class="site-icon">📧</span>
+                        <span class="site-name">Gmail</span>
+                    </button>
+                </div>
+
+                <div class="custom-site">
+                    <h3>Outro site</h3>
+                    <input type="text" id="custom-site-url" class="text-input scannable"
+                        placeholder="Digite uma URL (ex: exemplo.com)" tabindex="56" aria-label="URL personalizada">
+                    <button class="action-button scannable" onclick="launchCustomSite()" tabindex="57"
+                        aria-label="Abrir site personalizado">
+                        🔗 Abrir Site
+                    </button>
+                </div>
             </div>
 
             <div id="media-player" class="app-container hidden">
                 <h2>🎵 Reprodutor de Mídia</h2>
                 <div class="media-controls">
                     <input type="file" id="media-input" class="hidden" accept="audio/*,video/*">
-                    <button class="action-button scannable" onclick="document.getElementById('media-input').click()" tabindex="19" aria-label="Selecionar arquivo de mídia">📁 Selecionar Mídia</button>
+                    <button class="action-button scannable" onclick="document.getElementById('media-input').click()"
+                        tabindex="19" aria-label="Selecionar arquivo de mídia">📁 Selecionar Mídia</button>
                 </div>
                 <div class="media-container">
                     <audio id="audio-player" controls class="hidden" aria-label="Reprodutor de áudio"></audio>
@@ -164,11 +196,16 @@
                 <h2>📄 Leitor de PDF</h2>
                 <div class="pdf-controls">
                     <input type="file" id="pdf-input" class="hidden" accept=".pdf">
-                    <button class="action-button scannable" onclick="document.getElementById('pdf-input').click()" tabindex="20" aria-label="Abrir arquivo PDF">📂 Abrir PDF</button>
-                    <button class="action-button scannable" onclick="prevPage()" tabindex="21" aria-label="Página anterior">⬅️ Anterior</button>
-                    <button class="action-button scannable" onclick="nextPage()" tabindex="22" aria-label="Próxima página">➡️ Próxima</button>
-                    <button class="action-button scannable" onclick="zoomIn()" tabindex="23" aria-label="Aumentar zoom">➕ Zoom +</button>
-                    <button class="action-button scannable" onclick="zoomOut()" tabindex="24" aria-label="Diminuir zoom">➖ Zoom -</button>
+                    <button class="action-button scannable" onclick="document.getElementById('pdf-input').click()"
+                        tabindex="20" aria-label="Abrir arquivo PDF">📂 Abrir PDF</button>
+                    <button class="action-button scannable" onclick="prevPage()" tabindex="21"
+                        aria-label="Página anterior">⬅️ Anterior</button>
+                    <button class="action-button scannable" onclick="nextPage()" tabindex="22"
+                        aria-label="Próxima página">➡️ Próxima</button>
+                    <button class="action-button scannable" onclick="zoomIn()" tabindex="23"
+                        aria-label="Aumentar zoom">➕ Zoom +</button>
+                    <button class="action-button scannable" onclick="zoomOut()" tabindex="24"
+                        aria-label="Diminuir zoom">➖ Zoom -</button>
                 </div>
                 <div id="pdf-container" class="pdf-container">
                     <canvas id="pdf-canvas" aria-label="Visualização do documento PDF"></canvas>
@@ -182,14 +219,20 @@
                     <div id="communication-display" class="communication-display" aria-live="polite">
                         Sua mensagem aparecerá aqui...
                     </div>
-                    <button class="action-button scannable" onclick="speakCommunication()" tabindex="25" aria-label="Falar mensagem">🔊 Falar</button>
-                    <button class="action-button scannable" onclick="clearCommunication()" tabindex="26" aria-label="Limpar mensagem">🗑️ Limpar</button>
+                    <button class="action-button scannable" onclick="speakCommunication()" tabindex="25"
+                        aria-label="Falar mensagem">🔊 Falar</button>
+                    <button class="action-button scannable" onclick="clearCommunication()" tabindex="26"
+                        aria-label="Limpar mensagem">🗑️ Limpar</button>
                 </div>
                 <div class="communication-categories">
-                    <button class="category-button scannable" onclick="showPhrases('saudacoes')" tabindex="27" aria-label="Saudações">👋 Saudações</button>
-                    <button class="category-button scannable" onclick="showPhrases('necessidades')" tabindex="28" aria-label="Necessidades">🍽️ Necessidades</button>
-                    <button class="category-button scannable" onclick="showPhrases('sentimentos')" tabindex="29" aria-label="Sentimentos">❤️ Sentimentos</button>
-                    <button class="category-button scannable" onclick="showPhrases('emergencia')" tabindex="30" aria-label="Emergência">🚨 Emergência</button>
+                    <button class="category-button scannable" onclick="showPhrases('saudacoes')" tabindex="27"
+                        aria-label="Saudações">👋 Saudações</button>
+                    <button class="category-button scannable" onclick="showPhrases('necessidades')" tabindex="28"
+                        aria-label="Necessidades">🍽️ Necessidades</button>
+                    <button class="category-button scannable" onclick="showPhrases('sentimentos')" tabindex="29"
+                        aria-label="Sentimentos">❤️ Sentimentos</button>
+                    <button class="category-button scannable" onclick="showPhrases('emergencia')" tabindex="30"
+                        aria-label="Emergência">🚨 Emergência</button>
                 </div>
                 <div id="phrases-container" class="phrases-container">
                 </div>
@@ -198,15 +241,21 @@
             <div id="email-integration" class="app-container hidden">
                 <h2>✉️ Integração de E-mail</h2>
                 <div class="email-options">
-                    <button class="action-button scannable" onclick="openGmail()" tabindex="31" aria-label="Abrir Gmail">📧 Abrir Gmail</button>
-                    <button class="action-button scannable" onclick="openWhatsApp()" tabindex="32" aria-label="Abrir WhatsApp">💬 Abrir WhatsApp</button>
+                    <button class="action-button scannable" onclick="openGmail()" tabindex="31"
+                        aria-label="Abrir Gmail">📧 Abrir Gmail</button>
+                    <button class="action-button scannable" onclick="openWhatsApp()" tabindex="32"
+                        aria-label="Abrir WhatsApp">💬 Abrir WhatsApp</button>
                 </div>
                 <div class="email-compose">
                     <h3>Enviar Mensagem Rápida</h3>
-                    <input type="email" id="email-to" class="text-input scannable" placeholder="Para (e-mail)" tabindex="33" aria-label="Destinatário do e-mail">
-                    <input type="text" id="email-subject" class="text-input scannable" placeholder="Assunto" tabindex="34" aria-label="Assunto do e-mail">
-                    <textarea id="email-body" class="text-input scannable" rows="5" placeholder="Mensagem..." tabindex="35" aria-label="Corpo do e-mail"></textarea>
-                    <button class="action-button scannable" onclick="sendEmail()" tabindex="36" aria-label="Enviar e-mail">📤 Enviar</button>
+                    <input type="email" id="email-to" class="text-input scannable" placeholder="Para (e-mail)"
+                        tabindex="33" aria-label="Destinatário do e-mail">
+                    <input type="text" id="email-subject" class="text-input scannable" placeholder="Assunto"
+                        tabindex="34" aria-label="Assunto do e-mail">
+                    <textarea id="email-body" class="text-input scannable" rows="5" placeholder="Mensagem..."
+                        tabindex="35" aria-label="Corpo do e-mail"></textarea>
+                    <button class="action-button scannable" onclick="sendEmail()" tabindex="36"
+                        aria-label="Enviar e-mail">📤 Enviar</button>
                 </div>
             </div>
 
@@ -214,42 +263,55 @@
                 <h2>⚙️ Configurações de Acessibilidade</h2>
                 <div class="settings-section">
                     <label class="settings-label">Tamanho da Fonte:</label>
-                    <button class="action-button scannable" onclick="changeFontSize('small')" tabindex="37" aria-label="Definir fonte pequena">🔍 Pequena</button>
-                    <button class="action-button scannable" onclick="changeFontSize('medium')" tabindex="38" aria-label="Definir fonte média">📖 Média</button>
-                    <button class="action-button scannable" onclick="changeFontSize('large')" tabindex="39" aria-label="Definir fonte grande">📘 Grande</button>
+                    <button class="action-button scannable" onclick="changeFontSize('small')" tabindex="37"
+                        aria-label="Definir fonte pequena">🔍 Pequena</button>
+                    <button class="action-button scannable" onclick="changeFontSize('medium')" tabindex="38"
+                        aria-label="Definir fonte média">📖 Média</button>
+                    <button class="action-button scannable" onclick="changeFontSize('large')" tabindex="39"
+                        aria-label="Definir fonte grande">📘 Grande</button>
                 </div>
                 <div class="settings-section">
                     <label class="settings-label">Contraste:</label>
-                    <button class="action-button scannable" onclick="toggleContrast()" tabindex="40" aria-label="Alternar alto contraste">🎨 Alto Contraste</button>
+                    <button class="action-button scannable" onclick="toggleContrast()" tabindex="40"
+                        aria-label="Alternar alto contraste">🎨 Alto Contraste</button>
                 </div>
                 <div class="settings-section">
                     <label class="settings-label">Sons:</label>
-                    <button class="action-button scannable" onclick="toggleSounds()" tabindex="41" aria-label="Alternar sons de feedback">🔊 Sons de Feedback</button>
+                    <button class="action-button scannable" onclick="toggleSounds()" tabindex="41"
+                        aria-label="Alternar sons de feedback">🔊 Sons de Feedback</button>
                 </div>
                 <div class="settings-section">
                     <label class="settings-label">Varredura Automática:</label>
-                    <button class="action-button scannable" onclick="toggleScanMode()" tabindex="42" id="scan-toggle" aria-label="Ativar modo de varredura automática">🔄 Ativar Varredura</button>
-                    <button class="action-button scannable" onclick="setScanSpeed(3000)" tabindex="43" aria-label="Definir velocidade lenta de varredura">🌊 Lenta</button>
-                    <button class="action-button scannable" onclick="setScanSpeed(2000)" tabindex="44" aria-label="Definir velocidade normal de varredura">🚶 Normal</button>
-                    <button class="action-button scannable" onclick="setScanSpeed(1000)" tabindex="45" aria-label="Definir velocidade rápida de varredura">🏃 Rápida</button>
+                    <button class="action-button scannable" onclick="toggleScanMode()" tabindex="42" id="scan-toggle"
+                        aria-label="Ativar modo de varredura automática">🔄 Ativar Varredura</button>
+                    <button class="action-button scannable" onclick="setScanSpeed(3000)" tabindex="43"
+                        aria-label="Definir velocidade lenta de varredura">🌊 Lenta</button>
+                    <button class="action-button scannable" onclick="setScanSpeed(2000)" tabindex="44"
+                        aria-label="Definir velocidade normal de varredura">🚶 Normal</button>
+                    <button class="action-button scannable" onclick="setScanSpeed(1000)" tabindex="45"
+                        aria-label="Definir velocidade rápida de varredura">🏃 Rápida</button>
                 </div>
                 <div class="settings-section">
                     <h3>⌨️ Personalizar Atalhos</h3>
                     <div class="shortcut-settings">
                         <div class="shortcut-item">
                             <label>Editor de Texto:</label>
-                            <input type="text" class="shortcut-input" id="shortcut-text" maxlength="2" value="1" aria-label="Atalho para Editor de Texto">
+                            <input type="text" class="shortcut-input" id="shortcut-text" maxlength="2" value="1"
+                                aria-label="Atalho para Editor de Texto">
                         </div>
                         <div class="shortcut-item">
                             <label>Gerenciador de Arquivos:</label>
-                            <input type="text" class="shortcut-input" id="shortcut-file" maxlength="2" value="2" aria-label="Atalho para Gerenciador de Arquivos">
+                            <input type="text" class="shortcut-input" id="shortcut-file" maxlength="2" value="2"
+                                aria-label="Atalho para Gerenciador de Arquivos">
                         </div>
                         <div class="shortcut-item">
                             <label>Calculadora:</label>
-                            <input type="text" class="shortcut-input" id="shortcut-calc" maxlength="2" value="3" aria-label="Atalho para Calculadora">
+                            <input type="text" class="shortcut-input" id="shortcut-calc" maxlength="2" value="3"
+                                aria-label="Atalho para Calculadora">
                         </div>
                     </div>
-                    <button class="action-button scannable" onclick="saveShortcuts()" tabindex="46" aria-label="Salvar atalhos personalizados">💾 Salvar Atalhos</button>
+                    <button class="action-button scannable" onclick="saveShortcuts()" tabindex="46"
+                        aria-label="Salvar atalhos personalizados">💾 Salvar Atalhos</button>
                 </div>
             </div>
 
@@ -264,7 +326,7 @@
                         <p><strong>ESC:</strong> Volta ao menu principal</p>
                         <p><strong>Setas:</strong> Navegar em menus e listas</p>
                     </div>
-                    
+
                     <div class="help-section">
                         <h3>🛠️ Funcionalidades:</h3>
                         <p><strong>Editor de Texto:</strong> Escreva e salve documentos</p>
@@ -272,7 +334,7 @@
                         <p><strong>Teclado Virtual:</strong> Digite usando apenas o mouse</p>
                         <p><strong>Navegador:</strong> Acesse sites da internet</p>
                     </div>
-                    
+
                     <div class="help-section">
                         <h3>♿ Recursos de Acessibilidade:</h3>
                         <p><strong>• Foco Visual:</strong> Borda amarela destaca o elemento ativo</p>
@@ -317,8 +379,10 @@
 
     <div id="scan-controls" class="scan-controls" style="display: none;">
         <h4>🔄 Controles de Varredura</h4>
-        <button class="scan-control-button" onclick="pauseScanning()" id="pause-scan" aria-label="Pausar varredura">⏸️ Pausar</button>
-        <button class="scan-control-button" onclick="toggleScanMode()" aria-label="Desativar varredura">⏹ Desativar</button>
+        <button class="scan-control-button" onclick="pauseScanning()" id="pause-scan" aria-label="Pausar varredura">⏸️
+            Pausar</button>
+        <button class="scan-control-button" onclick="toggleScanMode()" aria-label="Desativar varredura">⏹
+            Desativar</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
@@ -330,7 +394,7 @@
         let calcExpression = '';
         let soundsEnabled = true;
         let highContrast = false;
-        
+
         // Variáveis para varredura automática
         let scanMode = false;
         let scanInterval = null;
@@ -358,7 +422,7 @@
         let communicationPhrases = {
             saudacoes: ["Olá", "Bom dia", "Boa tarde", "Boa noite", "Tudo bem?", "Prazer em conhecê-lo"],
             necessidades: ["Estou com fome", "Estou com sede", "Preciso ir ao banheiro", "Estou com dor", "Preciso de ajuda"],
-            sentimentos: ["Estou feliz", "Estou triste", "Estou cansado", "Estou com medo", "Estou com raiva"],
+            sentimentos: ["Estou feliz", "Estou triste", "Estou cansado", "Estou com medo", "Estou com raiva", "Eu te amo"],
             emergencia: ["Preciso de ajuda urgente", "Chame um médico", "Ligue para minha família", "Não estou me sentindo bem"]
         };
 
@@ -366,12 +430,12 @@
         function loadUserSettings() {
             try {
                 const saved = JSON.parse(localStorage.getItem('easyface-settings') || '{}');
-                
+
                 if (saved.fontSize) changeFontSize(saved.fontSize);
                 if (saved.highContrast) toggleContrast();
                 if (saved.soundsEnabled !== undefined) soundsEnabled = saved.soundsEnabled;
                 if (saved.scanSpeed) scanSpeed = saved.scanSpeed;
-                
+
                 updateStatus('Configurações carregadas');
             } catch (error) {
                 updateStatus('Configurações padrão aplicadas');
@@ -406,21 +470,21 @@
             apps.forEach(app => {
                 app.classList.add('hidden');
             });
-            
+
             const currentAppElement = document.getElementById(appId);
-    if (currentAppElement) {
-        currentAppElement.classList.remove('hidden');
-    }
-    currentApp = appId;
-    playFeedbackSound();
+            if (currentAppElement) {
+                currentAppElement.classList.remove('hidden');
+            }
+            currentApp = appId;
+            playFeedbackSound();
         }
 
-        function showTextEditor() { 
-            showApp('text-editor'); 
+        function showTextEditor() {
+            showApp('text-editor');
         }
-        
-        function showCalculator() { 
-            showApp('calculator-app'); 
+
+        function showCalculator() {
+            showApp('calculator-app');
             // Foca no botão 7 quando a calculadora é aberta
             setTimeout(() => {
                 const firstNumber = document.querySelector('.calc-button[data-key="7"]');
@@ -434,17 +498,17 @@
                 }
             }, 100);
         }
-        
-        function showSiteLauncher() { 
-            showApp('site-launcher'); 
+
+        function showSiteLauncher() {
+            showApp('site-launcher');
         }
-        
-        function showAccessibilitySettings() { 
-            showApp('accessibility-settings'); 
+
+        function showAccessibilitySettings() {
+            showApp('accessibility-settings');
         }
-        
-        function showHelp() { 
-            showApp('help'); 
+
+        function showHelp() {
+            showApp('help');
         }
 
         // ===== FUNÇÕES EXPLORADOR DE ARQUIVOS =====
@@ -452,11 +516,11 @@
             showApp('file-manager');
         }
 
-        document.getElementById('file-input').addEventListener('change', function(e) {
+        document.getElementById('file-input').addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     document.getElementById('file-text-area').value = e.target.result;
                     document.getElementById('file-info').textContent = `Arquivo "${file.name}" carregado com sucesso.`;
                     speakFeedback(`Arquivo ${file.name} carregado com sucesso`);
@@ -487,7 +551,7 @@
             showApp('media-player');
         }
 
-        document.getElementById('media-input').addEventListener('change', function(e) {
+        document.getElementById('media-input').addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
                 const url = URL.createObjectURL(file);
@@ -513,11 +577,11 @@
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
         }
 
-        document.getElementById('pdf-input').addEventListener('change', function(e) {
+        document.getElementById('pdf-input').addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file && file.type === 'application/pdf') {
                 const fileReader = new FileReader();
-                fileReader.onload = function() {
+                fileReader.onload = function () {
                     const typedarray = new Uint8Array(this.result);
                     loadPdf(typedarray);
                 };
@@ -528,7 +592,7 @@
         });
 
         function loadPdf(data) {
-            pdfjsLib.getDocument(data).promise.then(function(pdf) {
+            pdfjsLib.getDocument(data).promise.then(function (pdf) {
                 currentPdf = pdf;
                 pdfTotalPages = pdf.numPages;
                 currentPage = 1;
@@ -538,20 +602,20 @@
 
         function renderPage(pageNum) {
             if (!currentPdf) return;
-            
-            currentPdf.getPage(pageNum).then(function(page) {
+
+            currentPdf.getPage(pageNum).then(function (page) {
                 const viewport = page.getViewport({ scale: pdfScale });
                 const canvas = document.getElementById('pdf-canvas');
                 const context = canvas.getContext('2d');
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
-                
+
                 const renderContext = {
                     canvasContext: context,
                     viewport: viewport
                 };
-                
-                page.render(renderContext).promise.then(function() {
+
+                page.render(renderContext).promise.then(function () {
                     document.getElementById('pdf-info').textContent = `Página ${pageNum} de ${pdfTotalPages}`;
                     speakFeedback(`Página ${pageNum} de ${pdfTotalPages}`);
                 });
@@ -593,16 +657,16 @@
         function showPhrases(category) {
             const container = document.getElementById('phrases-container');
             container.innerHTML = '';
-            
+
             communicationPhrases[category].forEach((phrase, index) => {
                 const button = document.createElement('button');
                 button.className = 'phrase-button scannable';
                 button.textContent = phrase;
                 button.tabIndex = 50 + index;
                 button.setAttribute('aria-label', `Selecionar frase: ${phrase}`);
-                button.onclick = function() {
+                button.onclick = function () {
                     document.getElementById('communication-display').textContent = phrase;
-                    speakFeedback(`Frase selecionada: ${phrase}`);
+                    speakFeedback(`${phrase}`);
                 };
                 container.appendChild(button);
             });
@@ -636,14 +700,14 @@
 
         function openWhatsApp() {
             window.open('https://web.whatsapp.com', '_blank');
-            speakFeedback('Abrindo WhatsApp');
+            speakFeedback('Abrindo Uatzap');
         }
 
         function sendEmail() {
             const to = document.getElementById('email-to').value;
             const subject = document.getElementById('email-subject').value;
             const body = document.getElementById('email-body').value;
-            
+
             if (to && subject && body) {
                 const mailtoLink = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                 window.location.href = mailtoLink;
@@ -659,7 +723,7 @@
             try {
                 const saved = JSON.parse(localStorage.getItem('easyface-shortcuts') || '{}');
                 customShortcuts = saved;
-                
+
                 // Aplicar atalhos salvos
                 if (saved.text) document.getElementById('shortcut-text').value = saved.text;
                 if (saved.file) document.getElementById('shortcut-file').value = saved.file;
@@ -678,7 +742,7 @@
                     calc: document.getElementById('shortcut-calc').value,
                     // Outros atalhos...
                 };
-                
+
                 localStorage.setItem('easyface-shortcuts', JSON.stringify(customShortcuts));
                 updateStatus('Atalhos personalizados salvos');
                 speakFeedback('Atalhos personalizados salvos');
@@ -752,13 +816,13 @@
                 document.getElementById('calc-display').textContent = calcDisplay;
                 return;
             }
-            
+
             try {
                 const expressionToEval = calcExpression
                     .replace(/×/g, '*')
                     .replace(/÷/g, '/')
                     .replace(/−/g, '-');
-                
+
                 const result = eval(expressionToEval);
                 calcDisplay = result.toString();
                 calcExpression = result.toString();
@@ -794,20 +858,20 @@
         function moveCalcFocus(rowDelta, colDelta) {
             const newRow = Math.max(0, Math.min(calcFocus.row + rowDelta, calcGrid.length - 1));
             let newCol = Math.max(0, Math.min(calcFocus.col + colDelta, calcGrid[newRow].length - 1));
-            
+
             // Ajuste especial para o botão 0 que ocupa duas colunas
             if (newRow === 4 && newCol === 1) {
                 newCol = 0;
             }
-            
+
             // Encontra o elemento a ser focado
             const tabIndex = calcGrid[newRow][newCol];
             const element = document.querySelector(`.calc-button[tabindex="${tabIndex}"]`);
-            
+
             if (element) {
                 element.focus();
                 calcFocus = { row: newRow, col: newCol };
-                
+
                 // Destacar visualmente o botão com foco de navegação
                 document.querySelectorAll('.calc-button').forEach(btn => {
                     btn.classList.remove('navigation-focus');
@@ -818,35 +882,35 @@
 
         // ===== FUNÇÕES DO LAUNCHER DE SITE =====
         function launchSite(url) {
-    window.open(url, '_blank', 'noopener,noreferrer');
-    updateStatus('Site aberto em nova janela: ' + url);
-    playFeedbackSound();
-}
+            window.open(url, '_blank', 'noopener,noreferrer');
+            updateStatus('Site aberto em nova janela: ' + url);
+            playFeedbackSound();
+        }
 
-function launchCustomSite() {
-    const url = document.getElementById('custom-site-url').value.trim();
-    if (!url) {
-        updateStatus('Por favor, digite uma URL');
-        return;
-    }
-    
-    let finalUrl = url;
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        finalUrl = 'https://' + url;
-    }
-    
-    // Abre o site sem verificação (mais simples)
-    launchSite(finalUrl);
-    
-    // Aviso para o usuário sobre segurança
-    updateStatus('Site aberto. Cuidado com sites desconhecidos.');
-}
+        function launchCustomSite() {
+            const url = document.getElementById('custom-site-url').value.trim();
+            if (!url) {
+                updateStatus('Por favor, digite uma URL');
+                return;
+            }
+
+            let finalUrl = url;
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                finalUrl = 'https://' + url;
+            }
+
+            // Abre o site sem verificação (mais simples)
+            launchSite(finalUrl);
+
+            // Aviso para o usuário sobre segurança
+            updateStatus('Site aberto. Cuidado com sites desconhecidos.');
+        }
 
         // ===== FUNÇÕES DE ACESSIBILIDADE =====
         function changeFontSize(size) {
             const body = document.body;
             body.classList.remove('font-small', 'font-medium', 'font-large');
-            
+
             if (size === 'small') {
                 body.style.fontSize = '16px';
                 updateStatus('Fonte pequena aplicada');
@@ -857,7 +921,7 @@ function launchCustomSite() {
                 body.style.fontSize = '22px';
                 updateStatus('Fonte grande aplicada');
             }
-            
+
             saveUserSettings();
             playFeedbackSound();
         }
@@ -871,7 +935,7 @@ function launchCustomSite() {
                 document.body.style.filter = 'none';
                 updateStatus('Alto contraste desativado');
             }
-            
+
             saveUserSettings();
             playFeedbackSound();
         }
@@ -879,7 +943,7 @@ function launchCustomSite() {
         function toggleSounds() {
             soundsEnabled = !soundsEnabled;
             updateStatus(soundsEnabled ? 'Sons ativados' : 'Sons desativados');
-            
+
             saveUserSettings();
             if (soundsEnabled) playFeedbackSound();
         }
@@ -890,7 +954,7 @@ function launchCustomSite() {
             const button = document.getElementById('scan-toggle');
             const indicator = document.getElementById('scan-indicator');
             const controls = document.getElementById('scan-controls');
-            
+
             if (scanMode) {
                 startScanning();
                 button.textContent = '⏹️ Parar Varredura';
@@ -906,7 +970,7 @@ function launchCustomSite() {
                 controls.style.display = 'none';
                 updateStatus('Modo de varredura desativado');
             }
-            
+
             saveUserSettings();
         }
 
@@ -914,7 +978,7 @@ function launchCustomSite() {
             scanElements = document.querySelectorAll('.scannable:not([disabled])');
             currentScanIndex = 0;
             scanPaused = false;
-            
+
             if (scanElements.length > 0) {
                 scanInterval = setInterval(nextScanElement, scanSpeed);
                 highlightCurrentElement();
@@ -926,7 +990,7 @@ function launchCustomSite() {
                 clearInterval(scanInterval);
                 scanInterval = null;
             }
-            
+
             scanElements.forEach(el => el.classList.remove('scan-active'));
             scanElements = [];
             currentScanIndex = 0;
@@ -934,11 +998,11 @@ function launchCustomSite() {
 
         function nextScanElement() {
             if (scanPaused) return;
-            
+
             if (scanElements[currentScanIndex]) {
                 scanElements[currentScanIndex].classList.remove('scan-active');
             }
-            
+
             currentScanIndex = (currentScanIndex + 1) % scanElements.length;
             highlightCurrentElement();
         }
@@ -947,13 +1011,13 @@ function launchCustomSite() {
             if (scanElements[currentScanIndex]) {
                 const element = scanElements[currentScanIndex];
                 element.classList.add('scan-active');
-                
+
                 element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
+
                 if (soundsEnabled) {
                     playDifferentSound(800);
                 }
-                
+
                 const label = element.getAttribute('aria-label') || element.textContent;
                 updateStatus(`Selecionando: ${label.trim()}`);
             }
@@ -973,7 +1037,7 @@ function launchCustomSite() {
         function pauseScanning() {
             scanPaused = !scanPaused;
             const button = document.getElementById('pause-scan');
-            
+
             if (scanPaused) {
                 button.textContent = '▶️ Continuar';
                 updateStatus('Varredura pausada');
@@ -985,13 +1049,13 @@ function launchCustomSite() {
 
         function setScanSpeed(speed) {
             scanSpeed = speed;
-            updateStatus(`Velocidade definida: ${speed/1000} segundos`);
-            
+            updateStatus(`Velocidade definida: ${speed / 1000} segundos`);
+
             if (scanMode) {
                 stopScanning();
                 startScanning();
             }
-            
+
             saveUserSettings();
         }
 
@@ -1006,21 +1070,21 @@ function launchCustomSite() {
 
         function playDifferentSound(frequency, duration = 0.1) {
             if (!soundsEnabled) return;
-            
+
             try {
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
-                
+
                 oscillator.connect(gainNode);
                 gainNode.connect(audioContext.destination);
-                
+
                 oscillator.frequency.value = frequency;
                 oscillator.type = 'sine';
-                
+
                 gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
-                
+
                 oscillator.start(audioContext.currentTime);
                 oscillator.stop(audioContext.currentTime + duration);
             } catch (error) {
@@ -1033,7 +1097,7 @@ function launchCustomSite() {
             const statusBar = document.getElementById('status-bar');
             statusBar.textContent = message;
             statusBar.setAttribute('aria-live', 'polite');
-            
+
             setTimeout(() => {
                 if (!scanMode) {
                     statusBar.textContent = 'EASYFACE ativo - Use TAB para navegar';
@@ -1053,7 +1117,7 @@ function launchCustomSite() {
                     Seu navegador não suporta reconhecimento de voz. 
                     Recomendamos usar Google Chrome para ter acesso a todos os recursos.
                 `;
-                
+
                 const settingsDiv = document.getElementById('accessibility-settings');
                 if (settingsDiv) {
                     settingsDiv.appendChild(voiceWarning);
@@ -1071,7 +1135,7 @@ function launchCustomSite() {
             recognition.lang = 'pt-BR';
             recognition.continuous = false;
             recognition.interimResults = false;
-            
+
             function startVoiceCommand() {
                 try {
                     recognition.start();
@@ -1081,36 +1145,46 @@ function launchCustomSite() {
                     playErrorSound();
                 }
             }
-            
-            recognition.onresult = function(event) {
+
+            recognition.onresult = function (event) {
                 const command = event.results[0][0].transcript.toLowerCase().trim();
                 updateStatus(`Comando reconhecido: ${command}`);
-                
+
                 if (command.includes('editor') || command.includes('texto')) {
                     showTextEditor();
+                } else if (command.includes('arquivo') || command.includes('documento')) {
+                    showFileManager();
                 } else if (command.includes('calculadora') || command.includes('calcular')) {
                     showCalculator();
-                } else if (command.includes('teclado')) {
-                    showVirtualKeyboard();
-                } else if (command.includes('navegador') || command.includes('internet')) {
-                    showWebBrowser();
+                } else if (command.includes('site') || command.includes('internet') || command.includes('navegador')) {
+                    showSiteLauncher();
+                } else if (command.includes('mídia') || command.includes('vídeo') || command.includes('áudio')) {
+                    showMediaPlayer();
+                } else if (command.includes('pdf') || command.includes('leitor')) {
+                    showPdfReader();
+                } else if (command.includes('comunicação') || command.includes('mensagem') || command.includes('falar')) {
+                    showCommunicationAid();
+                } else if (command.includes('email') || command.includes('correio') || command.includes('gmail')) {
+                    showEmailIntegration();
                 } else if (command.includes('configurações') || command.includes('configurar')) {
                     showAccessibilitySettings();
                 } else if (command.includes('ajuda') || command.includes('socorro')) {
                     showHelp();
                 } else if (command.includes('varredura') || command.includes('escanear')) {
                     toggleScanMode();
+                } else if (command.includes('início') || command.includes('menu')) {
+                    showApp('welcome');
                 } else {
                     updateStatus('Comando não reconhecido. Tente: "editor", "calculadora", "configurações"...');
                     playErrorSound();
                 }
             };
-            
-            recognition.onerror = function(event) {
+
+            recognition.onerror = function (event) {
                 updateStatus('Erro no reconhecimento de voz: ' + event.error);
                 playErrorSound();
             };
-            
+
             // Adicionar botão de comando de voz
             const voiceButton = document.createElement('button');
             voiceButton.className = 'menu-button scannable';
@@ -1144,10 +1218,10 @@ function launchCustomSite() {
         }
 
         // ===== EVENT LISTENERS GERAL (ÚNICO E CONSOLIDADO) =====
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             const focused = document.activeElement;
             const isCalcButtonFocused = focused && focused.classList.contains('calc-button');
-            
+
             // Lógica de navegação da calculadora com setas e outras teclas
             if (currentApp === 'calculator-app' && isCalcButtonFocused) {
                 const key = e.key;
@@ -1159,7 +1233,7 @@ function launchCustomSite() {
                     else if (key === 'ArrowUp') moveCalcFocus(-1, 0);
                     return;
                 }
-                
+
                 if ('0123456789.+-*/'.includes(key)) {
                     e.preventDefault();
                     addToCalc(key);
@@ -1200,9 +1274,9 @@ function launchCustomSite() {
                     showCalculator();
                     return;
                 }
-                
+
                 // Atalhos padrão como fallback
-                switch(e.key) {
+                switch (e.key) {
                     case '1':
                         e.preventDefault();
                         showTextEditor();
@@ -1217,29 +1291,25 @@ function launchCustomSite() {
                         break;
                     case '4':
                         e.preventDefault();
-                        showVirtualKeyboard();
+                        showSiteLauncher();
                         break;
                     case '5':
                         e.preventDefault();
-                        showWebBrowser();
+                        showMediaPlayer();
                         break;
                     case '6':
                         e.preventDefault();
-                        showMediaPlayer();
+                        showPdfReader();
                         break;
                     case '7':
                         e.preventDefault();
-                        showPdfReader();
+                        showCommunicationAid();
                         break;
                     case '8':
                         e.preventDefault();
-                        showCommunicationAid();
-                        break;
-                    case '9':
-                        e.preventDefault();
                         showEmailIntegration();
                         break;
-                    case '0':
+                    case '9':
                         e.preventDefault();
                         showAccessibilitySettings();
                         break;
@@ -1257,7 +1327,7 @@ function launchCustomSite() {
                     return;
                 }
             }
-            
+
             // ESC volta ao menu principal
             if (e.key === 'Escape') {
                 if (scanMode) {
@@ -1270,17 +1340,17 @@ function launchCustomSite() {
                 e.preventDefault();
                 return;
             }
-            
+
             // Barra de espaço para pausar varredura
             if (scanMode && e.key === ' ') {
                 e.preventDefault();
                 pauseScanning();
                 return;
             }
-            
+
             // Atalhos de teclado para apps (Ctrl + número)
             if (e.ctrlKey) {
-                switch(e.key) {
+                switch (e.key) {
                     case '1':
                         e.preventDefault();
                         showTextEditor();
@@ -1301,7 +1371,7 @@ function launchCustomSite() {
                         e.preventDefault();
                         showHelp();
                         break;
-                    case '6': 
+                    case '6':
                         e.preventDefault();
                         showFileManager();
                         break;
@@ -1330,26 +1400,26 @@ function launchCustomSite() {
         });
 
         // ===== INICIALIZAÇÃO =====
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Inicializar a calculadora
             initCalculator();
         });
 
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             // Verificar e configurar reconhecimento de voz
             setupVoiceRecognition();
-            
+
             // Carregar configurações salvas
             loadUserSettings();
-            
+
             updateStatus('EASYFACE carregado e pronto para uso!');
 
             // Carregar atalhos personalizados
             loadShortcuts();
-            
+
             // Configurar eventos para os novos inputs de arquivo
             setupFileInputs();
-            
+
             // Foco inicial no primeiro botão do menu após um delay
             setTimeout(() => {
                 if (!scanMode) {
@@ -1367,4 +1437,5 @@ function launchCustomSite() {
         }
     </script>
 </body>
+
 </html>

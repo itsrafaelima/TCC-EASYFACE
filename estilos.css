@@ -197,23 +197,6 @@ body {
     max-width: 400px;
 }
 
-/* Teclado Virtual */
-.virtual-keyboard {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    gap: 5px;
-    max-width: 800px;
-    margin-top: 20px;
-}
-
-.key.space {
-    grid-column: span 4;
-}
-
-.key.backspace, .key.enter {
-    grid-column: span 2;
-}
-
 /* Navegador */
 .web-content {
     border: 2px solid #ddd;
@@ -392,10 +375,6 @@ body {
     
     .sidebar {
         width: 100%;
-    }
-    
-    .virtual-keyboard {
-        grid-template-columns: repeat(5, 1fr);
     }
 }
 
