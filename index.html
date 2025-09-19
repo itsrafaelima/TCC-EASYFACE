@@ -31,8 +31,8 @@
             <button class="menu-button scannable" onclick="showVirtualKeyboard()" tabindex="4" aria-label="Abrir Teclado Virtual">
                 ⌨️ Teclado Virtual
             </button>
-            <button class="menu-button scannable" onclick="showWebBrowser()" tabindex="5" aria-label="Abrir Navegador Web">
-                🌐 Navegador Web
+            <button class="menu-button scannable" onclick="showSiteLauncher()" tabindex="5" aria-label="Abrir Launcher de Sites">
+                🌐 Sites Seguros
             </button>
             <button class="menu-button scannable" onclick="showMediaPlayer()" tabindex="6" aria-label="Abrir Reprodutor de Mídia">
                 🎵 Reprodutor de Mídia
@@ -165,16 +165,45 @@
                 </div>
             </div>
 
-            <div id="web-browser" class="app-container hidden">
-                <h2>🌐 Navegador Simples</h2>
-                <input type="url" id="url-input" class="text-input scannable" 
-                    placeholder="Digite uma URL (ex: https://google.com)" tabindex="74" aria-label="Digite o endereço do site">
-                <button class="action-button scannable" onclick="loadWebsite()" tabindex="75" aria-label="Carregar site">🔍 Carregar Site</button>
-                <div id="web-content" class="web-content">
-                    <p class="web-placeholder">
-                        Digite uma URL acima e clique em "Carregar Site" para navegar na web.
-                    </p>
-                </div>
+            <div id="site-launcher" class="app-container hidden">
+                <h2>🌐 Sites Seguros</h2>
+                <p class="launcher-description">Clique em um dos sites abaixo para abrir em uma nova janela de forma segura:</p>
+    
+    <div class="sites-grid">
+        <button class="site-button scannable" onclick="launchSite('https://www.google.com')" tabindex="50" aria-label="Abrir Google">
+            <span class="site-icon">🔍</span>
+            <span class="site-name">Google</span>
+        </button>
+        
+        <button class="site-button scannable" onclick="launchSite('https://www.wikipedia.org')" tabindex="51" aria-label="Abrir Wikipedia">
+            <span class="site-icon">📚</span>
+            <span class="site-name">Wikipedia</span>
+        </button>
+        
+        <button class="site-button scannable" onclick="launchSite('https://www.youtube.com')" tabindex="52" aria-label="Abrir YouTube">
+            <span class="site-icon">▶️</span>
+            <span class="site-name">YouTube</span>
+        </button>
+        
+        <button class="site-button scannable" onclick="launchSite('https://web.whatsapp.com')" tabindex="53" aria-label="Abrir WhatsApp Web">
+            <span class="site-icon">💬</span>
+            <span class="site-name">WhatsApp Web</span>
+        </button>
+        
+        <button class="site-button scannable" onclick="launchSite('https://mail.google.com')" tabindex="54" aria-label="Abrir Gmail">
+            <span class="site-icon">📧</span>
+            <span class="site-name">Gmail</span>
+        </button>
+    </div>
+    
+    <div class="custom-site">
+        <h3>Outro site</h3>
+        <input type="text" id="custom-site-url" class="text-input scannable" 
+            placeholder="Digite uma URL (ex: exemplo.com)" tabindex="56" aria-label="URL personalizada">
+        <button class="action-button scannable" onclick="launchCustomSite()" tabindex="57" aria-label="Abrir site personalizado">
+            🔗 Abrir Site
+        </button>
+    </div>
             </div>
 
             <div id="media-player" class="app-container hidden">
@@ -392,14 +421,6 @@
             emergencia: ["Preciso de ajuda urgente", "Chame um médico", "Ligue para minha família", "Não estou me sentindo bem"]
         };
 
-        // Lista de domínios seguros
-        const safeDomains = [
-            'google.com', 'google.com.br', 
-            'wikipedia.org', 'pt.wikipedia.org',
-            'gov.br', 'edu.br', 'youtube.com',
-            'github.com', 'stackoverflow.com'
-        ];
-
         // ===== FUNÇÕES DE CONFIGURAÇÃO =====
         function loadUserSettings() {
             try {
@@ -477,8 +498,8 @@
             showApp('virtual-keyboard-app'); 
         }
         
-        function showWebBrowser() { 
-            showApp('web-browser'); 
+        function showSiteLauncher() { 
+            showApp('site-launcher'); 
         }
         
         function showAccessibilitySettings() { 
@@ -884,59 +905,31 @@
             playFeedbackSound();
         }
 
-        // ===== FUNÇÕES DO NAVEGADOR =====
-        function isUrlSafe(url) {
-            try {
-                const urlObj = new URL(url.startsWith('http') ? url : 'https://' + url);
-                const hostname = urlObj.hostname.toLowerCase();
-                
-                return safeDomains.some(domain => 
-                    hostname === domain || hostname.endsWith('.' + domain)
-                );
-            } catch (error) {
-                return false;
-            }
-        }
+        // ===== FUNÇÕES DO LAUNCHER DE SITE =====
+        function launchSite(url) {
+    window.open(url, '_blank', 'noopener,noreferrer');
+    updateStatus('Site aberto em nova janela: ' + url);
+    playFeedbackSound();
+}
 
-        function loadWebsite() {
-            const url = document.getElementById('url-input').value.trim();
-            const webContent = document.getElementById('web-content');
-            
-            if (!url) {
-                updateStatus('Por favor, digite uma URL válida.');
-                return;
-            }
-            
-            if (!isUrlSafe(url)) {
-                webContent.innerHTML = `
-                    <div class="alert-warning">
-                        <strong>⚠️ URL Bloqueada por Segurança</strong><br>
-                        Por questões de segurança, apenas sites confiáveis são permitidos.<br><br>
-                        <strong>Sites seguros permitidos:</strong><br>
-                        • Google (google.com)<br>
-                        • Wikipedia (wikipedia.org)<br>
-                        • Sites governamentais (.gov.br)<br>
-                        • Sites educacionais (.edu.br)<br>
-                        • GitHub, Stack Overflow, YouTube<br><br>
-                        Tente uma URL de um destes domínios.
-                    </div>
-                `;
-                updateStatus('URL bloqueada por segurança');
-                playErrorSound();
-                return;
-            }
-            
-            const finalUrl = url.startsWith('http') ? url : 'https://' + url;
-            webContent.innerHTML = `
-                <iframe src="${finalUrl}" class="browser-iframe" 
-                        title="Navegador web incorporado"
-                        aria-label="Conteúdo do site carregado">
-                    Carregando site...
-                </iframe>
-            `;
-            updateStatus('Site seguro carregado!');
-            playFeedbackSound();
-        }
+function launchCustomSite() {
+    const url = document.getElementById('custom-site-url').value.trim();
+    if (!url) {
+        updateStatus('Por favor, digite uma URL');
+        return;
+    }
+    
+    let finalUrl = url;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        finalUrl = 'https://' + url;
+    }
+    
+    // Abre o site sem verificação (mais simples)
+    launchSite(finalUrl);
+    
+    // Aviso para o usuário sobre segurança
+    updateStatus('Site aberto. Cuidado com sites desconhecidos.');
+}
 
         // ===== FUNÇÕES DE ACESSIBILIDADE =====
         function changeFontSize(size) {
