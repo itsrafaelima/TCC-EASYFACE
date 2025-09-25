@@ -89,7 +89,14 @@ let currentApp = 'welcome';
         }
 
         function showTextEditor() {
-            showApp('text-editor');
+            showApp('text-editor-app');
+            // Foca na área de texto quando o editor é aberto
+            setTimeout(() => {
+            const editorArea = document.querySelector('#text-editor-app textarea, #text-editor-app input, #text-editor-app [contenteditable="true"]');
+                if (editorArea){
+                    editorArea.focus();
+                }
+            },100);
         }
 
         function showCalculator() {
@@ -106,23 +113,44 @@ let currentApp = 'welcome';
                     firstNumber.classList.add('navigation-focus');
                 }
             }, 100);
-        }
+    }
 
         function showSiteLauncher() {
-            showApp('site-launcher');
+            showApp('site-launcher-app');
+            // Foca no campo de URL quando o lançador de sites é aberto
+            setTimeout(() => {
+            const urlBar = document.querySelector('input[type="text"]');
+            if (urlBar){
+                urlBar.focus();
+                }
+            }, 100);
         }
 
         function showAccessibilitySettings() {
-            showApp('accessibility-settings');
+            showApp('accessibility-settings-app');
+            // Foca no primeiro controle de acessibilidade quando a seção é aberta
+            setTimeout(() => {
+                const firstControl = document.querySelector('#accessibility-settings button, #accessibility-settings input');
+                if (firstControl) {
+                    firstControl.focus();
+                }
+            }, 100);
         }
 
         function showHelp() {
-            showApp('help');
+            showApp('help-app');
+            // Foca no botão de fechar ajuda quando a seção é aberta
+            setTimeout(() => {
+                const closeButton = document.getElementById('close-help');
+                if (closeButton) {
+                    closeButton.focus();
+                }
+            }, 100);
         }
 
         // ===== FUNÇÕES EXPLORADOR DE ARQUIVOS =====
         function showFileManager() {
-            showApp('file-manager');
+            showApp('file-manager-app');
         }
 
         document.getElementById('file-input').addEventListener('change', function (e) {
@@ -157,7 +185,7 @@ let currentApp = 'welcome';
         // ===== FUNÇÕES REPRODUTOR AÚDIO =====
 
         function showMediaPlayer() {
-            showApp('media-player');
+            showApp('media-player-app');
         }
 
         document.getElementById('media-input').addEventListener('change', function (e) {
@@ -181,7 +209,7 @@ let currentApp = 'welcome';
         // ===== FUNÇÕES LEITOR PDF =====
 
         function showPdfReader() {
-            showApp('pdf-reader');
+            showApp('pdf-reader-app');
             // Inicializar PDF.js
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
         }
@@ -260,7 +288,7 @@ let currentApp = 'welcome';
         // ===== FUNÇÕES COMUNICAÇÃO ALTERNATIVA =====
 
         function showCommunicationAid() {
-            showApp('communication-aid');
+            showApp('communication-aid-app');
         }
 
         function showPhrases(category) {
@@ -299,7 +327,7 @@ let currentApp = 'welcome';
         // FUNÇÕES EMAIL-WHATSAPP
 
         function showEmailIntegration() {
-            showApp('email-integration');
+            showApp('email-integration-app');
         }
 
         function openGmail() {
@@ -834,6 +862,12 @@ let currentApp = 'welcome';
             // Lógica de navegação da calculadora com setas e outras teclas
             if (currentApp === 'calculator-app' && isCalcButtonFocused) {
                 const key = e.key;
+
+                if (key === 'Tab') {
+                    // Permitir navegação normal com Tab
+                    return;
+                }
+
                 if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
                     e.preventDefault();
                     if (key === 'ArrowRight') moveCalcFocus(0, 1);
