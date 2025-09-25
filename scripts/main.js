@@ -151,6 +151,13 @@ let currentApp = 'welcome';
         // ===== FUNÇÕES EXPLORADOR DE ARQUIVOS =====
         function showFileManager() {
             showApp('file-manager-app');
+            // Foca no botão de carregar arquivo quando o gerenciador de arquivos é aberto
+            setTimeout(() => {
+                const loadButton = document.getElementById('load-file-button');
+                if (loadButton) {
+                    loadButton.focus();
+                }
+            }, 100);
         }
 
         document.getElementById('file-input').addEventListener('change', function (e) {
@@ -186,6 +193,13 @@ let currentApp = 'welcome';
 
         function showMediaPlayer() {
             showApp('media-player-app');
+            // Foca no botão de carregar mídia quando o reprodutor é aberto
+            setTimeout(() => {
+                const loadButton = document.getElementById('load-media-button');
+                if (loadButton) {
+                    loadButton.focus();
+                }
+            }, 100);
         }
 
         document.getElementById('media-input').addEventListener('change', function (e) {
@@ -210,6 +224,13 @@ let currentApp = 'welcome';
 
         function showPdfReader() {
             showApp('pdf-reader-app');
+            // Foca no botão de carregar PDF quando o leitor é aberto
+            setTimeout(() => {
+                const loadButton = document.getElementById('load-pdf-button');
+                if (loadButton) {
+                    loadButton.focus();
+                }
+            }, 100);
             // Inicializar PDF.js
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
         }
@@ -289,6 +310,13 @@ let currentApp = 'welcome';
 
         function showCommunicationAid() {
             showApp('communication-aid-app');
+            // Foca no primeiro botão de categoria quando o auxílio é aberto
+            setTimeout(() => {
+                const firstCategory = document.querySelector('.category-button');
+                if (firstCategory) {
+                    firstCategory.focus();
+                }
+            }, 100);
         }
 
         function showPhrases(category) {
@@ -328,6 +356,13 @@ let currentApp = 'welcome';
 
         function showEmailIntegration() {
             showApp('email-integration-app');
+            // Foca no botão de abrir Gmail quando a seção é aberta
+            setTimeout(() => {
+                const gmailButton = document.getElementById('open-gmail-button');
+                if (gmailButton) {
+                    gmailButton.focus();
+                }
+            }, 100);
         }
 
         function openGmail() {
@@ -377,7 +412,14 @@ let currentApp = 'welcome';
                     text: document.getElementById('shortcut-text').value,
                     file: document.getElementById('shortcut-file').value,
                     calc: document.getElementById('shortcut-calc').value,
-                    // Outros atalhos...
+                    site: document.getElementById('shortcut-site').value,
+                    acce: document.getElementById('shortcut-accessibility').value,
+                    help: document.getElementById('shortcut-help').value,
+                    media: document.getElementById('shortcut-media').value,
+                    pdf: document.getElementById('shortcut-pdf').value,
+                    commu: document.getElementById('shortcut-communication').value,
+                    email: document.getElementById('shortcut-email').value,
+                    whats: document.getElementById('shortcut-whatsapp').value
                 };
 
                 localStorage.setItem('easyface-shortcuts', JSON.stringify(customShortcuts));
