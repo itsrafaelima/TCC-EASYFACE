@@ -117,11 +117,11 @@ function showCalculator() {
 
 function showSiteLauncher() {
     showApp('site-launcher-app');
-    // Foca no campo de URL quando o lançador de sites é aberto
+    // Foca no botão do Google quando o lançador de sites é aberto
     setTimeout(() => {
-        const urlBar = document.querySelector('input[type="text"]');
-        if (urlBar) {
-            urlBar.focus();
+        const googleButton = document.querySelector('.site-button[onclick*="google.com"]');
+        if (googleButton) {
+            googleButton.focus();
         }
     }, 100);
 }
@@ -153,9 +153,9 @@ function showFileManager() {
     showApp('file-manager-app');
     // Foca no botão de carregar arquivo quando o gerenciador de arquivos é aberto
     setTimeout(() => {
-        const loadButton = document.getElementById('load-file-button');
-        if (loadButton) {
-            loadButton.focus();
+        const openFileButton = document.querySelector('#file-manager-app .action-button');
+        if (openFileButton) {
+            openFileButton.focus();
         }
     }, 100);
 }
