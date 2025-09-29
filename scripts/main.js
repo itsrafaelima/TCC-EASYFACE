@@ -195,7 +195,7 @@ function showMediaPlayer() {
     showApp('media-player-app');
     // Foca no botão de carregar mídia quando o reprodutor é aberto
     setTimeout(() => {
-        const loadButton = document.getElementById('load-media-button');
+        const loadButton = document.querySelector('#media-player-app .action-button');
         if (loadButton) {
             loadButton.focus();
         }
@@ -226,11 +226,12 @@ function showPdfReader() {
     showApp('pdf-reader-app');
     // Foca no botão de carregar PDF quando o leitor é aberto
     setTimeout(() => {
-        const loadButton = document.getElementById('load-pdf-button');
+        const loadButton = document.querySelector('#pdf-reader-app .action-button');
         if (loadButton) {
             loadButton.focus();
         }
     }, 100);
+
     // Inicializar PDF.js
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
 }
@@ -308,13 +309,32 @@ function zoomOut() {
 
 // ===== FUNÇÕES COMUNICAÇÃO ALTERNATIVA =====
 
+// Variáveis para navegação na comunicação alternativa
+let commFocus = { category: 0, phrase: 0 };
+let currentCategory = null;
+const categories = ['saudacoes', 'necessidades', 'sentimentos', 'emergencia'];
+
+function highlightCommElement(element) {
+    // Remove destaque anterior
+    document.querySelectorAll('.category-button, .phrase-button').forEach(btn => {
+        btn.classList.remove('navigation-focus');
+    });
+    // Adiciona destaque ao elemento atual
+    if (element) {
+        element.classList.add('navigation-focus');
+    }
+}
+
 function showCommunicationAid() {
     showApp('communication-aid-app');
     // Foca no primeiro botão de categoria quando o auxílio é aberto
     setTimeout(() => {
+        commFocus = { category: 0, phrase: 0 };
+        currentCategory = null;
         const firstCategory = document.querySelector('.category-button');
         if (firstCategory) {
             firstCategory.focus();
+            highlightCommElement(firstCategory);
         }
     }, 100);
 }
