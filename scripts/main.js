@@ -610,7 +610,13 @@ function loadShortcuts() {
         if (saved.text) document.getElementById('shortcut-text').value = saved.text;
         if (saved.file) document.getElementById('shortcut-file').value = saved.file;
         if (saved.calc) document.getElementById('shortcut-calc').value = saved.calc;
-        // Carregar outros atalhos...
+        if (saved.site) document.getElementById('shortcut-site').value = saved.site;
+        if (saved.media) document.getElementById('shortcut-media').value = saved.media;
+        if (saved.pdf) document.getElementById('shortcut-pdf').value = saved.pdf;
+        if (saved.commu) document.getElementById('shortcut-comm').value = saved.commu;
+        if (saved.email) document.getElementById('shortcut-email').value = saved.email;
+        if (saved.conf) document.getElementById('shortcut-conf').value = saved.conf;
+        if (saved.help) document.getElementById('shortcut-help').value = saved.help;
     } catch (error) {
         console.log('Não foi possível carregar atalhos personalizados');
     }
@@ -623,13 +629,12 @@ function saveShortcuts() {
             file: document.getElementById('shortcut-file').value,
             calc: document.getElementById('shortcut-calc').value,
             site: document.getElementById('shortcut-site').value,
-            acce: document.getElementById('shortcut-accessibility').value,
-            help: document.getElementById('shortcut-help').value,
             media: document.getElementById('shortcut-media').value,
             pdf: document.getElementById('shortcut-pdf').value,
-            commu: document.getElementById('shortcut-communication').value,
+            comm: document.getElementById('shortcut-comm').value,
             email: document.getElementById('shortcut-email').value,
-            whats: document.getElementById('shortcut-whatsapp').value
+            conf: document.getElementById('shortcut-conf').value,
+            help: document.getElementById('shortcut-help').value
         };
 
         localStorage.setItem('easyface-shortcuts', JSON.stringify(customShortcuts));
