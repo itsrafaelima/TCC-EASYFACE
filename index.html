@@ -219,19 +219,21 @@
                     <div id="communication-display" class="communication-display" aria-live="polite">
                         Sua mensagem aparecerá aqui...
                     </div>
-                    <button class="action-button scannable" onclick="speakCommunication()" tabindex="25"
-                        aria-label="Falar mensagem">🔊 Falar</button>
-                    <button class="action-button scannable" onclick="clearCommunication()" tabindex="26"
-                        aria-label="Limpar mensagem">🗑️ Limpar</button>
+                    <div class="communication-controls">
+                        <button class="action-button scannable" onclick="speakCommunication()" tabindex="25"
+                            id="speak-button" aria-label="Falar mensagem">🔊 Falar</button>
+                        <button class="action-button scannable" onclick="clearCommunication()" tabindex="26"
+                            aria-label="Limpar mensagem">🗑️ Limpar</button>
+                    </div>
                 </div>
                 <div class="communication-categories">
-                    <button class="category-button scannable" onclick="showPhrases('saudacoes')" tabindex="27"
+                    <button class="category-button scannable" onclick="selectCategory('saudacoes')" tabindex="27"
                         aria-label="Saudações">👋 Saudações</button>
-                    <button class="category-button scannable" onclick="showPhrases('necessidades')" tabindex="28"
+                    <button class="category-button scannable" onclick="selectCategory('necessidades')" tabindex="28"
                         aria-label="Necessidades">🍽️ Necessidades</button>
-                    <button class="category-button scannable" onclick="showPhrases('sentimentos')" tabindex="29"
+                    <button class="category-button scannable" onclick="selectCategory('sentimentos')" tabindex="29"
                         aria-label="Sentimentos">❤️ Sentimentos</button>
-                    <button class="category-button scannable" onclick="showPhrases('emergencia')" tabindex="30"
+                    <button class="category-button scannable" onclick="selectCategory('emergencia')" tabindex="30"
                         aria-label="Emergência">🚨 Emergência</button>
                 </div>
                 <div id="phrases-container" class="phrases-container">
@@ -330,9 +332,17 @@
                     <div class="help-section">
                         <h3>🛠️ Funcionalidades:</h3>
                         <p><strong>Editor de Texto:</strong> Escreva e salve documentos</p>
+                        <p><strong>Gerenciador de Arquivos:</strong> Abra qualquer arquivo .txt na tela e edite-o</p>
                         <p><strong>Calculadora:</strong> Realize cálculos matemáticos</p>
-                        <p><strong>Teclado Virtual:</strong> Digite usando apenas o mouse</p>
-                        <p><strong>Navegador:</strong> Acesse sites da internet</p>
+                        <p><strong>Sites Seguros:</strong> Acesse 5 sites seguros da internet</p>
+                        <p><strong>Reprodutor de Mídia:</strong> Toque arquivos de áudio e vídeo</p>
+                        <p><strong>Leitor de PDF:</strong> Abra e navegue em documentos PDF</p>
+                        <p><strong>Comunicação Alternativa:</strong> Use frases prontas para se comunicar</p>
+                        <p><strong>Integração de E-mail:</strong> Envie e-mails e mensagens rapidamente</p>
+                        <p><strong>Configurações de Acessibilidade:</strong> Ajuste fonte, contraste, sons e varredura
+                        </p>
+                        <p><strong>Central de Ajuda:</strong> Veja instruções e dicas de uso</p>
+                        <p><strong>Comando de Voz:</strong> Use sua voz pra navegar entre menus</p>
                     </div>
 
                     <div class="help-section">
@@ -388,4 +398,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
     <script src="scripts/main.js"></script>
 </body>
+
 </html>

@@ -310,13 +310,126 @@ function zoomOut() {
 // ===== FUNÇÕES COMUNICAÇÃO ALTERNATIVA =====
 
 // Variáveis para navegação na comunicação alternativa
-let commFocus = { category: 0, phrase: 0 };
+let commFocus = { 
+    section: 'controls',
+    index: 0 
+};
 let currentCategory = null;
 const categories = ['saudacoes', 'necessidades', 'sentimentos', 'emergencia'];
+let commElements = {
+    controls: [],
+    categories: [],
+    phrases: []
+};
+
+function updateCommElements() {
+    // Atualiza a lista de elementos navegáveis
+    commElements.controls = Array.from(document.querySelectorAll('.communication-controls .action-button'));
+    commElements.categories = Array.from(document.querySelectorAll('.category-button'));
+    commElements.phrases = Array.from(document.querySelectorAll('.phrase-button'));
+}
+
+// ===== NAVEGAÇÃO POR SETAS NA COMUNICAÇÃO ALTERNATIVA =====
+function moveCommFocus(direction) {
+    updateCommElements();
+    
+    if (commFocus.section === 'controls') {
+        // Navegação nos controles (Falar, Limpar)
+        const newIndex = commFocus.index + direction;
+        
+        if (newIndex >= 0 && newIndex < commElements.controls.length) {
+            // Continua nos controles
+            commFocus.index = newIndex;
+            commElements.controls[newIndex].focus();
+            highlightCommElement(commElements.controls[newIndex]);
+        } 
+        else if (newIndex >= commElements.controls.length && direction === 1) {
+            // Sai dos controles para categorias
+            moveToCategories();
+        }
+        else if (newIndex < 0 && direction === -1 && commElements.phrases.length > 0) {
+            // Vem das frases para os controles (caso especial)
+            moveToPhrases(commElements.phrases.length - 1);
+        }
+        
+    } else if (commFocus.section === 'categories') {
+        // Navegação nas categorias
+        const newIndex = commFocus.index + direction;
+        
+        if (newIndex >= 0 && newIndex < commElements.categories.length) {
+            // Continua nas categorias
+            commFocus.index = newIndex;
+            commElements.categories[newIndex].focus();
+            highlightCommElement(commElements.categories[newIndex]);
+        } 
+        else if (newIndex >= commElements.categories.length && direction === 1 && commElements.phrases.length > 0) {
+            // Sai das categorias para frases
+            moveToPhrases();
+        }
+        else if (newIndex < 0 && direction === -1) {
+            // Volta das categorias para controles
+            moveToControls(commElements.controls.length - 1);
+        }
+        
+    } else if (commFocus.section === 'phrases') {
+        // Navegação nas frases
+        const newIndex = commFocus.index + direction;
+        
+        if (newIndex >= 0 && newIndex < commElements.phrases.length) {
+            // Continua nas frases
+            commFocus.index = newIndex;
+            commElements.phrases[newIndex].focus();
+            highlightCommElement(commElements.phrases[newIndex]);
+        } 
+        else if (newIndex >= commElements.phrases.length && direction === 1) {
+            // Sai das frases (volta para controles - ciclo completo)
+            moveToControls();
+        }
+        else if (newIndex < 0 && direction === -1) {
+            // Volta das frases para categorias
+            moveToCategories(commElements.categories.length - 1);
+        }
+    }
+}
+
+function moveToControls(targetIndex = 0) {
+    commFocus.section = 'controls';
+    commFocus.index = targetIndex;
+    updateCommElements();
+    
+    if (commElements.controls[targetIndex]) {
+        commElements.controls[targetIndex].focus();
+        highlightCommElement(commElements.controls[targetIndex]);
+    }
+}
+
+function moveToCategories(targetIndex = 0) {
+    commFocus.section = 'categories';
+    commFocus.index = targetIndex;
+    updateCommElements();
+    
+    if (commElements.categories[targetIndex]) {
+        commElements.categories[targetIndex].focus();
+        highlightCommElement(commElements.categories[targetIndex]);
+    }
+}
+
+function moveToPhrases(targetIndex = 0) {
+    if (commElements.phrases.length > 0) {
+        commFocus.section = 'phrases';
+        commFocus.index = targetIndex;
+        updateCommElements();
+        
+        if (commElements.phrases[targetIndex]) {
+            commElements.phrases[targetIndex].focus();
+            highlightCommElement(commElements.phrases[targetIndex]);
+        }
+    }
+}
 
 function highlightCommElement(element) {
     // Remove destaque anterior
-    document.querySelectorAll('.category-button, .phrase-button').forEach(btn => {
+    document.querySelectorAll('.action-button, .category-button, .phrase-button').forEach(btn => {
         btn.classList.remove('navigation-focus');
     });
     // Adiciona destaque ao elemento atual
@@ -325,16 +438,42 @@ function highlightCommElement(element) {
     }
 }
 
+function selectCategory(category) {
+    currentCategory = category;
+    showPhrases(category);
+    
+    // Atualiza elementos e move foco para as frases
+    setTimeout(() => {
+        updateCommElements();
+        if (commElements.phrases.length > 0) {
+            moveToPhrases();
+        }
+    }, 100);
+}
+
+// Função para voltar às categorias
+function backToCategories() {
+    currentCategory = null;
+    document.getElementById('phrases-container').innerHTML = '';
+    
+    // Volta para as categorias
+    setTimeout(() => {
+        updateCommElements();
+        moveToCategories();
+    }, 100);
+}
+
 function showCommunicationAid() {
     showApp('communication-aid-app');
-    // Foca no primeiro botão de categoria quando o auxílio é aberto
+    // Foca no botão Falar quando o auxílio é aberto
     setTimeout(() => {
-        commFocus = { category: 0, phrase: 0 };
+        commFocus = { section: 'controls', index: 0 };
         currentCategory = null;
-        const firstCategory = document.querySelector('.category-button');
-        if (firstCategory) {
-            firstCategory.focus();
-            highlightCommElement(firstCategory);
+        updateCommElements();
+        const speakButton = document.getElementById('speak-button');
+        if (speakButton) {
+            speakButton.focus();
+            highlightCommElement(speakButton);
         }
     }, 100);
 }
@@ -378,9 +517,13 @@ function showEmailIntegration() {
     showApp('email-integration-app');
     // Foca no botão de abrir Gmail quando a seção é aberta
     setTimeout(() => {
-        const gmailButton = document.getElementById('open-gmail-button');
-        if (gmailButton) {
-            gmailButton.focus();
+        const firstEmailButton = document.querySelector('#email-integration-app .email-options .action-button');
+        if (firstEmailButton) {
+            firstEmailButton.focus();
+        } else {
+            // Fallback: foca no primeiro botão da seção
+            const firstButton = document.querySelector('#email-integration-app .action-button');
+            if (firstButton) firstButton.focus();
         }
     }, 100);
 }
@@ -951,16 +1094,68 @@ document.addEventListener('keydown', function (e) {
                 calculateResult();
             }
             return;
-        } else if (key === 'Escape') {
-            e.preventDefault();
-            clearCalc();
-            return;
         } else if (key === 'Backspace') {
             e.preventDefault();
             deleteLast();
             return;
         }
+    } // Adicione esta seção no event listener de teclado, após a lógica da calculadora
+else if (currentApp === 'communication-aid-app') {
+    const key = e.key;
+    
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+        e.preventDefault();
+        
+        if (key === 'ArrowDown' || key === 'ArrowRight') {
+            moveCommFocus(1); // Próximo elemento
+        } else if (key === 'ArrowUp' || key === 'ArrowLeft') {
+            moveCommFocus(-1); // Elemento anterior
+        }
+        return;
     }
+    
+    // Tab funciona normalmente para navegação sequencial
+    if (key === 'Tab') {
+        e.preventDefault();
+        if (e.shiftKey) {
+            moveCommFocus(-1); // Tab + Shift: elemento anterior
+        } else {
+            moveCommFocus(1); // Tab: próximo elemento
+        }
+        return;
+    }
+    
+    // ESC volta para categorias se estiver nas frases, ou para controles se estiver nas categorias
+    if (key === 'Escape') {
+        e.preventDefault();
+        
+        if (commFocus.section === 'phrases') {
+            // Se estiver nas frases, volta para categorias
+            backToCategories();
+        } else if (commFocus.section === 'categories') {
+            // Se estiver nas categorias, volta para controles
+            moveToControls();
+        } else if (commFocus.section === 'controls') {
+            // Se estiver nos controles (Falar/Limpar), volta para menu principal
+            showApp('welcome');
+            const firstButton = document.querySelector('.menu-button');
+            if (firstButton) firstButton.focus();
+        }
+        return;
+    }
+    
+    // Enter para selecionar
+    if (key === 'Enter' || key === ' ') {
+        e.preventDefault();
+        const focused = document.activeElement;
+        if (focused && (focused.classList.contains('action-button') || 
+                        focused.classList.contains('category-button') || 
+                        focused.classList.contains('phrase-button'))) {
+            focused.click();
+        }
+        return;
+    }
+}
 
     if (e.ctrlKey) {
         // Verificar atalhos personalizados primeiro
@@ -1035,6 +1230,7 @@ document.addEventListener('keydown', function (e) {
 
     // ESC volta ao menu principal
     if (e.key === 'Escape') {
+        e.preventDefault();
         if (scanMode) {
             toggleScanMode();
         } else {
@@ -1042,18 +1238,7 @@ document.addEventListener('keydown', function (e) {
             const firstButton = document.querySelector('.menu-button');
             if (firstButton) firstButton.focus();
         }
-        e.preventDefault();
         return;
-    }
-
-    if (currentApp === 'calculator-app') {
-        if (e.key === 'Escape') {
-            e.preventDefault();
-            showApp('welcome'); // volta pro menu
-            const firstButton = document.querySelector('.menu-button');
-            if (firstButton) firstButton.focus();
-            return;
-        }
     }
 
     // Barra de espaço para pausar varredura

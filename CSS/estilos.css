@@ -479,6 +479,13 @@ body {
     margin-bottom: 20px;
 }
 
+.communication-controls {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+    justify-content: center;
+}
+
 .category-button {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
