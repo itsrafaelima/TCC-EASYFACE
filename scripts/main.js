@@ -34,6 +34,8 @@ let communicationPhrases = {
     sentimentos: ["Estou feliz", "Estou triste", "Estou cansado", "Estou com medo", "Estou com raiva", "Eu te amo"],
     emergencia: ["Preciso de ajuda urgente", "Chame um médico", "Ligue para minha família", "Não estou me sentindo bem"]
 };
+let settingsFocusIndex = 0;
+let settingsButtons = [];
 
 // ===== FUNÇÕES DE CONFIGURAÇÃO =====
 function loadUserSettings() {
@@ -128,13 +130,58 @@ function showSiteLauncher() {
 
 function showAccessibilitySettings() {
     showApp('accessibility-settings-app');
-    // Foca no primeiro controle de acessibilidade quando a seção é aberta
+
+    // Atualiza a lista de botões navegáveis
     setTimeout(() => {
-        const firstControl = document.querySelector('#accessibility-settings button, #accessibility-settings input');
-        if (firstControl) {
-            firstControl.focus();
+        settingsButtons = Array.from(document.querySelectorAll('#accessibility-settings-app .action-button, #accessibility-settings-app .scannable'));
+        settingsFocusIndex = 0;
+
+        // Foca no botão de fonte pequena quando a seção é aberta
+        const smallFontButton = document.querySelector('#accessibility-settings-app button[onclick*="small"]');
+        if (smallFontButton) {
+            const index = settingsButtons.indexOf(smallFontButton);
+            if (index !== -1) {
+                settingsFocusIndex = index;
+            }
+        }
+
+        if (settingsButtons[settingsFocusIndex]) {
+            settingsButtons[settingsFocusIndex].focus();
+            highlightSettingsElement(settingsButtons[settingsFocusIndex]);
         }
     }, 100);
+}
+
+
+// Função para destacar elemento nas configurações
+function highlightSettingsElement(element) {
+    // Remove destaque anterior
+    document.querySelectorAll('#accessibility-settings-app .action-button, #accessibility-settings-app .scannable').forEach(btn => {
+        btn.classList.remove('navigation-focus');
+    });
+    // Adiciona destaque ao elemento atual
+    if (element) {
+        element.classList.add('navigation-focus');
+    }
+}
+
+// Função para navegar nas configurações com setas
+function moveSettingsFocus(direction) {
+    if (settingsButtons.length === 0) return;
+
+    // Remove destaque do elemento atual
+    if (settingsButtons[settingsFocusIndex]) {
+        settingsButtons[settingsFocusIndex].classList.remove('navigation-focus');
+    }
+
+    // Calcula novo índice
+    settingsFocusIndex = (settingsFocusIndex + direction + settingsButtons.length) % settingsButtons.length;
+
+    // Aplica foco e destaque ao novo elemento
+    if (settingsButtons[settingsFocusIndex]) {
+        settingsButtons[settingsFocusIndex].focus();
+        highlightSettingsElement(settingsButtons[settingsFocusIndex]);
+    }
 }
 
 function showHelp() {
@@ -310,9 +357,9 @@ function zoomOut() {
 // ===== FUNÇÕES COMUNICAÇÃO ALTERNATIVA =====
 
 // Variáveis para navegação na comunicação alternativa
-let commFocus = { 
+let commFocus = {
     section: 'controls',
-    index: 0 
+    index: 0
 };
 let currentCategory = null;
 const categories = ['saudacoes', 'necessidades', 'sentimentos', 'emergencia'];
@@ -332,17 +379,17 @@ function updateCommElements() {
 // ===== NAVEGAÇÃO POR SETAS NA COMUNICAÇÃO ALTERNATIVA =====
 function moveCommFocus(direction) {
     updateCommElements();
-    
+
     if (commFocus.section === 'controls') {
         // Navegação nos controles (Falar, Limpar)
         const newIndex = commFocus.index + direction;
-        
+
         if (newIndex >= 0 && newIndex < commElements.controls.length) {
             // Continua nos controles
             commFocus.index = newIndex;
             commElements.controls[newIndex].focus();
             highlightCommElement(commElements.controls[newIndex]);
-        } 
+        }
         else if (newIndex >= commElements.controls.length && direction === 1) {
             // Sai dos controles para categorias
             moveToCategories();
@@ -351,17 +398,17 @@ function moveCommFocus(direction) {
             // Vem das frases para os controles (caso especial)
             moveToPhrases(commElements.phrases.length - 1);
         }
-        
+
     } else if (commFocus.section === 'categories') {
         // Navegação nas categorias
         const newIndex = commFocus.index + direction;
-        
+
         if (newIndex >= 0 && newIndex < commElements.categories.length) {
             // Continua nas categorias
             commFocus.index = newIndex;
             commElements.categories[newIndex].focus();
             highlightCommElement(commElements.categories[newIndex]);
-        } 
+        }
         else if (newIndex >= commElements.categories.length && direction === 1 && commElements.phrases.length > 0) {
             // Sai das categorias para frases
             moveToPhrases();
@@ -370,17 +417,17 @@ function moveCommFocus(direction) {
             // Volta das categorias para controles
             moveToControls(commElements.controls.length - 1);
         }
-        
+
     } else if (commFocus.section === 'phrases') {
         // Navegação nas frases
         const newIndex = commFocus.index + direction;
-        
+
         if (newIndex >= 0 && newIndex < commElements.phrases.length) {
             // Continua nas frases
             commFocus.index = newIndex;
             commElements.phrases[newIndex].focus();
             highlightCommElement(commElements.phrases[newIndex]);
-        } 
+        }
         else if (newIndex >= commElements.phrases.length && direction === 1) {
             // Sai das frases (volta para controles - ciclo completo)
             moveToControls();
@@ -396,7 +443,7 @@ function moveToControls(targetIndex = 0) {
     commFocus.section = 'controls';
     commFocus.index = targetIndex;
     updateCommElements();
-    
+
     if (commElements.controls[targetIndex]) {
         commElements.controls[targetIndex].focus();
         highlightCommElement(commElements.controls[targetIndex]);
@@ -407,7 +454,7 @@ function moveToCategories(targetIndex = 0) {
     commFocus.section = 'categories';
     commFocus.index = targetIndex;
     updateCommElements();
-    
+
     if (commElements.categories[targetIndex]) {
         commElements.categories[targetIndex].focus();
         highlightCommElement(commElements.categories[targetIndex]);
@@ -419,7 +466,7 @@ function moveToPhrases(targetIndex = 0) {
         commFocus.section = 'phrases';
         commFocus.index = targetIndex;
         updateCommElements();
-        
+
         if (commElements.phrases[targetIndex]) {
             commElements.phrases[targetIndex].focus();
             highlightCommElement(commElements.phrases[targetIndex]);
@@ -441,7 +488,7 @@ function highlightCommElement(element) {
 function selectCategory(category) {
     currentCategory = category;
     showPhrases(category);
-    
+
     // Atualiza elementos e move foco para as frases
     setTimeout(() => {
         updateCommElements();
@@ -455,7 +502,7 @@ function selectCategory(category) {
 function backToCategories() {
     currentCategory = null;
     document.getElementById('phrases-container').innerHTML = '';
-    
+
     // Volta para as categorias
     setTimeout(() => {
         updateCommElements();
@@ -1099,64 +1146,115 @@ document.addEventListener('keydown', function (e) {
             deleteLast();
             return;
         }
-    } // Adicione esta seção no event listener de teclado, após a lógica da calculadora
-else if (currentApp === 'communication-aid-app') {
-    const key = e.key;
+    } 
     
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
-        e.preventDefault();
-        
-        if (key === 'ArrowDown' || key === 'ArrowRight') {
-            moveCommFocus(1); // Próximo elemento
-        } else if (key === 'ArrowUp' || key === 'ArrowLeft') {
-            moveCommFocus(-1); // Elemento anterior
+    // NAVEGAÇÃO NA COMUNICAÇÃO ALTERNATIVA
+    else if (currentApp === 'communication-aid-app') {
+        const key = e.key;
+
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+            e.preventDefault();
+
+            if (key === 'ArrowDown' || key === 'ArrowRight') {
+                moveCommFocus(1); // Próximo elemento
+            } else if (key === 'ArrowUp' || key === 'ArrowLeft') {
+                moveCommFocus(-1); // Elemento anterior
+            }
+            return;
         }
-        return;
-    }
-    
-    // Tab funciona normalmente para navegação sequencial
-    if (key === 'Tab') {
-        e.preventDefault();
-        if (e.shiftKey) {
-            moveCommFocus(-1); // Tab + Shift: elemento anterior
-        } else {
-            moveCommFocus(1); // Tab: próximo elemento
+
+        // Tab funciona normalmente para navegação sequencial
+        if (key === 'Tab') {
+            e.preventDefault();
+            if (e.shiftKey) {
+                moveCommFocus(-1); // Tab + Shift: elemento anterior
+            } else {
+                moveCommFocus(1); // Tab: próximo elemento
+            }
+            return;
         }
-        return;
-    }
-    
-    // ESC volta para categorias se estiver nas frases, ou para controles se estiver nas categorias
-    if (key === 'Escape') {
-        e.preventDefault();
+
+        // ESC volta para categorias se estiver nas frases, ou para controles se estiver nas categorias
+        if (key === 'Escape') {
+            e.preventDefault();
+            
+            if (commFocus.section === 'phrases') {
+                // Se estiver nas frases, volta para categorias
+                backToCategories();
+            } else if (commFocus.section === 'categories') {
+                // Se estiver nas categorias, volta para controles
+                moveToControls();
+            } else if (commFocus.section === 'controls') {
+                // Se estiver nos controles (Falar/Limpar), volta para menu principal
+                showApp('welcome');
+                const firstButton = document.querySelector('.menu-button');
+                if (firstButton) firstButton.focus();
+            }
+            return;
+        }
         
-        if (commFocus.section === 'phrases') {
-            // Se estiver nas frases, volta para categorias
-            backToCategories();
-        } else if (commFocus.section === 'categories') {
-            // Se estiver nas categorias, volta para controles
-            moveToControls();
-        } else if (commFocus.section === 'controls') {
-            // Se estiver nos controles (Falar/Limpar), volta para menu principal
+        // Enter para selecionar
+        if (key === 'Enter' || key === ' ') {
+            e.preventDefault();
+            const focused = document.activeElement;
+            if (focused && (focused.classList.contains('action-button') || 
+                            focused.classList.contains('category-button') || 
+                            focused.classList.contains('phrase-button'))) {
+                focused.click();
+            }
+            return;
+        }
+    } 
+    
+    // NAVEGAÇÃO NAS CONFIGURAÇÕES
+    else if (currentApp === 'accessibility-settings-app') {
+        const key = e.key;
+
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+            e.preventDefault();
+
+            if (key === 'ArrowDown' || key === 'ArrowRight') {
+                moveSettingsFocus(1); // Próximo elemento
+            } else if (key === 'ArrowUp' || key === 'ArrowLeft') {
+                moveSettingsFocus(-1); // Elemento anterior
+            }
+            return;
+        }
+
+        // Tab funciona normalmente para navegação sequencial
+        if (key === 'Tab') {
+            // Atualiza a lista de botões quando o Tab é pressionado
+            setTimeout(() => {
+                settingsButtons = Array.from(document.querySelectorAll('#accessibility-settings-app .action-button, #accessibility-settings-app .scannable'));
+                const currentFocused = document.activeElement;
+                const newIndex = settingsButtons.indexOf(currentFocused);
+                if (newIndex !== -1) {
+                    settingsFocusIndex = newIndex;
+                    highlightSettingsElement(currentFocused);
+                }
+            }, 10);
+            return;
+        }
+
+        // ESC volta para o menu principal
+        if (key === 'Escape') {
+            e.preventDefault();
             showApp('welcome');
             const firstButton = document.querySelector('.menu-button');
             if (firstButton) firstButton.focus();
+            return;
         }
-        return;
-    }
-    
-    // Enter para selecionar
-    if (key === 'Enter' || key === ' ') {
-        e.preventDefault();
-        const focused = document.activeElement;
-        if (focused && (focused.classList.contains('action-button') || 
-                        focused.classList.contains('category-button') || 
-                        focused.classList.contains('phrase-button'))) {
-            focused.click();
-        }
-        return;
-    }
-}
 
+        // Enter ou Espaço para ativar o botão focado
+        if ((key === 'Enter' || key === ' ') &&
+            document.activeElement.classList.contains('action-button')) {
+            e.preventDefault();
+            document.activeElement.click();
+            return;
+        }
+    }
+
+    // CONTINUA COM O RESTO DO CÓDIGO (atalhos Ctrl, varredura, etc.)
     if (e.ctrlKey) {
         // Verificar atalhos personalizados primeiro
         if (customShortcuts.text && e.key === customShortcuts.text) {
@@ -1220,7 +1318,7 @@ else if (currentApp === 'communication-aid-app') {
         }
     }
 
-    // Lógica de varredura automática (após a calculadora)
+    // Lógica de varredura automática
     if (scanMode && e.key === 'Enter') {
         e.preventDefault();
         if (selectCurrentScanElement()) {
@@ -1278,10 +1376,6 @@ else if (currentApp === 'communication-aid-app') {
             case '7':
                 e.preventDefault();
                 showCommunicationAid();
-                break;
-            case '7':
-                e.preventDefault();
-                showMediaPlayer();
                 break;
             case '8':
                 e.preventDefault();
