@@ -9,7 +9,7 @@ body {
     font-family: Arial, sans-serif;
     font-size: 18px;
     line-height: 1.6;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #eaa503 0%, #eaa503 50% , #085e00 100%);
     color: #333;
     min-height: 100vh;
 }
@@ -86,7 +86,7 @@ body {
 
 /* ===== BOTÕES GERAIS ===== */
 .menu-button, .action-button, .calc-button, .key, .scan-control-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #d08f26 0%, #58a24b 100%);
     color: white;
     border: none;
     padding: 12px 20px;
@@ -144,7 +144,7 @@ body {
 }
 
 .welcome-box {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #f38a00 0%, #23d100 100%);
     color: white;
     padding: 2rem;
     border-radius: 15px;
@@ -248,7 +248,7 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 15px 10px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #d08f26 0%, #58a24b 100%);
     color: white;
     border: none;
     border-radius: 10px;
@@ -406,7 +406,7 @@ body {
 }
 
 .category-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #d08f26 0%, #58a24b 100%);
     color: white;
     border: none;
     padding: 20px 15px;
@@ -449,7 +449,7 @@ body {
 
 .phrase-button {
     padding: 15px 10px;
-    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+    background: linear-gradient(135deg, #cdc54e 0%, #61a044 100%);
     color: white;
     border: none;
     border-radius: 8px;
