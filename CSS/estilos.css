@@ -1,39 +1,4 @@
-/* ===== MELHORIAS DE ACESSIBILIDADE ===== */
-.skip-link {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: #ff6b6b;
-    color: white;
-    padding: 8px;
-    text-decoration: none;
-    border-radius: 0 0 5px 0;
-    z-index: 100;
-}
-
-.skip-link:focus {
-    top: 0;
-}
-
-.high-contrast {
-    filter: contrast(150%) brightness(110%);
-}
-
-.high-contrast .menu-button,
-.high-contrast .action-button,
-.high-contrast .calc-button,
-.high-contrast .key {
-    border: 3px solid yellow !important;
-}
-
-.calc-button{
-    min-height: 60px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    transition: all 0.2s ease;
-}
-
-/* ===== ESTILOS EXISTENTES ===== */
+/* ===== BASE E LAYOUT GERAL ===== */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -49,7 +14,17 @@ body {
     min-height: 100vh;
 }
 
-/* Header */
+.app-container {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ===== HEADER ===== */
 .header {
     background: rgba(255, 255, 255, 0.95);
     padding: 1rem;
@@ -67,7 +42,7 @@ body {
     font-size: 0.9rem;
 }
 
-/* Layout principal */
+/* ===== LAYOUT PRINCIPAL ===== */
 .main-container {
     display: flex;
     min-height: calc(100vh - 120px);
@@ -75,7 +50,7 @@ body {
     padding: 1rem;
 }
 
-/* Sidebar */
+/* ===== SIDEBAR ===== */
 .sidebar {
     width: 280px;
     background: rgba(255, 255, 255, 0.95);
@@ -90,7 +65,7 @@ body {
     text-align: center;
 }
 
-/* Área de conteúdo */
+/* ===== ÁREA DE CONTEÚDO ===== */
 .content-area {
     flex: 1;
     background: rgba(255, 255, 255, 0.95);
@@ -100,7 +75,16 @@ body {
     overflow-y: auto;
 }
 
-/* Botões */
+/* ===== BARRA DE STATUS ===== */
+.status-bar {
+    background: #4a5568;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* ===== BOTÕES GERAIS ===== */
 .menu-button, .action-button, .calc-button, .key, .scan-control-button {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -126,46 +110,13 @@ body {
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-.calc-button:hover{
-    filter: brightness(1.1);
-}
-
 .menu-button:focus, .action-button:focus, .key:focus, 
 .text-input:focus, .scannable:focus {
     outline: 3px solid #ffd700;
     outline-offset: 2px;
 }
 
-.calc-button:focus {
-    outline: 3px solid #ffd700;
-    outline-offset: 2px;
-    transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-}
-
-.calc-button:active {
-    transform: scale(0.95);
-    transition: transform 0.1s;
-}
-
-.calc-button.navigation-focus {
-    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
-    color: #333 !important;
-    font-weight: bold;
-    border: 2px solid #333 !important;
-}
-
-/* Estados especiais dos botões */
-.calc-button.operator {
-    background: linear-gradient(135deg, #ff6b6b 0%, #c44569 100%);
-}
-
-.calc-button.equals {
-    background: linear-gradient(135deg, #26de81 0%, #20bf6b 100%);
-    grid-row: span 2;
-}
-
-/* Inputs */
+/* ===== INPUTS GERAIS ===== */
 .text-input {
     width: 100%;
     padding: 15px;
@@ -175,57 +126,7 @@ body {
     margin: 10px 0;
 }
 
-/* Calculadora */
-.calc-display {
-    font-size: 2.2rem;
-    padding: 15px;
-    margin-bottom: 20px;
-    background: #222;
-    color: #0f0;
-    font-family: 'Courier New', monospace;
-    border-radius: 5px;
-    min-height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-.calculator {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    max-width: 400px;
-}
-
-/* Navegador */
-.web-content {
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    height: 500px;
-    padding: 20px;
-    margin-top: 15px;
-    overflow: auto;
-}
-
-.browser-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    border-radius: 5px;
-}
-
-.web-placeholder {
-    text-align: center;
-    color: #666;
-    margin-top: 100px;
-}
-
-/* Estados de visibilidade */
-.hidden {
-    display: none !important;
-}
-
-/* Conteúdo de boas-vindas */
+/* ===== CONTEÚDO DE BOAS-VINDAS ===== */
 .welcome-content {
     text-align: center;
     padding: 2rem;
@@ -251,147 +152,10 @@ body {
     max-width: 500px;
 }
 
-/* Configurações */
-.settings-section {
-    margin: 20px 0;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
+/* ===== EDITOR DE TEXTO ===== */
+/* Estilos específicos do editor já estão cobertos pelos estilos gerais de text-input e action-button */
 
-.settings-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #4a5568;
-}
-
-/* Ajuda */
-.help-content {
-    max-width: 800px;
-}
-
-.help-section {
-    margin: 25px 0;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid #667eea;
-}
-
-.help-section h3 {
-    color: #4a5568;
-    margin-bottom: 15px;
-}
-
-.help-section p {
-    margin: 8px 0;
-}
-
-/* Barra de status */
-.status-bar {
-    background: #4a5568;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    font-weight: bold;
-}
-
-/* Indicadores de varredura */
-.scan-mode-indicator {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: #ff6b6b;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 25px;
-    font-weight: bold;
-    z-index: 1000;
-    animation: pulse 1.5s infinite;
-}
-
-.scan-controls {
-    position: fixed;
-    bottom: 80px;
-    right: 10px;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    z-index: 1000;
-}
-
-.scan-controls h4 {
-    margin-bottom: 10px;
-    color: #4a5568;
-}
-
-/* Elemento ativo na varredura */
-.scan-active {
-    outline: 4px solid #ff6b6b !important;
-    outline-offset: 2px;
-    background: rgba(255, 107, 107, 0.1) !important;
-    animation: scanPulse 0.8s ease-in-out;
-}
-
-/* Animações */
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
-
-@keyframes scanPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-.pulse {
-    animation: buttonPulse 0.3s ease;
-}
-
-@keyframes buttonPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(0.95); }
-    100% { transform: scale(1); }
-}
-
-/* Alertas */
-.alert-warning {
-    background: #fff3cd;
-    border: 1px solid #ffeaa7;
-    color: #856404;
-    padding: 15px;
-    border-radius: 8px;
-    margin: 15px 0;
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-    .main-container {
-        flex-direction: column;
-    }
-    
-    .sidebar {
-        width: 100%;
-    }
-}
-
-/* Tamanhos de fonte para acessibilidade */
-.font-small {
-    font-size: 16px;
-}
-
-.font-medium {
-    font-size: 18px;
-}
-
-.font-large {
-    font-size: 22px;
-}
-
-/* Gerenciador de Arquivos */
+/* ===== GERENCIADOR DE ARQUIVOS ===== */
 .file-actions {
     display: flex;
     gap: 10px;
@@ -402,7 +166,7 @@ body {
     margin: 15px 0;
 }
 
-.file-info, .media-info, .pdf-info {
+.file-info {
     padding: 10px;
     background-color: #f8f9fa;
     border-radius: 5px;
@@ -410,7 +174,146 @@ body {
     min-height: 20px;
 }
 
-/* Reprodutor de Mídia */
+/* ===== CALCULADORA ===== */
+.calc-button {
+    min-height: 60px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.calc-button:hover {
+    filter: brightness(1.1);
+}
+
+.calc-button:focus {
+    outline: 3px solid #ffd700;
+    outline-offset: 2px;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.calc-button:active {
+    transform: scale(0.95);
+    transition: transform 0.1s;
+}
+
+.calc-button.navigation-focus {
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
+    color: #333 !important;
+    font-weight: bold;
+    border: 2px solid #333 !important;
+}
+
+.calc-button.operator {
+    background: linear-gradient(135deg, #ff6b6b 0%, #c44569 100%);
+}
+
+.calc-button.equals {
+    background: linear-gradient(135deg, #26de81 0%, #20bf6b 100%);
+    grid-row: span 2;
+}
+
+.calc-display {
+    font-size: 2.2rem;
+    padding: 15px;
+    margin-bottom: 20px;
+    background: #222;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    border-radius: 5px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.calculator {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 400px;
+}
+
+/* ===== LAUNCHER DE SITES ===== */
+.sites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.site-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 90px;
+}
+
+.site-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.site-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.site-name {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.launcher-description {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.custom-site {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.custom-site h3 {
+    margin-bottom: 15px;
+    color: #4a5568;
+}
+
+.web-content {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    height: 500px;
+    padding: 20px;
+    margin-top: 15px;
+    overflow: auto;
+}
+
+.browser-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 5px;
+}
+
+.web-placeholder {
+    text-align: center;
+    color: #666;
+    margin-top: 100px;
+}
+
+/* ===== REPRODUTOR DE MÍDIA ===== */
 .media-controls {
     margin-bottom: 15px;
 }
@@ -426,7 +329,15 @@ body {
     border-radius: 8px;
 }
 
-/* Leitor de PDF */
+.media-info {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    margin: 10px 0;
+    min-height: 20px;
+}
+
+/* ===== LEITOR DE PDF ===== */
 .pdf-controls {
     display: flex;
     flex-wrap: wrap;
@@ -452,7 +363,15 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Ferramenta de Comunicação Alternativa */
+.pdf-info {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    margin: 10px 0;
+    min-height: 20px;
+}
+
+/* ===== COMUNICAÇÃO ALTERNATIVA ===== */
 .communication-output {
     display: flex;
     flex-direction: column;
@@ -564,7 +483,7 @@ body {
     font-weight: bold;
 }
 
-/* Integração de E-mail */
+/* ===== INTEGRAÇÃO DE E-MAIL ===== */
 .email-options {
     display: flex;
     gap: 10px;
@@ -581,7 +500,21 @@ body {
     color: #4a5568;
 }
 
-/* Personalização de Atalhos */
+/* ===== CONFIGURAÇÕES DE ACESSIBILIDADE ===== */
+.settings-section {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.settings-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #4a5568;
+}
+
 .shortcut-settings {
     margin: 15px 0;
 }
@@ -606,28 +539,80 @@ body {
     font-size: 16px;
 }
 
-/* Melhorias de responsividade */
-@media (max-width: 768px) {
-    .pdf-controls, .communication-categories, .email-options {
-        flex-direction: column;
-    }
-    
-    .phrases-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .shortcut-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .shortcut-item label {
-        width: 100%;
-        margin-bottom: 5px;
-    }
+#accessibility-settings-app .action-button.navigation-focus,
+#accessibility-settings-app .scannable.navigation-focus {
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
+    color: #333 !important;
+    border: 2px solid #333 !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    font-weight: bold;
 }
 
-/* Melhorias de alto contraste para novos elementos */
+/* ===== CENTRAL DE AJUDA ===== */
+.help-content {
+    max-width: 800px;
+}
+
+.help-section {
+    margin: 25px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.help-section h3 {
+    color: #4a5568;
+    margin-bottom: 15px;
+}
+
+.help-section p {
+    margin: 8px 0;
+}
+
+/* ===== RECURSOS DE ACESSIBILIDADE ===== */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #ff6b6b;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 0 0 5px 0;
+    z-index: 100;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Tamanhos de fonte */
+.font-small {
+    font-size: 16px;
+}
+
+.font-medium {
+    font-size: 18px;
+}
+
+.font-large {
+    font-size: 22px;
+}
+
+/* Alto contraste */
+.high-contrast {
+    filter: contrast(150%) brightness(110%);
+}
+
+.high-contrast .menu-button,
+.high-contrast .action-button,
+.high-contrast .calc-button,
+.high-contrast .key {
+    border: 3px solid yellow !important;
+}
+
 .high-contrast .phrase-button,
 .high-contrast .category-button,
 .high-contrast .shortcut-input {
@@ -648,82 +633,107 @@ body {
     color: yellow;
 }
 
-.app-container {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-.sites-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.site-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 15px 10px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-height: 90px;
-}
-
-.site-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.site-icon {
-    font-size: 24px;
-    margin-bottom: 8px;
-}
-
-.site-name {
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.launcher-description {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #666;
-}
-
-.custom-site {
-    margin-top: 30px;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.custom-site h3 {
-    margin-bottom: 15px;
-    color: #4a5568;
-}
-
-/* Destaque para navegação por setas nas configurações */
-#accessibility-settings-app .action-button.navigation-focus,
-#accessibility-settings-app .scannable.navigation-focus {
-    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
-    color: #333 !important;
-    border: 2px solid #333 !important;
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-    font-weight: bold;
-}
-
-/* Estilo específico para alto contraste */
 .high-contrast #accessibility-settings-app .action-button.navigation-focus,
 .high-contrast #accessibility-settings-app .scannable.navigation-focus {
     border: 3px solid yellow !important;
     background: black !important;
     color: yellow !important;
+}
+
+/* ===== VARREDURA AUTOMÁTICA ===== */
+.scan-mode-indicator {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #ff6b6b;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    z-index: 1000;
+    animation: pulse 1.5s infinite;
+}
+
+.scan-controls {
+    position: fixed;
+    bottom: 80px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.scan-controls h4 {
+    margin-bottom: 10px;
+    color: #4a5568;
+}
+
+.scan-active {
+    outline: 4px solid #ff6b6b !important;
+    outline-offset: 2px;
+    background: rgba(255, 107, 107, 0.1) !important;
+    animation: scanPulse 0.8s ease-in-out;
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes scanPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: buttonPulse 0.3s ease;
+}
+
+@keyframes buttonPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+/* ===== ALERTAS ===== */
+.alert-warning {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+    }
+    
+    .pdf-controls, .communication-categories, .email-options {
+        flex-direction: column;
+    }
+    
+    .phrases-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .shortcut-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .shortcut-item label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
 }
