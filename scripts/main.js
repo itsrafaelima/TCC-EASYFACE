@@ -77,6 +77,7 @@ function getCurrentFontSize() {
 
 // ===== FUNÇÕES DE NAVEGAÇÃO =====
 function showApp(appId) {
+    const previousApp = currentApp;
     const apps = document.querySelectorAll('.app-container');
     apps.forEach(app => {
         app.classList.add('hidden');
@@ -88,68 +89,98 @@ function showApp(appId) {
     }
     currentApp = appId;
     playFeedbackSound();
+
+    console.log(`Mudando de app: ${previousApp} → ${appId}, ScanMode: ${scanMode}`);
+    
+    // Sempre reinicia varredura ao mudar de app (se scanMode ativo)
+    if (scanMode) {
+        console.log(`Reiniciando varredura para: ${appId}`);
+        setTimeout(() => {
+            restartScan();
+        }, 300);
+    }
 }
 
 function showTextEditor() {
-    showApp('text-editor-app');
-    // Foca na área de texto quando o editor é aberto
-    setTimeout(() => {
-        const editorArea = document.querySelector('#text-editor-app textarea, #text-editor-app input, #text-editor-app [contenteditable="true"]');
-        if (editorArea) {
-            editorArea.focus();
-        }
-    }, 100);
+    try {
+        showApp('text-editor-app');
+        // Foca na área de texto quando o editor é aberto
+        setTimeout(() => {
+            const editorArea = document.querySelector('#text-editor-app textarea, #text-editor-app input, #text-editor-app [contenteditable="true"]');
+            if (editorArea && !scanMode) {
+                editorArea.focus();
+            }
+        }, 100);
+    } catch (error) {
+        console.error('Erro em showTextEditor:', error);
+        updateStatus('Erro ao abrir editor de texto');
+    }
 }
 
 function showCalculator() {
-    showApp('calculator-app');
-    // Foca no botão 7 quando a calculadora é aberta
-    setTimeout(() => {
-        const firstNumber = document.querySelector('.calc-button[data-key="7"]');
-        if (firstNumber) {
-            firstNumber.focus();
-            calcFocus = { row: 1, col: 0 }; // Posição do número 7 na grade
-            document.querySelectorAll('.calc-button').forEach(btn => {
-                btn.classList.remove('navigation-focus');
-            });
-            firstNumber.classList.add('navigation-focus');
-        }
-    }, 100);
+    try {
+        showApp('calculator-app');
+        // Foca no botão 7 quando a calculadora é aberta
+        setTimeout(() => {
+            const firstNumber = document.querySelector('.calc-button[data-key="7"]');
+            if (firstNumber && !scanMode) {
+                firstNumber.focus();
+                calcFocus = { row: 1, col: 0 }; // Posição do número 7 na grade
+                document.querySelectorAll('.calc-button').forEach(btn => {
+                    btn.classList.remove('navigation-focus');
+                });
+                firstNumber.classList.add('navigation-focus');
+            }
+        }, 100);
+    } catch (error) {
+        console.error('Erro em showCalculator:', error);
+        updateStatus('Erro ao abrir calculadora');
+    }
 }
 
 function showSiteLauncher() {
-    showApp('site-launcher-app');
-    // Foca no botão do Google quando o lançador de sites é aberto
-    setTimeout(() => {
-        const googleButton = document.querySelector('.site-button[onclick*="google.com"]');
-        if (googleButton) {
-            googleButton.focus();
-        }
-    }, 100);
+    try {
+        showApp('site-launcher-app');
+        // Foca no botão do Google quando o lançador de sites é aberto
+        setTimeout(() => {
+            const googleButton = document.querySelector('.site-button[onclick*="google.com"]');
+            if (googleButton && !scanMode) {
+                googleButton.focus();
+            }
+        }, 100);
+    } catch (error) {
+        console.error('Erro em showSiteLauncher:', error);
+        updateStatus('Erro ao abrir sites seguros');
+    }
 }
 
 function showAccessibilitySettings() {
-    showApp('accessibility-settings-app');
+    try {
+        showApp('accessibility-settings-app');
 
-    // Atualiza a lista de botões navegáveis
-    setTimeout(() => {
-        settingsButtons = Array.from(document.querySelectorAll('#accessibility-settings-app .action-button, #accessibility-settings-app .scannable'));
-        settingsFocusIndex = 0;
+        // Atualiza a lista de botões navegáveis
+        setTimeout(() => {
+            settingsButtons = Array.from(document.querySelectorAll('#accessibility-settings-app .action-button, #accessibility-settings-app .scannable'));
+            settingsFocusIndex = 0;
 
-        // Foca no botão de fonte pequena quando a seção é aberta
-        const smallFontButton = document.querySelector('#accessibility-settings-app button[onclick*="small"]');
-        if (smallFontButton) {
-            const index = settingsButtons.indexOf(smallFontButton);
-            if (index !== -1) {
-                settingsFocusIndex = index;
+            // Foca no botão de fonte pequena quando a seção é aberta
+            const smallFontButton = document.querySelector('#accessibility-settings-app button[onclick*="small"]');
+            if (smallFontButton && !scanMode) {
+                const index = settingsButtons.indexOf(smallFontButton);
+                if (index !== -1) {
+                    settingsFocusIndex = index;
+                }
             }
-        }
 
-        if (settingsButtons[settingsFocusIndex]) {
-            settingsButtons[settingsFocusIndex].focus();
-            highlightSettingsElement(settingsButtons[settingsFocusIndex]);
-        }
-    }, 100);
+            if (settingsButtons[settingsFocusIndex]) {
+                settingsButtons[settingsFocusIndex].focus();
+                highlightSettingsElement(settingsButtons[settingsFocusIndex]);
+            }
+        }, 100);
+    } catch (error) {
+        console.error('Erro em showAccessibilitySettings:', error);
+        updateStatus('Erro ao abrir configurações');
+    }
 }
 
 
@@ -185,26 +216,37 @@ function moveSettingsFocus(direction) {
 }
 
 function showHelp() {
-    showApp('help-app');
-    // Foca no botão de fechar ajuda quando a seção é aberta
-    setTimeout(() => {
-        const closeButton = document.getElementById('close-help');
-        if (closeButton) {
-            closeButton.focus();
-        }
-    }, 100);
+    try {
+        showApp('help-app');
+        // Foca no botão de fechar ajuda quando a seção é aberta
+        setTimeout(() => {
+            const closeButton = document.getElementById('close-help');
+            if (closeButton && !scanMode) {
+                closeButton.focus();
+            }
+        }, 100);
+    } catch (error) {
+        console.error('Erro em showHelp:', error);
+        updateStatus('Erro ao abrir menu de ajuda');
+    }
 }
 
 // ===== FUNÇÕES EXPLORADOR DE ARQUIVOS =====
 function showFileManager() {
-    showApp('file-manager-app');
-    // Foca no botão de carregar arquivo quando o gerenciador de arquivos é aberto
-    setTimeout(() => {
-        const openFileButton = document.querySelector('#file-manager-app .action-button');
-        if (openFileButton) {
-            openFileButton.focus();
-        }
-    }, 100);
+    try {
+        showApp('file-manager-app');
+        // Foca no botão de carregar arquivo quando o gerenciador de arquivos é aberto
+        setTimeout(() => {
+            const openFileButton = document.querySelector('#file-manager-app .action-button');
+            if (openFileButton && !scanMode) {
+                openFileButton.focus();
+
+            }
+        }, 100);
+    } catch (error) {
+        console.error('Erro em showFileManager:', error);
+        updateStatus('Erro ao abrir gerenciador de arquivos');
+    }
 }
 
 document.getElementById('file-input').addEventListener('change', function (e) {
@@ -239,14 +281,19 @@ function saveTextFile() {
 // ===== FUNÇÕES REPRODUTOR AÚDIO =====
 
 function showMediaPlayer() {
-    showApp('media-player-app');
-    // Foca no botão de carregar mídia quando o reprodutor é aberto
-    setTimeout(() => {
-        const loadButton = document.querySelector('#media-player-app .action-button');
-        if (loadButton) {
-            loadButton.focus();
-        }
-    }, 100);
+    try {
+        showApp('media-player-app');
+        // Foca no botão de carregar mídia quando o reprodutor é aberto
+        setTimeout(() => {
+            const loadButton = document.querySelector('#media-player-app .action-button');
+            if (loadButton && !scanMode) {
+                loadButton.focus();
+            }
+        }, 100);
+    } catch (error) {
+        console.error('Erro em showMediaPlayer:', error);
+        updateStatus('Erro ao abrir reprodutor de mídia');
+    }
 }
 
 document.getElementById('media-input').addEventListener('change', function (e) {
@@ -270,17 +317,22 @@ document.getElementById('media-input').addEventListener('change', function (e) {
 // ===== FUNÇÕES LEITOR PDF =====
 
 function showPdfReader() {
-    showApp('pdf-reader-app');
-    // Foca no botão de carregar PDF quando o leitor é aberto
-    setTimeout(() => {
-        const loadButton = document.querySelector('#pdf-reader-app .action-button');
-        if (loadButton) {
-            loadButton.focus();
-        }
-    }, 100);
+    try {
+        showApp('pdf-reader-app');
+        // Foca no botão de carregar PDF quando o leitor é aberto
+        setTimeout(() => {
+            const loadButton = document.querySelector('#pdf-reader-app .action-button');
+            if (loadButton && !scanMode) {
+                loadButton.focus();
+            }
+        }, 100);
 
-    // Inicializar PDF.js
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
+        // Inicializar PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
+    } catch (error) {
+        console.error('Erro em showPdfReader:', error);
+        updateStatus('Erro ao abrir leitor de PDF');
+    }
 }
 
 document.getElementById('pdf-input').addEventListener('change', function (e) {
@@ -511,18 +563,23 @@ function backToCategories() {
 }
 
 function showCommunicationAid() {
-    showApp('communication-aid-app');
-    // Foca no botão Falar quando o auxílio é aberto
-    setTimeout(() => {
-        commFocus = { section: 'controls', index: 0 };
-        currentCategory = null;
-        updateCommElements();
-        const speakButton = document.getElementById('speak-button');
-        if (speakButton) {
-            speakButton.focus();
-            highlightCommElement(speakButton);
-        }
-    }, 100);
+    try {
+        showApp('communication-aid-app');
+        // Foca no botão Falar quando o auxílio é aberto
+        setTimeout(() => {
+            commFocus = { section: 'controls', index: 0 };
+            currentCategory = null;
+            updateCommElements();
+            const speakButton = document.getElementById('speak-button');
+            if (speakButton && !scanMode) {
+                speakButton.focus();
+                highlightCommElement(speakButton);
+            }
+        }, 100);
+    } catch (error) {
+        console.error('Erro em showCommunicationAid:', error);
+        updateStatus('Erro ao abrir comunicação alternativa');
+    }
 }
 
 function showPhrases(category) {
@@ -561,18 +618,23 @@ function clearCommunication() {
 // FUNÇÕES EMAIL-WHATSAPP
 
 function showEmailIntegration() {
-    showApp('email-integration-app');
-    // Foca no botão de abrir Gmail quando a seção é aberta
-    setTimeout(() => {
-        const firstEmailButton = document.querySelector('#email-integration-app .email-options .action-button');
-        if (firstEmailButton) {
-            firstEmailButton.focus();
-        } else {
-            // Fallback: foca no primeiro botão da seção
-            const firstButton = document.querySelector('#email-integration-app .action-button');
-            if (firstButton) firstButton.focus();
-        }
-    }, 100);
+    try {
+        showApp('email-integration-app');
+        // Foca no botão de abrir Gmail quando a seção é aberta
+        setTimeout(() => {
+            const firstEmailButton = document.querySelector('#email-integration-app .email-options .action-button');
+            if (firstEmailButton && !scanMode) {
+                firstEmailButton.focus();
+            } else {
+                // Fallback: foca no primeiro botão da seção
+                const firstButton = document.querySelector('#email-integration-app .action-button');
+                if (firstButton) firstButton.focus();
+            }
+        }, 100);
+    } catch (error) {
+        console.error('Erro em showEmailIntegration:', error);
+        updateStatus('Erro ao abrir integração de e-mail');
+    }
 }
 
 function openGmail() {
@@ -849,13 +911,40 @@ function toggleScanMode() {
     const indicator = document.getElementById('scan-indicator');
     const controls = document.getElementById('scan-controls');
 
+    console.log('=== DEBUG TOGGLE SCAN ===');
+    console.log('currentApp:', currentApp);
+    console.log('scanMode será:', scanMode);
+
+    // DEBUG: Verifica qual app está visível
+    const visibleApps = Array.from(document.querySelectorAll('.app-container'))
+        .filter(app => !app.classList.contains('hidden'))
+        .map(app => app.id);
+    console.log('Apps visíveis:', visibleApps);
+
     if (scanMode) {
-        startScanning();
-        button.textContent = '⏹️ Parar Varredura';
-        button.setAttribute('aria-label', 'Parar modo de varredura automática');
-        indicator.style.display = 'block';
-        controls.style.display = 'block';
-        updateStatus('Modo de varredura ativado - Use ENTER para selecionar');
+        if (currentApp !== 'welcome') {
+            console.log('Forçando volta para welcome...');
+            showApp('welcome');
+        }
+
+        setTimeout(() => {
+            console.log('Iniciando varredura após timeout...');
+            console.log('currentApp agora:', currentApp);
+
+            // DEBUG: Verifica elementos antes de iniciar
+            const sidebarElements = document.querySelectorAll('.sidebar .scannable');
+            const welcomeElements = document.querySelectorAll('#welcome .scannable');
+            console.log('Elementos na sidebar:', sidebarElements.length);
+            console.log('Elementos no welcome:', welcomeElements.length);
+
+            startScanning();
+            button.textContent = '⏹️ Parar Varredura';
+            button.setAttribute('aria-label', 'Parar modo de varredura automática');
+            indicator.style.display = 'block';
+            controls.style.display = 'block';
+            updateStatus('Modo de varredura ativado - Use ENTER para selecionar');
+            speakFeedback('Modo de varredura ativado');
+        });
     } else {
         stopScanning();
         button.textContent = '🔄 Ativar Varredura';
@@ -863,20 +952,73 @@ function toggleScanMode() {
         indicator.style.display = 'none';
         controls.style.display = 'none';
         updateStatus('Modo de varredura desativado');
+        speakFeedback('Modo de varredura desativado');
     }
 
     saveUserSettings();
 }
 
 function startScanning() {
-    scanElements = document.querySelectorAll('.scannable:not([disabled])');
+    console.log('=== START SCANNING ===');
+    console.log('App atual:', currentApp);
+    console.log('ScanMode:', scanMode);
+    
+    let selector = '.scannable';
+    if (currentApp !== 'welcome') {
+        selector = `#${currentApp} .scannable`;
+    }
+    
+    console.log('Seletor usado:', selector);
+    
+    scanElements = Array.from(document.querySelectorAll(selector)).filter(el => {
+        const isVisible = !el.disabled && 
+               el.offsetParent !== null &&
+               getComputedStyle(el).visibility !== 'hidden' &&
+               getComputedStyle(el).display !== 'none';
+        return isVisible;
+    });
+    
+    console.log(`Elementos encontrados em ${currentApp}:`, scanElements.length);
+    console.log('Elementos:', scanElements.map(el => el.textContent?.substring(0, 20)));
+
+    // Ordena por posição
+    scanElements.sort((a, b) => {
+        const rectA = a.getBoundingClientRect();
+        const rectB = b.getBoundingClientRect();
+        return (rectA.top - rectB.top) || (rectA.left - rectB.left);
+    });
+
     currentScanIndex = 0;
     scanPaused = false;
 
+    console.log(`Elementos scannable em ${currentApp}:`, scanElements.length);
+
     if (scanElements.length > 0) {
+        if (scanInterval) {
+            clearInterval(scanInterval);
+        }
         scanInterval = setInterval(nextScanElement, scanSpeed);
         highlightCurrentElement();
+    } else {
+        updateStatus('Nenhum elemento encontrado para varredura');
     }
+}
+
+function getAppName(appId) {
+    const appNames = {
+        'welcome': 'Menu Principal',
+        'text-editor-app': 'Editor de Texto',
+        'file-manager-app': 'Gerenciador de Arquivos',
+        'calculator-app': 'Calculadora',
+        'site-launcher-app': 'Sites Seguros',
+        'media-player-app': 'Reprodutor de Mídia',
+        'pdf-reader-app': 'Leitor de PDF',
+        'communication-aid-app': 'Comunicação Alternativa',
+        'email-integration-app': 'Integração de E-mail',
+        'accessibility-settings-app': 'Configurações',
+        'help-app': 'Ajuda'
+    };
+    return appNames[appId] || appId;
 }
 
 function stopScanning() {
@@ -885,72 +1027,210 @@ function stopScanning() {
         scanInterval = null;
     }
 
-    scanElements.forEach(el => el.classList.remove('scan-active'));
+    // Remove destaque de todos os elementos
+    scanElements.forEach(el => {
+        el.classList.remove('scan-active');
+        el.style.outline = ''; // Limpa qualquer estilo inline
+    });
+
     scanElements = [];
     currentScanIndex = 0;
+    scanPaused = false;
 }
 
 function nextScanElement() {
-    if (scanPaused) return;
+    if (scanPaused || scanElements.length === 0) return;
 
-    if (scanElements[currentScanIndex]) {
-        scanElements[currentScanIndex].classList.remove('scan-active');
+    try {
+        // Remove destaque do elemento atual
+        if (scanElements[currentScanIndex]) {
+            scanElements[currentScanIndex].classList.remove('scan-active');
+            scanElements[currentScanIndex].style.outline = '';
+        }
+
+        // Avança para o próximo elemento
+        currentScanIndex = (currentScanIndex + 1) % scanElements.length;
+        highlightCurrentElement();
+    } catch (error) {
+        console.error('Erro em nextScanElement:', error);
+        // Reinicia a varredura em caso de erro
+        if (scanMode) {
+            setTimeout(() => {
+                startScanning();
+                updateStatus('Varredura reiniciada devido a erro');
+            }, 1000);
+        }
     }
-
-    currentScanIndex = (currentScanIndex + 1) % scanElements.length;
-    highlightCurrentElement();
 }
 
 function highlightCurrentElement() {
     if (scanElements[currentScanIndex]) {
-        const element = scanElements[currentScanIndex];
-        element.classList.add('scan-active');
+        try {
+            const element = scanElements[currentScanIndex];
+            
+            // Aplica destaque
+            element.classList.add('scan-active');
+            element.style.outline = '4px solid #ff6b6b';
+            element.style.outlineOffset = '2px';
 
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Rola para visualizar o elemento
+            element.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center',
+                inline: 'center'
+            });
 
-        if (soundsEnabled) {
-            playDifferentSound(800);
+            // Foca no elemento para navegação por teclado
+            element.focus();
+
+            if (soundsEnabled) {
+                playDifferentSound(800);
+            }
+
+            const label = element.getAttribute('aria-label') || element.textContent || element.placeholder || 'Elemento';
+            updateStatus(`Varredura: ${label.trim()} - Pressione ENTER para selecionar`);
+            
+        } catch (error) {
+            console.error('Erro em highlightCurrentElement:', error);
         }
-
-        const label = element.getAttribute('aria-label') || element.textContent;
-        updateStatus(`Selecionando: ${label.trim()}`);
     }
 }
 
 function selectCurrentScanElement() {
-    if (scanElements[currentScanIndex] && scanMode) {
+    if (scanElements[currentScanIndex] && scanMode && !scanPaused) {
         const element = scanElements[currentScanIndex];
-        element.classList.remove('scan-active');
-        element.click();
-        playFeedbackSound();
-        return true;
+        const currentElementIndex = currentScanIndex;
+        
+        try {
+            // Remove destaque temporariamente
+            element.classList.remove('scan-active');
+            element.style.outline = '';
+            
+            // CORREÇÃO: Usa dispatchEvent em vez de click() direto
+            element.dispatchEvent(new MouseEvent('click', {
+                view: window,
+                bubbles: true,
+                cancelable: true
+            }));
+            
+            playFeedbackSound();
+            
+            // Restaura o destaque após um delay
+            setTimeout(() => {
+                if (scanMode && scanElements[currentElementIndex] === element) {
+                    element.classList.add('scan-active');
+                    element.style.outline = '4px solid #ff6b6b';
+                    element.style.outlineOffset = '2px';
+                }
+            }, 500);
+            
+            return true;
+        } catch (error) {
+            console.error('Erro ao selecionar elemento na varredura:', error);
+            // IMPORTANTE: Restaura a varredura mesmo com erro
+            if (scanMode && scanElements[currentElementIndex] === element) {
+                element.classList.add('scan-active');
+                element.style.outline = '4px solid #ff6b6b';
+                element.style.outlineOffset = '2px';
+            }
+            return false;
+        }
     }
     return false;
 }
 
 function pauseScanning() {
+    if (!scanMode) return;
+
     scanPaused = !scanPaused;
     const button = document.getElementById('pause-scan');
 
     if (scanPaused) {
         button.textContent = '▶️ Continuar';
         updateStatus('Varredura pausada');
+        speakFeedback('Varredura pausada');
     } else {
         button.textContent = '⏸️ Pausar';
         updateStatus('Varredura retomada');
+        speakFeedback('Varredura retomada');
     }
 }
 
 function setScanSpeed(speed) {
     scanSpeed = speed;
     updateStatus(`Velocidade definida: ${speed / 1000} segundos`);
+    speakFeedback(`Velocidade de varredura definida para ${speed / 1000} segundos`);
 
     if (scanMode) {
+        // Reinicia a varredura com nova velocidade
+        const wasPaused = scanPaused;
         stopScanning();
         startScanning();
+        if (wasPaused) {
+            scanPaused = true;
+            document.getElementById('pause-scan').textContent = '▶️ Continuar';
+        }
     }
 
     saveUserSettings();
+}
+
+function debugScanElements() {
+    let selector = '.scannable';
+    if (currentApp !== 'welcome') {
+        selector = `#${currentApp} .scannable`;
+    }
+
+    const elements = Array.from(document.querySelectorAll(selector)).filter(el => {
+        return !el.disabled &&
+            el.offsetParent !== null &&
+            getComputedStyle(el).visibility !== 'hidden' &&
+            getComputedStyle(el).display !== 'none';
+    });
+
+    console.log('=== DEBUG SCAN ELEMENTS ===');
+    console.log('App atual:', currentApp);
+    console.log('Seletor usado:', selector);
+    console.log('Modo de varredura:', scanMode ? 'ATIVO' : 'INATIVO');
+    console.log('Elementos scannable no app atual:', elements.length);
+    console.log('Elementos na lista de varredura:', scanElements.length);
+    console.log('Índice atual:', currentScanIndex);
+
+    elements.forEach((el, index) => {
+        const isInScanList = scanElements.includes(el);
+        const isCurrent = scanElements[currentScanIndex] === el;
+        console.log(`${index}: ${el.tagName}.${el.className} - "${el.textContent?.substring(0, 30) || el.placeholder || 'sem texto'}" - ScanList: ${isInScanList} - Current: ${isCurrent}`);
+    });
+
+    if (scanElements[currentScanIndex]) {
+        console.log('Elemento atual destacado:', scanElements[currentScanIndex]);
+    }
+
+    updateStatus(`Debug: ${elements.length} elementos em ${currentApp} (ver console)`);
+}
+
+function restartScan() {
+    if (scanMode) {
+        console.log('🔄 REINICIANDO VARREDURA para:', currentApp);
+        
+        // Para completamente a varredura atual
+        if (scanInterval) {
+            clearInterval(scanInterval);
+            scanInterval = null;
+        }
+        
+        // Limpa elementos anteriores
+        scanElements.forEach(el => {
+            el.classList.remove('scan-active');
+            el.style.outline = '';
+        });
+        
+        // Pequeno delay para garantir que a DOM atualizou
+        setTimeout(() => {
+            startScanning();
+            updateStatus(`Varredura em ${getAppName(currentApp)}`);
+        }, 200);
+    }
 }
 
 // ===== FUNÇÕES DE SOM =====
@@ -1113,6 +1393,12 @@ function initCalculator() {
 
 // ===== EVENT LISTENERS GERAL (ÚNICO E CONSOLIDADO) =====
 document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+        e.preventDefault();
+        debugScanElements();
+        return;
+    }
+
     const focused = document.activeElement;
     const isCalcButtonFocused = focused && focused.classList.contains('calc-button');
 
@@ -1151,8 +1437,8 @@ document.addEventListener('keydown', function (e) {
             deleteLast();
             return;
         }
-    } 
-    
+    }
+
     // NAVEGAÇÃO NA COMUNICAÇÃO ALTERNATIVA
     else if (currentApp === 'communication-aid-app') {
         const key = e.key;
@@ -1182,7 +1468,7 @@ document.addEventListener('keydown', function (e) {
         // ESC volta para categorias se estiver nas frases, ou para controles se estiver nas categorias
         if (key === 'Escape') {
             e.preventDefault();
-            
+
             if (commFocus.section === 'phrases') {
                 // Se estiver nas frases, volta para categorias
                 backToCategories();
@@ -1197,20 +1483,20 @@ document.addEventListener('keydown', function (e) {
             }
             return;
         }
-        
+
         // Enter para selecionar
         if (key === 'Enter' || key === ' ') {
             e.preventDefault();
             const focused = document.activeElement;
-            if (focused && (focused.classList.contains('action-button') || 
-                            focused.classList.contains('category-button') || 
-                            focused.classList.contains('phrase-button'))) {
+            if (focused && (focused.classList.contains('action-button') ||
+                focused.classList.contains('category-button') ||
+                focused.classList.contains('phrase-button'))) {
                 focused.click();
             }
             return;
         }
-    } 
-    
+    }
+
     // NAVEGAÇÃO NAS CONFIGURAÇÕES
     else if (currentApp === 'accessibility-settings-app') {
         const key = e.key;

@@ -672,10 +672,50 @@ body {
 
 .scan-active {
     outline: 4px solid #ff6b6b !important;
-    outline-offset: 2px;
+    outline-offset: 2px !important;
     background: rgba(255, 107, 107, 0.1) !important;
     animation: scanPulse 0.8s ease-in-out;
+    position: relative;
+    z-index: 999;
 }
+
+/* Garantir que o scan-active sobrescreva outros estilos */
+.scan-active.navigation-focus {
+    outline: 4px solid #ff6b6b !important;
+    background: rgba(255, 107, 107, 0.2) !important;
+}
+
+@keyframes scanPulse {
+    0% { 
+        transform: scale(1); 
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+    }
+    50% { 
+        transform: scale(1.02); 
+        box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
+    }
+    100% { 
+        transform: scale(1); 
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+    }
+}
+
+.scan-control-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.scan-control-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+} 
 
 /* ===== ANIMAÇÕES ===== */
 @keyframes pulse {
