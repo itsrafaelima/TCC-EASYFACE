@@ -483,23 +483,6 @@ body {
     font-weight: bold;
 }
 
-/* ===== INTEGRAÇÃO DE E-MAIL ===== */
-.email-options {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.email-compose {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.email-compose h3 {
-    margin-bottom: 15px;
-    color: #4a5568;
-}
-
 /* ===== CONFIGURAÇÕES DE ACESSIBILIDADE ===== */
 .settings-section {
     margin: 20px 0;

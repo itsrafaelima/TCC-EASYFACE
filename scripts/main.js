@@ -615,51 +615,6 @@ function clearCommunication() {
     speakFeedback('Mensagem limpa');
 }
 
-// FUNÇÕES EMAIL-WHATSAPP
-
-function showEmailIntegration() {
-    try {
-        showApp('email-integration-app');
-        // Foca no botão de abrir Gmail quando a seção é aberta
-        setTimeout(() => {
-            const firstEmailButton = document.querySelector('#email-integration-app .email-options .action-button');
-            if (firstEmailButton && !scanMode) {
-                firstEmailButton.focus();
-            } else {
-                // Fallback: foca no primeiro botão da seção
-                const firstButton = document.querySelector('#email-integration-app .action-button');
-                if (firstButton) firstButton.focus();
-            }
-        }, 100);
-    } catch (error) {
-        console.error('Erro em showEmailIntegration:', error);
-        updateStatus('Erro ao abrir integração de e-mail');
-    }
-}
-
-function openGmail() {
-    window.open('https://mail.google.com', '_blank');
-    speakFeedback('Abrindo Gmail');
-}
-
-function openWhatsApp() {
-    window.open('https://web.whatsapp.com', '_blank');
-    speakFeedback('Abrindo Uatzap');
-}
-
-function sendEmail() {
-    const to = document.getElementById('email-to').value;
-    const subject = document.getElementById('email-subject').value;
-    const body = document.getElementById('email-body').value;
-
-    if (to && subject && body) {
-        const mailtoLink = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        window.location.href = mailtoLink;
-        speakFeedback('E-mail preparado para envio');
-    } else {
-        speakFeedback('Preencha todos os campos para enviar o e-mail');
-    }
-}
 
 // ===== PERSONALIZAÇÃO ATALHOS =====
 
@@ -676,7 +631,6 @@ function loadShortcuts() {
         if (saved.media) document.getElementById('shortcut-media').value = saved.media;
         if (saved.pdf) document.getElementById('shortcut-pdf').value = saved.pdf;
         if (saved.commu) document.getElementById('shortcut-comm').value = saved.commu;
-        if (saved.email) document.getElementById('shortcut-email').value = saved.email;
         if (saved.conf) document.getElementById('shortcut-conf').value = saved.conf;
         if (saved.help) document.getElementById('shortcut-help').value = saved.help;
     } catch (error) {
@@ -694,7 +648,6 @@ function saveShortcuts() {
             media: document.getElementById('shortcut-media').value,
             pdf: document.getElementById('shortcut-pdf').value,
             comm: document.getElementById('shortcut-comm').value,
-            email: document.getElementById('shortcut-email').value,
             conf: document.getElementById('shortcut-conf').value,
             help: document.getElementById('shortcut-help').value
         };
@@ -1014,7 +967,6 @@ function getAppName(appId) {
         'media-player-app': 'Reprodutor de Mídia',
         'pdf-reader-app': 'Leitor de PDF',
         'communication-aid-app': 'Comunicação Alternativa',
-        'email-integration-app': 'Integração de E-mail',
         'accessibility-settings-app': 'Configurações',
         'help-app': 'Ajuda'
     };
@@ -1338,8 +1290,6 @@ function setupVoiceRecognition() {
             showPdfReader();
         } else if (command.includes('comunicação') || command.includes('mensagem') || command.includes('falar')) {
             showCommunicationAid();
-        } else if (command.includes('email') || command.includes('correio') || command.includes('gmail')) {
-            showEmailIntegration();
         } else if (command.includes('configurações') || command.includes('configurar')) {
             showAccessibilitySettings();
         } else if (command.includes('ajuda') || command.includes('socorro')) {
@@ -1596,10 +1546,6 @@ document.addEventListener('keydown', function (e) {
                 break;
             case '8':
                 e.preventDefault();
-                showEmailIntegration();
-                break;
-            case '9':
-                e.preventDefault();
                 showAccessibilitySettings();
                 break;
             case 's':
@@ -1671,10 +1617,6 @@ document.addEventListener('keydown', function (e) {
             case '8':
                 e.preventDefault();
                 showPdfReader();
-                break;
-            case '9':
-                e.preventDefault();
-                showEmailIntegration();
                 break;
             case 's':
                 e.preventDefault();

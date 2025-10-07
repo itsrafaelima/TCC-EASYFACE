@@ -49,10 +49,6 @@
                 aria-label="Abrir Ferramenta de Comunicação">
                 💬 Comunicação Alternativa
             </button>
-            <button class="menu-button scannable" onclick="showEmailIntegration()" tabindex="9"
-                aria-label="Abrir Integração de E-mail">
-                ✉️ Integração de E-mail
-            </button>
             <button class="menu-button scannable" onclick="showAccessibilitySettings()" tabindex="10"
                 aria-label="Abrir Configurações de Acessibilidade">
                 ⚙️ Configurações
@@ -240,27 +236,6 @@
                 </div>
             </div>
 
-            <div id="email-integration-app" class="app-container hidden">
-                <h2>✉️ Integração de E-mail</h2>
-                <div class="email-options">
-                    <button class="action-button scannable" onclick="openGmail()" tabindex="31"
-                        aria-label="Abrir Gmail">📧 Abrir Gmail</button>
-                    <button class="action-button scannable" onclick="openWhatsApp()" tabindex="32"
-                        aria-label="Abrir WhatsApp">💬 Abrir WhatsApp</button>
-                </div>
-                <div class="email-compose">
-                    <h3>Enviar Mensagem Rápida</h3>
-                    <input type="email" id="email-to" class="text-input scannable" placeholder="Para (e-mail)"
-                        tabindex="33" aria-label="Destinatário do e-mail">
-                    <input type="text" id="email-subject" class="text-input scannable" placeholder="Assunto"
-                        tabindex="34" aria-label="Assunto do e-mail">
-                    <textarea id="email-body" class="text-input scannable" rows="5" placeholder="Mensagem..."
-                        tabindex="35" aria-label="Corpo do e-mail"></textarea>
-                    <button class="action-button scannable" onclick="sendEmail()" tabindex="36"
-                        aria-label="Enviar e-mail">📤 Enviar</button>
-                </div>
-            </div>
-
             <div id="accessibility-settings-app" class="app-container hidden">
                 <h2>⚙️ Configurações de Acessibilidade</h2>
                 <div class="settings-section">
@@ -332,18 +307,13 @@
                                 aria-label="Atalho para Comunicação Alternativa">
                         </div>
                         <div class="shortcut-item">
-                            <label>Integração de E-mail:</label>
-                            <input type="text" class="shortcut-input" id="shortcut-email" maxlength="2" value="8"
-                                aria-label="Atalho para Integração de E-mail">
-                        </div>
-                        <div class="shortcut-item">
                             <label>Configurações:</label>
-                            <input type="text" class="shortcut-input" id="shortcut-conf" maxlength="2" value="9"
+                            <input type="text" class="shortcut-input" id="shortcut-conf" maxlength="2" value="8"
                                 aria-label="Atalho para Configurações de Acessibilidade">
                         </div>
                         <div class="shortcut-item">
                             <label>Ajuda:</label>
-                            <input type="text" class="shortcut-input" id="shortcut-help" maxlength="2" value="10"
+                            <input type="text" class="shortcut-input" id="shortcut-help" maxlength="2" value="9"
                                 aria-label="Atalho para Central de Ajuda">
                         </div>
                     </div>
@@ -373,7 +343,6 @@
                         <p><strong>Reprodutor de Mídia:</strong> Toque arquivos de áudio e vídeo</p>
                         <p><strong>Leitor de PDF:</strong> Abra e navegue em documentos PDF</p>
                         <p><strong>Comunicação Alternativa:</strong> Use frases prontas para se comunicar</p>
-                        <p><strong>Integração de E-mail:</strong> Envie e-mails e mensagens rapidamente</p>
                         <p><strong>Configurações de Acessibilidade:</strong> Ajuste fonte, contraste, sons e varredura
                         </p>
                         <p><strong>Central de Ajuda:</strong> Veja instruções e dicas de uso</p>
