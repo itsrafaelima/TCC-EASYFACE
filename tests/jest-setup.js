@@ -1,7 +1,7 @@
 require('@testing-library/jest-dom');
 
 // Configurações globais para testes
-console.log('✅ Jest configurado e pronto para testes!');
+console.log('Jest configurado e pronto para testes!');
 
 // Mock para localStorage
 const localStorageMock = {
