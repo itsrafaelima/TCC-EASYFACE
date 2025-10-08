@@ -21,7 +21,24 @@ body {
 }
 
 .hidden {
-    display: none !important;
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.visually-hidden {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 }
 
 /* ===== HEADER ===== */
@@ -557,18 +574,56 @@ body {
 /* ===== RECURSOS DE ACESSIBILIDADE ===== */
 .skip-link {
     position: absolute;
-    top: -40px;
+    top: -50px;
     left: 0;
-    background: #ff6b6b;
-    color: white;
-    padding: 8px;
+    background: #000000;
+    color: #ffffff !important;
+    padding: 14px 24px;
     text-decoration: none;
-    border-radius: 0 0 5px 0;
-    z-index: 100;
+    border-radius: 0 0 8px 0;
+    z-index: 10000;
+    font-weight: bold;
+    font-size: 16px;
+    border: 3px solid #ffffff;
+    transition: top 0.3s ease;
+    line-height: 1.4;
+    text-align: center;
+    min-width: 200px;
 }
 
 .skip-link:focus {
     top: 0;
+    background: #000000;
+    color: #ffffff !important;
+    outline: 4px solid #ffd700;
+    outline-offset: 2px;
+    border: 3px solid #ffffff;
+}
+
+@media (prefers-contrast: high) {
+    .skip-link {
+        background: #000000 !important;
+        color: #ffff00 !important;
+        border: 3px solid #ffff00 !important;
+    }
+    
+    .skip-link:focus {
+        background: #000000 !important;
+        color: #ffff00 !important;
+        outline: 4px solid #ffff00 !important;
+    }
+}
+
+.high-contrast .skip-link {
+    background: #000000 !important;
+    color: #ffff00 !important;
+    border: 3px solid #ffff00 !important;
+}
+
+.high-contrast .skip-link:focus {
+    background: #000000 !important;
+    color: #ffff00 !important;
+    outline: 4px solid #ffffff !important;
 }
 
 /* Tamanhos de fonte */

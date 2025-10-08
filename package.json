@@ -1,0 +1,45 @@
+{
+  "name": "easyface",
+  "version": "1.0.0",
+  "description": "EASYFACE - Interface Acessível",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:a11y": "jest tests/a11y/",
+    "test:basic": "jest tests/",
+    "test:watch": "jest --watch",
+    "test:simple": "npx jest tests/simple.test.js",
+    "serve": "npx http-server -p 3002 -c-1",
+    "test:lighthouse": "powershell -Command \"if (!(Test-Path 'reports')) { New-Item -ItemType Directory -Path 'reports' }; npx lighthouse http://localhost:3000 --output html --output-path ./reports/lighthouse-report.html\"",
+    "test:lighthouse:a11y": "powershell -Command \"if (!(Test-Path 'reports')) { New-Item -ItemType Directory -Path 'reports' }; npx lighthouse http://localhost:3000 --only-categories=accessibility --output html --output-path ./reports/lighthouse-a11y.html\"",
+    "test:all": "npm run test:a11y && echo 'Testes de acessibilidade concluídos'",
+    "clean:reports": "if exist reports rmdir /s /q reports"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["./tests/jest-setup.js"]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsrafaelima/TCC-EASYFACE.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itsrafaelima/TCC-EASYFACE.git/issues"
+  },
+  "homepage": "https://github.com/itsrafaelima/TCC-EASYFACE.git#readme",
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "jest-environment-jsdom": "^29.0.0",
+    "axe-core": "^4.7.0",
+    "jest-axe": "^7.0.0",
+    "jsdom": "^22.0.0",
+    "@testing-library/dom": "^9.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "puppeteer": "^21.0.0",
+    "http-server": "^14.0.0",
+    "lighthouse": "^10.0.0"
+  }
+}
