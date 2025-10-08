@@ -1,47 +1,62 @@
-let currentApp = 'welcome';
-let calcDisplay = '0';
-let calcExpression = '';
-let soundsEnabled = true;
-let highContrast = false;
+// ===== VARIÁVEIS GLOBAIS =====
 
-// Variáveis para varredura automática
-let scanMode = false;
-let scanInterval = null;
-let scanElements = [];
-let currentScanIndex = 0;
-let scanSpeed = 2000;
-let scanPaused = false;
+// Controle de estado da aplicação
+let currentApp = 'welcome'; // App atualmente ativo na tela
+let calcDisplay = 'Calculadora'; // Texto mostrado no display da calculadora
+let calcExpression = ''; // Expressão matemática sendo construída
+let soundsEnabled = true; // Controla se sons de feedback estão ativos
+let highContrast = false; // Controla modo de alto contraste
 
-// Variáveis para navegação na calculadora
-let calcFocus = { row: 0, col: 0 };
+// Variáveis para varredura automática (assistive scanning)
+let scanMode = false; // Indica se o modo de varredura está ativo
+let scanInterval = null; // ID do intervalo que controla a varredura
+let scanElements = []; // Array com elementos que podem ser varridos
+let currentScanIndex = 0; // Índice do elemento atualmente destacado
+let scanSpeed = 2000; // Velocidade da varredura em milissegundos (2 segundos)
+let scanPaused = false; // Indica se a varredura está pausada
+
+// Variáveis para navegação na calculadora com setas do teclado
+let calcFocus = { row: 0, col: 0 }; // Posição atual na grade da calculadora
+// Mapeamento da grade de botões da calculadora (tabindex de cada posição)
 const calcGrid = [
     [11, 12, 13, 14],   // C, ⌫, ÷, ×
     [15, 16, 17, 18],   // 7, 8, 9, -
     [19, 20, 21, 22],   // 4, 5, 6, +
     [23, 24, 25, 26],   // 1, 2, 3, =
-    [27, 27, 28, 26]    // 0 (span 2), ., = (duplicado para mapeamento)
+    [27, 27, 28, 26]    // 0 (span 2 colunas), ., = (duplicado)
 ];
 
-// Variáveis Novas Funcionalidades
-let currentPdf = null;
-let currentPage = 1;
-let pdfTotalPages = 0;
-let pdfScale = 1.5;
-let customShortcuts = {};
+// Variáveis para funcionalidades específicas
+let currentPdf = null; // Objeto PDF atualmente carregado
+let currentPage = 1; // Página atual do PDF
+let pdfTotalPages = 0; // Total de páginas do PDF
+let pdfScale = 1.5; // Nível de zoom do PDF
+let customShortcuts = {}; // Atalhos de teclado personalizados pelo usuário
+
+// Frases pré-definidas para comunicação alternativa (CAA)
 let communicationPhrases = {
     saudacoes: ["Olá", "Bom dia", "Boa tarde", "Boa noite", "Tudo bem?", "Prazer em conhecê-lo"],
     necessidades: ["Estou com fome", "Estou com sede", "Preciso ir ao banheiro", "Estou com dor", "Preciso de ajuda"],
     sentimentos: ["Estou feliz", "Estou triste", "Estou cansado", "Estou com medo", "Estou com raiva", "Eu te amo"],
     emergencia: ["Preciso de ajuda urgente", "Chame um médico", "Ligue para minha família", "Não estou me sentindo bem"]
 };
-let settingsFocusIndex = 0;
-let settingsButtons = [];
+
+// Variáveis para navegação nas configurações
+let settingsFocusIndex = 0; // Índice do elemento focado nas configurações
+let settingsButtons = []; // Array de botões nas configurações
 
 // ===== FUNÇÕES DE CONFIGURAÇÃO =====
+
+/**
+ * Carrega as configurações salvas do usuário do localStorage
+ * Aplica automaticamente fonte, contraste, sons e velocidade de varredura
+ */
 function loadUserSettings() {
     try {
+        // Tenta recuperar configurações salvas
         const saved = JSON.parse(localStorage.getItem('easyface-settings') || '{}');
 
+        // Aplica cada configuração se existir
         if (saved.fontSize) changeFontSize(saved.fontSize);
         if (saved.highContrast) toggleContrast();
         if (saved.soundsEnabled !== undefined) soundsEnabled = saved.soundsEnabled;
@@ -49,18 +64,25 @@ function loadUserSettings() {
 
         updateStatus('Configurações carregadas');
     } catch (error) {
+        // Se houver erro, usa configurações padrão
         updateStatus('Configurações padrão aplicadas');
     }
 }
 
+/**
+ * Salva as configurações atuais do usuário no localStorage
+ * Chamada automaticamente quando qualquer configuração é alterada
+ */
 function saveUserSettings() {
     try {
+        // Monta objeto com configurações atuais
         const settings = {
             fontSize: getCurrentFontSize(),
             highContrast: highContrast,
             soundsEnabled: soundsEnabled,
             scanSpeed: scanSpeed
         };
+        // Salva no localStorage
         localStorage.setItem('easyface-settings', JSON.stringify(settings));
         updateStatus('Configurações salvas automaticamente');
     } catch (error) {
@@ -68,6 +90,10 @@ function saveUserSettings() {
     }
 }
 
+/**
+ * Obtém o tamanho de fonte atual baseado no fontSize do body
+ * @returns {string} 'small', 'medium' ou 'large'
+ */
 function getCurrentFontSize() {
     const size = parseInt(document.body.style.fontSize);
     if (size <= 16) return 'small';
@@ -76,23 +102,33 @@ function getCurrentFontSize() {
 }
 
 // ===== FUNÇÕES DE NAVEGAÇÃO =====
+
+/**
+ * Exibe um aplicativo específico e esconde todos os outros
+ * Reinicia a varredura automática se estiver ativa
+ * @param {string} appId - ID do elemento HTML do aplicativo
+ */
 function showApp(appId) {
     const previousApp = currentApp;
+    
+    // Esconde todos os aplicativos
     const apps = document.querySelectorAll('.app-container');
     apps.forEach(app => {
         app.classList.add('hidden');
     });
 
+    // Mostra o aplicativo selecionado
     const currentAppElement = document.getElementById(appId);
     if (currentAppElement) {
         currentAppElement.classList.remove('hidden');
     }
+    
     currentApp = appId;
     playFeedbackSound();
 
     console.log(`Mudando de app: ${previousApp} → ${appId}, ScanMode: ${scanMode}`);
     
-    // Sempre reinicia varredura ao mudar de app (se scanMode ativo)
+    // Reinicia varredura ao mudar de app (se scanMode ativo)
     if (scanMode) {
         console.log(`Reiniciando varredura para: ${appId}`);
         setTimeout(() => {
@@ -101,10 +137,13 @@ function showApp(appId) {
     }
 }
 
+/**
+ * Abre o Editor de Texto e foca automaticamente na área de texto
+ */
 function showTextEditor() {
     try {
         showApp('text-editor-app');
-        // Foca na área de texto quando o editor é aberto
+        // Foca na área de texto quando o editor é aberto (exceto em modo varredura)
         setTimeout(() => {
             const editorArea = document.querySelector('#text-editor-app textarea, #text-editor-app input, #text-editor-app [contenteditable="true"]');
             if (editorArea && !scanMode) {
@@ -117,6 +156,10 @@ function showTextEditor() {
     }
 }
 
+/**
+ * Abre a Calculadora e foca no botão 7 (primeiro número)
+ * Inicializa a posição de foco na grade
+ */
 function showCalculator() {
     try {
         showApp('calculator-app');
@@ -138,10 +181,12 @@ function showCalculator() {
     }
 }
 
+/**
+ * Abre o Lançador de Sites e foca no botão do Google
+ */
 function showSiteLauncher() {
     try {
         showApp('site-launcher-app');
-        // Foca no botão do Google quando o lançador de sites é aberto
         setTimeout(() => {
             const googleButton = document.querySelector('.site-button[onclick*="google.com"]');
             if (googleButton && !scanMode) {
@@ -154,6 +199,10 @@ function showSiteLauncher() {
     }
 }
 
+/**
+ * Abre as Configurações de Acessibilidade
+ * Atualiza a lista de botões navegáveis e foca no primeiro
+ */
 function showAccessibilitySettings() {
     try {
         showApp('accessibility-settings-app');
@@ -183,8 +232,11 @@ function showAccessibilitySettings() {
     }
 }
 
-
-// Função para destacar elemento nas configurações
+/**
+ * Destaca visualmente um elemento nas configurações
+ * Remove destaque anterior e aplica ao novo elemento
+ * @param {HTMLElement} element - Elemento a ser destacado
+ */
 function highlightSettingsElement(element) {
     // Remove destaque anterior
     document.querySelectorAll('#accessibility-settings-app .action-button, #accessibility-settings-app .scannable').forEach(btn => {
@@ -196,7 +248,10 @@ function highlightSettingsElement(element) {
     }
 }
 
-// Função para navegar nas configurações com setas
+/**
+ * Navega entre elementos nas configurações usando setas
+ * @param {number} direction - 1 para avançar, -1 para retroceder
+ */
 function moveSettingsFocus(direction) {
     if (settingsButtons.length === 0) return;
 
@@ -205,7 +260,7 @@ function moveSettingsFocus(direction) {
         settingsButtons[settingsFocusIndex].classList.remove('navigation-focus');
     }
 
-    // Calcula novo índice
+    // Calcula novo índice (com wrap-around circular)
     settingsFocusIndex = (settingsFocusIndex + direction + settingsButtons.length) % settingsButtons.length;
 
     // Aplica foco e destaque ao novo elemento
@@ -215,10 +270,12 @@ function moveSettingsFocus(direction) {
     }
 }
 
+/**
+ * Abre a Central de Ajuda
+ */
 function showHelp() {
     try {
         showApp('help-app');
-        // Foca no botão de fechar ajuda quando a seção é aberta
         setTimeout(() => {
             const closeButton = document.getElementById('close-help');
             if (closeButton && !scanMode) {
@@ -231,16 +288,18 @@ function showHelp() {
     }
 }
 
-// ===== FUNÇÕES EXPLORADOR DE ARQUIVOS =====
+// ===== FUNÇÕES GERENCIADOR DE ARQUIVOS =====
+
+/**
+ * Abre o Gerenciador de Arquivos e foca no botão de carregar
+ */
 function showFileManager() {
     try {
         showApp('file-manager-app');
-        // Foca no botão de carregar arquivo quando o gerenciador de arquivos é aberto
         setTimeout(() => {
             const openFileButton = document.querySelector('#file-manager-app .action-button');
             if (openFileButton && !scanMode) {
                 openFileButton.focus();
-
             }
         }, 100);
     } catch (error) {
@@ -249,28 +308,41 @@ function showFileManager() {
     }
 }
 
+/**
+ * Event listener para carregamento de arquivos de texto
+ * Lê o arquivo e exibe seu conteúdo na textarea
+ */
 document.getElementById('file-input').addEventListener('change', function (e) {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function (e) {
+            // Exibe conteúdo do arquivo na textarea
             document.getElementById('file-text-area').value = e.target.result;
             document.getElementById('file-info').textContent = `Arquivo "${file.name}" carregado com sucesso.`;
             speakFeedback(`Arquivo ${file.name} carregado com sucesso`);
         };
-        reader.readAsText(file);
+        reader.readAsText(file); // Lê arquivo como texto
     }
 });
 
+/**
+ * Salva o conteúdo da textarea como arquivo .txt
+ * Cria um blob e inicia download
+ */
 function saveTextFile() {
     const text = document.getElementById('file-text-area').value;
     if (text.trim()) {
+        // Cria arquivo blob
         const blob = new Blob([text], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
+        
+        // Cria link temporário e clica para download
         const a = document.createElement('a');
         a.href = url;
         a.download = 'documento.txt';
         a.click();
+        
         document.getElementById('file-info').textContent = 'Arquivo salvo com sucesso!';
         speakFeedback('Arquivo salvo com sucesso');
     } else {
@@ -278,12 +350,14 @@ function saveTextFile() {
     }
 }
 
-// ===== FUNÇÕES REPRODUTOR AÚDIO =====
+// ===== FUNÇÕES REPRODUTOR DE MÍDIA =====
 
+/**
+ * Abre o Reprodutor de Mídia e foca no botão de carregar
+ */
 function showMediaPlayer() {
     try {
         showApp('media-player-app');
-        // Foca no botão de carregar mídia quando o reprodutor é aberto
         setTimeout(() => {
             const loadButton = document.querySelector('#media-player-app .action-button');
             if (loadButton && !scanMode) {
@@ -296,10 +370,16 @@ function showMediaPlayer() {
     }
 }
 
+/**
+ * Event listener para carregamento de arquivos de mídia
+ * Detecta se é áudio ou vídeo e carrega no player apropriado
+ */
 document.getElementById('media-input').addEventListener('change', function (e) {
     const file = e.target.files[0];
     if (file) {
         const url = URL.createObjectURL(file);
+        
+        // Verifica tipo de arquivo e escolhe player correto
         if (file.type.startsWith('audio/')) {
             document.getElementById('audio-player').classList.remove('hidden');
             document.getElementById('video-player').classList.add('hidden');
@@ -309,17 +389,20 @@ document.getElementById('media-input').addEventListener('change', function (e) {
             document.getElementById('audio-player').classList.add('hidden');
             document.getElementById('video-player').src = url;
         }
+        
         document.getElementById('media-info').textContent = `Mídia "${file.name}" carregada.`;
         speakFeedback(`Mídia carregada!`);
     }
 });
 
-// ===== FUNÇÕES LEITOR PDF =====
+// ===== FUNÇÕES LEITOR DE PDF =====
 
+/**
+ * Abre o Leitor de PDF e inicializa a biblioteca PDF.js
+ */
 function showPdfReader() {
     try {
         showApp('pdf-reader-app');
-        // Foca no botão de carregar PDF quando o leitor é aberto
         setTimeout(() => {
             const loadButton = document.querySelector('#pdf-reader-app .action-button');
             if (loadButton && !scanMode) {
@@ -327,7 +410,7 @@ function showPdfReader() {
             }
         }, 100);
 
-        // Inicializar PDF.js
+        // Configura worker do PDF.js (necessário para processar PDFs)
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
     } catch (error) {
         console.error('Erro em showPdfReader:', error);
@@ -335,39 +418,56 @@ function showPdfReader() {
     }
 }
 
+/**
+ * Event listener para carregamento de arquivos PDF
+ * Lê o arquivo e carrega no visualizador
+ */
 document.getElementById('pdf-input').addEventListener('change', function (e) {
     const file = e.target.files[0];
     if (file && file.type === 'application/pdf') {
         const fileReader = new FileReader();
         fileReader.onload = function () {
+            // Converte para Uint8Array (formato necessário para PDF.js)
             const typedarray = new Uint8Array(this.result);
             loadPdf(typedarray);
         };
-        fileReader.readAsArrayBuffer(file);
+        fileReader.readAsArrayBuffer(file); // Lê como array buffer
         document.getElementById('pdf-info').textContent = `PDF "${file.name}" carregado.`;
         speakFeedback(`PDF ${file.name} carregado`);
     }
 });
 
+/**
+ * Carrega um PDF usando a biblioteca PDF.js
+ * @param {Uint8Array} data - Dados do PDF em formato binário
+ */
 function loadPdf(data) {
     pdfjsLib.getDocument(data).promise.then(function (pdf) {
         currentPdf = pdf;
         pdfTotalPages = pdf.numPages;
         currentPage = 1;
-        renderPage(currentPage);
+        renderPage(currentPage); // Renderiza primeira página
     });
 }
 
+/**
+ * Renderiza uma página específica do PDF no canvas
+ * @param {number} pageNum - Número da página a renderizar
+ */
 function renderPage(pageNum) {
     if (!currentPdf) return;
 
     currentPdf.getPage(pageNum).then(function (page) {
+        // Calcula dimensões baseadas no zoom
         const viewport = page.getViewport({ scale: pdfScale });
         const canvas = document.getElementById('pdf-canvas');
         const context = canvas.getContext('2d');
+        
+        // Ajusta tamanho do canvas
         canvas.height = viewport.height;
         canvas.width = viewport.width;
 
+        // Renderiza página no canvas
         const renderContext = {
             canvasContext: context,
             viewport: viewport
@@ -380,6 +480,9 @@ function renderPage(pageNum) {
     });
 }
 
+/**
+ * Navega para a página anterior do PDF
+ */
 function prevPage() {
     if (currentPdf && currentPage > 1) {
         currentPage--;
@@ -387,6 +490,9 @@ function prevPage() {
     }
 }
 
+/**
+ * Navega para a próxima página do PDF
+ */
 function nextPage() {
     if (currentPdf && currentPage < pdfTotalPages) {
         currentPage++;
@@ -394,11 +500,17 @@ function nextPage() {
     }
 }
 
+/**
+ * Aumenta o zoom do PDF em 25%
+ */
 function zoomIn() {
     pdfScale += 0.25;
     if (currentPdf) renderPage(currentPage);
 }
 
+/**
+ * Diminui o zoom do PDF em 25% (mínimo 0.5)
+ */
 function zoomOut() {
     if (pdfScale > 0.5) {
         pdfScale -= 0.25;
@@ -406,29 +518,38 @@ function zoomOut() {
     }
 }
 
-// ===== FUNÇÕES COMUNICAÇÃO ALTERNATIVA =====
+// ===== COMUNICAÇÃO ALTERNATIVA (CAA) =====
 
 // Variáveis para navegação na comunicação alternativa
 let commFocus = {
-    section: 'controls',
-    index: 0
+    section: 'controls', // Seção atual: 'controls', 'categories' ou 'phrases'
+    index: 0 // Índice do elemento focado na seção
 };
-let currentCategory = null;
+let currentCategory = null; // Categoria de frases atualmente selecionada
 const categories = ['saudacoes', 'necessidades', 'sentimentos', 'emergencia'];
+
+// Objeto para armazenar elementos navegáveis
 let commElements = {
-    controls: [],
-    categories: [],
-    phrases: []
+    controls: [],   // Botões Falar e Limpar
+    categories: [], // Botões de categoria
+    phrases: []     // Botões de frases
 };
 
+/**
+ * Atualiza a lista de elementos navegáveis na comunicação alternativa
+ * Necessário chamar toda vez que a interface muda
+ */
 function updateCommElements() {
-    // Atualiza a lista de elementos navegáveis
     commElements.controls = Array.from(document.querySelectorAll('.communication-controls .action-button'));
     commElements.categories = Array.from(document.querySelectorAll('.category-button'));
     commElements.phrases = Array.from(document.querySelectorAll('.phrase-button'));
 }
 
-// ===== NAVEGAÇÃO POR SETAS NA COMUNICAÇÃO ALTERNATIVA =====
+/**
+ * Move o foco entre elementos na comunicação alternativa
+ * Navega de forma inteligente entre controles → categorias → frases
+ * @param {number} direction - 1 para avançar, -1 para retroceder
+ */
 function moveCommFocus(direction) {
     updateCommElements();
 
@@ -443,11 +564,11 @@ function moveCommFocus(direction) {
             highlightCommElement(commElements.controls[newIndex]);
         }
         else if (newIndex >= commElements.controls.length && direction === 1) {
-            // Sai dos controles para categorias
+            // Avança para categorias
             moveToCategories();
         }
         else if (newIndex < 0 && direction === -1 && commElements.phrases.length > 0) {
-            // Vem das frases para os controles (caso especial)
+            // Volta das frases (wrap-around circular)
             moveToPhrases(commElements.phrases.length - 1);
         }
 
@@ -462,11 +583,11 @@ function moveCommFocus(direction) {
             highlightCommElement(commElements.categories[newIndex]);
         }
         else if (newIndex >= commElements.categories.length && direction === 1 && commElements.phrases.length > 0) {
-            // Sai das categorias para frases
+            // Avança para frases
             moveToPhrases();
         }
         else if (newIndex < 0 && direction === -1) {
-            // Volta das categorias para controles
+            // Volta para controles
             moveToControls(commElements.controls.length - 1);
         }
 
@@ -481,16 +602,20 @@ function moveCommFocus(direction) {
             highlightCommElement(commElements.phrases[newIndex]);
         }
         else if (newIndex >= commElements.phrases.length && direction === 1) {
-            // Sai das frases (volta para controles - ciclo completo)
+            // Volta para controles (wrap-around circular completo)
             moveToControls();
         }
         else if (newIndex < 0 && direction === -1) {
-            // Volta das frases para categorias
+            // Volta para categorias
             moveToCategories(commElements.categories.length - 1);
         }
     }
 }
 
+/**
+ * Move o foco para a seção de controles (Falar/Limpar)
+ * @param {number} targetIndex - Índice do botão a focar (padrão: 0)
+ */
 function moveToControls(targetIndex = 0) {
     commFocus.section = 'controls';
     commFocus.index = targetIndex;
@@ -502,6 +627,10 @@ function moveToControls(targetIndex = 0) {
     }
 }
 
+/**
+ * Move o foco para a seção de categorias
+ * @param {number} targetIndex - Índice da categoria a focar (padrão: 0)
+ */
 function moveToCategories(targetIndex = 0) {
     commFocus.section = 'categories';
     commFocus.index = targetIndex;
@@ -513,6 +642,10 @@ function moveToCategories(targetIndex = 0) {
     }
 }
 
+/**
+ * Move o foco para a seção de frases
+ * @param {number} targetIndex - Índice da frase a focar (padrão: 0)
+ */
 function moveToPhrases(targetIndex = 0) {
     if (commElements.phrases.length > 0) {
         commFocus.section = 'phrases';
@@ -526,6 +659,10 @@ function moveToPhrases(targetIndex = 0) {
     }
 }
 
+/**
+ * Destaca visualmente um elemento na comunicação alternativa
+ * @param {HTMLElement} element - Elemento a ser destacado
+ */
 function highlightCommElement(element) {
     // Remove destaque anterior
     document.querySelectorAll('.action-button, .category-button, .phrase-button').forEach(btn => {
@@ -537,6 +674,10 @@ function highlightCommElement(element) {
     }
 }
 
+/**
+ * Seleciona uma categoria e exibe suas frases
+ * @param {string} category - Nome da categoria (ex: 'saudacoes')
+ */
 function selectCategory(category) {
     currentCategory = category;
     showPhrases(category);
@@ -550,7 +691,10 @@ function selectCategory(category) {
     }, 100);
 }
 
-// Função para voltar às categorias
+/**
+ * Volta da visualização de frases para as categorias
+ * Limpa o container de frases
+ */
 function backToCategories() {
     currentCategory = null;
     document.getElementById('phrases-container').innerHTML = '';
@@ -562,10 +706,13 @@ function backToCategories() {
     }, 100);
 }
 
+/**
+ * Abre o aplicativo de Comunicação Alternativa
+ * Inicializa com foco nos controles
+ */
 function showCommunicationAid() {
     try {
         showApp('communication-aid-app');
-        // Foca no botão Falar quando o auxílio é aberto
         setTimeout(() => {
             commFocus = { section: 'controls', index: 0 };
             currentCategory = null;
@@ -582,24 +729,35 @@ function showCommunicationAid() {
     }
 }
 
+/**
+ * Cria botões para as frases de uma categoria específica
+ * @param {string} category - Nome da categoria
+ */
 function showPhrases(category) {
     const container = document.getElementById('phrases-container');
-    container.innerHTML = '';
+    container.innerHTML = ''; // Limpa frases anteriores
 
+    // Cria um botão para cada frase da categoria
     communicationPhrases[category].forEach((phrase, index) => {
         const button = document.createElement('button');
         button.className = 'phrase-button scannable';
         button.textContent = phrase;
         button.tabIndex = 50 + index;
         button.setAttribute('aria-label', `Selecionar frase: ${phrase}`);
+        
+        // Ao clicar, exibe a frase no display
         button.onclick = function () {
             document.getElementById('communication-display').textContent = phrase;
             speakFeedback(`${phrase}`);
         };
+        
         container.appendChild(button);
     });
 }
 
+/**
+ * Fala o texto exibido no display usando síntese de voz
+ */
 function speakCommunication() {
     const text = document.getElementById('communication-display').textContent;
     if (text && text !== 'Sua mensagem aparecerá aqui...' && 'speechSynthesis' in window) {
@@ -610,20 +768,26 @@ function speakCommunication() {
     }
 }
 
+/**
+ * Limpa a mensagem do display de comunicação
+ */
 function clearCommunication() {
     document.getElementById('communication-display').textContent = 'Sua mensagem aparecerá aqui...';
     speakFeedback('Mensagem limpa');
 }
 
+// ===== PERSONALIZAÇÃO DE ATALHOS =====
 
-// ===== PERSONALIZAÇÃO ATALHOS =====
-
+/**
+ * Carrega atalhos de teclado personalizados do localStorage
+ * Preenche os campos de input com os valores salvos
+ */
 function loadShortcuts() {
     try {
         const saved = JSON.parse(localStorage.getItem('easyface-shortcuts') || '{}');
         customShortcuts = saved;
 
-        // Aplicar atalhos salvos
+        // Aplica atalhos salvos aos campos de input
         if (saved.text) document.getElementById('shortcut-text').value = saved.text;
         if (saved.file) document.getElementById('shortcut-file').value = saved.file;
         if (saved.calc) document.getElementById('shortcut-calc').value = saved.calc;
@@ -638,6 +802,10 @@ function loadShortcuts() {
     }
 }
 
+/**
+ * Salva os atalhos personalizados definidos pelo usuário
+ * Lê os valores dos campos e armazena no localStorage
+ */
 function saveShortcuts() {
     try {
         customShortcuts = {
@@ -660,19 +828,28 @@ function saveShortcuts() {
     }
 }
 
-// ===== LEITOR DE TELA =====
+// ===== LEITOR DE TELA (TEXT-TO-SPEECH) =====
 
+/**
+ * Fornece feedback de voz usando a API Web Speech
+ * @param {string} message - Mensagem a ser falada
+ */
 function speakFeedback(message) {
     if (soundsEnabled && 'speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(message);
-        utterance.volume = 0.8;
-        utterance.rate = 0.9;
-        utterance.pitch = 1;
+        utterance.volume = 0.8; // Volume (0 a 1)
+        utterance.rate = 0.9;   // Velocidade da fala
+        utterance.pitch = 1;    // Tom da voz
         speechSynthesis.speak(utterance);
     }
 }
 
 // ===== FUNÇÕES DO EDITOR DE TEXTO =====
+
+/**
+ * Salva o conteúdo da textarea como arquivo .txt
+ * Cria um blob e inicia o download
+ */
 function saveText() {
     const text = document.getElementById('text-area').value;
     if (text.trim()) {
@@ -681,7 +858,7 @@ function saveText() {
         const a = document.createElement('a');
         a.href = url;
         a.download = 'easyface-texto.txt';
-        a.click();
+        a.click(); // Inicia o download
         updateStatus('Texto salvo com sucesso!');
         playFeedbackSound();
     } else {
@@ -689,12 +866,18 @@ function saveText() {
     }
 }
 
+/**
+ * Limpa todo o conteúdo da textarea do editor
+ */
 function clearText() {
     document.getElementById('text-area').value = '';
     updateStatus('Texto limpo.');
     playFeedbackSound();
 }
 
+/**
+ * Lê o texto da textarea em voz alta usando síntese de voz
+ */
 function speakText() {
     const text = document.getElementById('text-area').value;
     if (text.trim() && 'speechSynthesis' in window) {
@@ -708,17 +891,28 @@ function speakText() {
 }
 
 // ===== FUNÇÕES DA CALCULADORA =====
+
+/**
+ * Adiciona um valor (número ou operador) à expressão da calculadora
+ * @param {string} value - Valor a adicionar (número ou operador)
+ */
 function addToCalc(value) {
     if (calcDisplay === '0' && !isNaN(value)) {
+        // Se display está em zero e valor é número, substitui
         calcDisplay = value;
     } else {
+        // Caso contrário, adiciona ao final
         calcDisplay += value;
     }
-    calcExpression += value;
+    calcExpression += value; // Adiciona também à expressão completa
     document.getElementById('calc-display').textContent = calcDisplay;
     playFeedbackSound();
 }
 
+/**
+ * Calcula o resultado da expressão matemática atual
+ * Usa eval() para avaliar a expressão (com precauções)
+ */
 function calculateResult() {
     if (calcExpression.trim() === '') {
         calcDisplay = '0';
@@ -727,22 +921,27 @@ function calculateResult() {
     }
 
     try {
+        // Substitui símbolos visuais por operadores JavaScript
         const expressionToEval = calcExpression
             .replace(/×/g, '*')
             .replace(/÷/g, '/')
             .replace(/−/g, '-');
 
-        const result = eval(expressionToEval);
+        const result = eval(expressionToEval); // Calcula resultado
         calcDisplay = result.toString();
         calcExpression = result.toString();
         document.getElementById('calc-display').textContent = calcDisplay;
     } catch (error) {
+        // Se houver erro na expressão
         calcDisplay = 'Erro';
         calcExpression = '';
         document.getElementById('calc-display').textContent = calcDisplay;
     }
 }
 
+/**
+ * Limpa completamente a calculadora (C)
+ */
 function clearCalc() {
     calcDisplay = '0';
     calcExpression = '';
@@ -751,6 +950,9 @@ function clearCalc() {
     playFeedbackSound();
 }
 
+/**
+ * Apaga o último caractere digitado (⌫)
+ */
 function deleteLast() {
     if (calcDisplay.length > 1) {
         calcDisplay = calcDisplay.slice(0, -1);
@@ -763,8 +965,15 @@ function deleteLast() {
     playFeedbackSound();
 }
 
-// ===== SISTEMA DE NAVEGAÇÃO POR SETAS =====
+// ===== NAVEGAÇÃO POR SETAS NA CALCULADORA =====
+
+/**
+ * Move o foco entre botões da calculadora usando setas
+ * @param {number} rowDelta - Mudança na linha (-1 para cima, 1 para baixo)
+ * @param {number} colDelta - Mudança na coluna (-1 para esquerda, 1 para direita)
+ */
 function moveCalcFocus(rowDelta, colDelta) {
+    // Calcula nova posição com limites da grade
     const newRow = Math.max(0, Math.min(calcFocus.row + rowDelta, calcGrid.length - 1));
     let newCol = Math.max(0, Math.min(calcFocus.col + colDelta, calcGrid[newRow].length - 1));
 
@@ -773,7 +982,7 @@ function moveCalcFocus(rowDelta, colDelta) {
         newCol = 0;
     }
 
-    // Encontra o elemento a ser focado
+    // Encontra o elemento a ser focado pelo tabindex
     const tabIndex = calcGrid[newRow][newCol];
     const element = document.querySelector(`.calc-button[tabindex="${tabIndex}"]`);
 
@@ -781,7 +990,7 @@ function moveCalcFocus(rowDelta, colDelta) {
         element.focus();
         calcFocus = { row: newRow, col: newCol };
 
-        // Destacar visualmente o botão com foco de navegação
+        // Destaca visualmente o botão com foco de navegação
         document.querySelectorAll('.calc-button').forEach(btn => {
             btn.classList.remove('navigation-focus');
         });
@@ -789,13 +998,22 @@ function moveCalcFocus(rowDelta, colDelta) {
     }
 }
 
-// ===== FUNÇÕES DO LAUNCHER DE SITE =====
+// ===== FUNÇÕES DO LANÇADOR DE SITES =====
+
+/**
+ * Abre um site em nova aba
+ * @param {string} url - URL completa do site
+ */
 function launchSite(url) {
-    window.open(url, '_blank', 'noopener,noreferrer');
+    window.open(url, '_blank', 'noopener,noreferrer'); // Abre com segurança
     updateStatus('Site aberto em nova janela: ' + url);
     playFeedbackSound();
 }
 
+/**
+ * Abre um site personalizado digitado pelo usuário
+ * Adiciona https:// se necessário
+ */
 function launchCustomSite() {
     const url = document.getElementById('custom-site-url').value.trim();
     if (!url) {
@@ -804,18 +1022,21 @@ function launchCustomSite() {
     }
 
     let finalUrl = url;
+    // Adiciona protocolo se não tiver
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
         finalUrl = 'https://' + url;
     }
 
-    // Abre o site sem verificação (mais simples)
     launchSite(finalUrl);
-
-    // Aviso para o usuário sobre segurança
     updateStatus('Site aberto. Cuidado com sites desconhecidos.');
 }
 
 // ===== FUNÇÕES DE ACESSIBILIDADE =====
+
+/**
+ * Altera o tamanho da fonte de toda a interface
+ * @param {string} size - 'small', 'medium' ou 'large'
+ */
 function changeFontSize(size) {
     const body = document.body;
     body.classList.remove('font-small', 'font-medium', 'font-large');
@@ -835,6 +1056,10 @@ function changeFontSize(size) {
     playFeedbackSound();
 }
 
+/**
+ * Alterna o modo de alto contraste
+ * Aplica filtros CSS para melhorar visibilidade
+ */
 function toggleContrast() {
     highContrast = !highContrast;
     if (highContrast) {
@@ -849,6 +1074,9 @@ function toggleContrast() {
     playFeedbackSound();
 }
 
+/**
+ * Ativa ou desativa sons de feedback
+ */
 function toggleSounds() {
     soundsEnabled = !soundsEnabled;
     updateStatus(soundsEnabled ? 'Sons ativados' : 'Sons desativados');
@@ -858,6 +1086,11 @@ function toggleSounds() {
 }
 
 // ===== FUNÇÕES DE VARREDURA AUTOMÁTICA =====
+
+/**
+ * Ativa ou desativa o modo de varredura automática
+ * Em modo varredura, elementos são destacados sequencialmente
+ */
 function toggleScanMode() {
     scanMode = !scanMode;
     const button = document.getElementById('scan-toggle');
@@ -868,13 +1101,8 @@ function toggleScanMode() {
     console.log('currentApp:', currentApp);
     console.log('scanMode será:', scanMode);
 
-    // DEBUG: Verifica qual app está visível
-    const visibleApps = Array.from(document.querySelectorAll('.app-container'))
-        .filter(app => !app.classList.contains('hidden'))
-        .map(app => app.id);
-    console.log('Apps visíveis:', visibleApps);
-
     if (scanMode) {
+        // Se não estiver no welcome, volta para lá
         if (currentApp !== 'welcome') {
             console.log('Forçando volta para welcome...');
             showApp('welcome');
@@ -882,14 +1110,6 @@ function toggleScanMode() {
 
         setTimeout(() => {
             console.log('Iniciando varredura após timeout...');
-            console.log('currentApp agora:', currentApp);
-
-            // DEBUG: Verifica elementos antes de iniciar
-            const sidebarElements = document.querySelectorAll('.sidebar .scannable');
-            const welcomeElements = document.querySelectorAll('#welcome .scannable');
-            console.log('Elementos na sidebar:', sidebarElements.length);
-            console.log('Elementos no welcome:', welcomeElements.length);
-
             startScanning();
             button.textContent = '⏹️ Parar Varredura';
             button.setAttribute('aria-label', 'Parar modo de varredura automática');
@@ -897,7 +1117,7 @@ function toggleScanMode() {
             controls.style.display = 'block';
             updateStatus('Modo de varredura ativado - Use ENTER para selecionar');
             speakFeedback('Modo de varredura ativado');
-        });
+        }, 300);
     } else {
         stopScanning();
         button.textContent = '🔄 Ativar Varredura';
@@ -911,11 +1131,16 @@ function toggleScanMode() {
     saveUserSettings();
 }
 
+/**
+ * Inicia o processo de varredura automática
+ * Encontra elementos navegáveis e inicia o loop de destaque
+ */
 function startScanning() {
     console.log('=== START SCANNING ===');
     console.log('App atual:', currentApp);
     console.log('ScanMode:', scanMode);
     
+    // Define seletor baseado no app atual
     let selector = '.scannable';
     if (currentApp !== 'welcome') {
         selector = `#${currentApp} .scannable`;
@@ -923,6 +1148,7 @@ function startScanning() {
     
     console.log('Seletor usado:', selector);
     
+    // Filtra apenas elementos visíveis
     scanElements = Array.from(document.querySelectorAll(selector)).filter(el => {
         const isVisible = !el.disabled && 
                el.offsetParent !== null &&
@@ -932,9 +1158,8 @@ function startScanning() {
     });
     
     console.log(`Elementos encontrados em ${currentApp}:`, scanElements.length);
-    console.log('Elementos:', scanElements.map(el => el.textContent?.substring(0, 20)));
 
-    // Ordena por posição
+    // Ordena elementos por posição na tela (top-left to bottom-right)
     scanElements.sort((a, b) => {
         const rectA = a.getBoundingClientRect();
         const rectB = b.getBoundingClientRect();
@@ -944,19 +1169,23 @@ function startScanning() {
     currentScanIndex = 0;
     scanPaused = false;
 
-    console.log(`Elementos scannable em ${currentApp}:`, scanElements.length);
-
     if (scanElements.length > 0) {
         if (scanInterval) {
             clearInterval(scanInterval);
         }
+        // Inicia loop de varredura
         scanInterval = setInterval(nextScanElement, scanSpeed);
-        highlightCurrentElement();
+        highlightCurrentElement(); // Destaca primeiro elemento
     } else {
         updateStatus('Nenhum elemento encontrado para varredura');
     }
 }
 
+/**
+ * Obtém nome amigável de um app pelo ID
+ * @param {string} appId - ID do app
+ * @returns {string} Nome amigável
+ */
 function getAppName(appId) {
     const appNames = {
         'welcome': 'Menu Principal',
@@ -973,6 +1202,10 @@ function getAppName(appId) {
     return appNames[appId] || appId;
 }
 
+/**
+ * Para completamente a varredura automática
+ * Remove destaques e limpa o intervalo
+ */
 function stopScanning() {
     if (scanInterval) {
         clearInterval(scanInterval);
@@ -982,7 +1215,7 @@ function stopScanning() {
     // Remove destaque de todos os elementos
     scanElements.forEach(el => {
         el.classList.remove('scan-active');
-        el.style.outline = ''; // Limpa qualquer estilo inline
+        el.style.outline = '';
     });
 
     scanElements = [];
@@ -990,6 +1223,10 @@ function stopScanning() {
     scanPaused = false;
 }
 
+/**
+ * Avança para o próximo elemento na varredura
+ * Chamada automaticamente pelo intervalo
+ */
 function nextScanElement() {
     if (scanPaused || scanElements.length === 0) return;
 
@@ -1000,12 +1237,12 @@ function nextScanElement() {
             scanElements[currentScanIndex].style.outline = '';
         }
 
-        // Avança para o próximo elemento
+        // Avança para o próximo (com wrap-around circular)
         currentScanIndex = (currentScanIndex + 1) % scanElements.length;
         highlightCurrentElement();
     } catch (error) {
         console.error('Erro em nextScanElement:', error);
-        // Reinicia a varredura em caso de erro
+        // Tenta reiniciar em caso de erro
         if (scanMode) {
             setTimeout(() => {
                 startScanning();
@@ -1015,30 +1252,36 @@ function nextScanElement() {
     }
 }
 
+/**
+ * Destaca visualmente o elemento atual da varredura
+ * Aplica borda, scroll e foco
+ */
 function highlightCurrentElement() {
     if (scanElements[currentScanIndex]) {
         try {
             const element = scanElements[currentScanIndex];
             
-            // Aplica destaque
+            // Aplica destaque visual
             element.classList.add('scan-active');
-            element.style.outline = '4px solid #ff6b6b';
+            element.style.outline = '4px solid #ff6b6b'; // Borda vermelha
             element.style.outlineOffset = '2px';
 
-            // Rola para visualizar o elemento
+            // Rola a página para mostrar o elemento
             element.scrollIntoView({ 
                 behavior: 'smooth', 
                 block: 'center',
                 inline: 'center'
             });
 
-            // Foca no elemento para navegação por teclado
+            // Foca no elemento para acessibilidade
             element.focus();
 
+            // Toca som de feedback
             if (soundsEnabled) {
                 playDifferentSound(800);
             }
 
+            // Atualiza status com descrição do elemento
             const label = element.getAttribute('aria-label') || element.textContent || element.placeholder || 'Elemento';
             updateStatus(`Varredura: ${label.trim()} - Pressione ENTER para selecionar`);
             
@@ -1048,6 +1291,10 @@ function highlightCurrentElement() {
     }
 }
 
+/**
+ * Seleciona (clica) o elemento atualmente destacado na varredura
+ * @returns {boolean} true se selecionou com sucesso
+ */
 function selectCurrentScanElement() {
     if (scanElements[currentScanIndex] && scanMode && !scanPaused) {
         const element = scanElements[currentScanIndex];
@@ -1058,7 +1305,7 @@ function selectCurrentScanElement() {
             element.classList.remove('scan-active');
             element.style.outline = '';
             
-            // CORREÇÃO: Usa dispatchEvent em vez de click() direto
+            // Dispara evento de clique
             element.dispatchEvent(new MouseEvent('click', {
                 view: window,
                 bubbles: true,
@@ -1079,7 +1326,7 @@ function selectCurrentScanElement() {
             return true;
         } catch (error) {
             console.error('Erro ao selecionar elemento na varredura:', error);
-            // IMPORTANTE: Restaura a varredura mesmo com erro
+            // Restaura a varredura mesmo com erro
             if (scanMode && scanElements[currentElementIndex] === element) {
                 element.classList.add('scan-active');
                 element.style.outline = '4px solid #ff6b6b';
@@ -1091,6 +1338,9 @@ function selectCurrentScanElement() {
     return false;
 }
 
+/**
+ * Pausa ou retoma a varredura automática
+ */
 function pauseScanning() {
     if (!scanMode) return;
 
@@ -1108,6 +1358,10 @@ function pauseScanning() {
     }
 }
 
+/**
+ * Define a velocidade da varredura
+ * @param {number} speed - Velocidade em milissegundos
+ */
 function setScanSpeed(speed) {
     scanSpeed = speed;
     updateStatus(`Velocidade definida: ${speed / 1000} segundos`);
@@ -1127,6 +1381,12 @@ function setScanSpeed(speed) {
     saveUserSettings();
 }
 
+// ===== FUNÇÕES DE DEBUG E UTILITÁRIAS =====
+
+/**
+ * Função de debug para inspecionar elementos da varredura
+ * Exibe informações detalhadas no console (Ctrl+Shift+D)
+ */
 function debugScanElements() {
     let selector = '.scannable';
     if (currentApp !== 'welcome') {
@@ -1161,6 +1421,10 @@ function debugScanElements() {
     updateStatus(`Debug: ${elements.length} elementos em ${currentApp} (ver console)`);
 }
 
+/**
+ * Reinicia completamente a varredura para o app atual
+ * Útil quando a interface muda dinamicamente
+ */
 function restartScan() {
     if (scanMode) {
         console.log('🔄 REINICIANDO VARREDURA para:', currentApp);
@@ -1185,32 +1449,48 @@ function restartScan() {
     }
 }
 
-// ===== FUNÇÕES DE SOM =====
+// ===== FUNÇÕES DE SOM (FEEDBACK AUDITIVO) =====
+
+/**
+ * Toca som de feedback padrão (sucesso/confirmação)
+ */
 function playFeedbackSound() {
-    playDifferentSound(800, 0.1);
+    playDifferentSound(800, 0.1); // Frequência 800Hz, duração 0.1s
 }
 
+/**
+ * Toca som de erro
+ */
 function playErrorSound() {
-    playDifferentSound(300, 0.2);
+    playDifferentSound(300, 0.2); // Frequência 300Hz (grave), duração 0.2s
 }
 
+/**
+ * Gera um som sintético usando Web Audio API
+ * @param {number} frequency - Frequência do som em Hz
+ * @param {number} duration - Duração do som em segundos (padrão: 0.1)
+ */
 function playDifferentSound(frequency, duration = 0.1) {
     if (!soundsEnabled) return;
 
     try {
+        // Cria contexto de áudio
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+        const oscillator = audioContext.createOscillator(); // Gerador de onda
+        const gainNode = audioContext.createGain(); // Controle de volume
 
+        // Conecta oscilador -> volume -> saída
         oscillator.connect(gainNode);
         gainNode.connect(audioContext.destination);
 
-        oscillator.frequency.value = frequency;
-        oscillator.type = 'sine';
+        oscillator.frequency.value = frequency; // Define frequência
+        oscillator.type = 'sine'; // Onda senoidal (som suave)
 
+        // Fade out suave para evitar cliques
         gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
         gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
 
+        // Inicia e para o som
         oscillator.start(audioContext.currentTime);
         oscillator.stop(audioContext.currentTime + duration);
     } catch (error) {
@@ -1219,11 +1499,18 @@ function playDifferentSound(frequency, duration = 0.1) {
 }
 
 // ===== FUNÇÕES DE STATUS =====
+
+/**
+ * Atualiza a mensagem da barra de status
+ * Mensagem desaparece após 3 segundos
+ * @param {string} message - Mensagem a exibir
+ */
 function updateStatus(message) {
     const statusBar = document.getElementById('status-bar');
     statusBar.textContent = message;
-    statusBar.setAttribute('aria-live', 'polite');
+    statusBar.setAttribute('aria-live', 'polite'); // Acessibilidade
 
+    // Restaura mensagem padrão após 3 segundos
     setTimeout(() => {
         if (!scanMode) {
             statusBar.textContent = 'EASYFACE ativo - Use TAB para navegar';
@@ -1233,16 +1520,22 @@ function updateStatus(message) {
     }, 3000);
 }
 
-// ===== FUNÇÕES DE RECONHECIMENTO DE VOZ =====
+// ===== RECONHECIMENTO DE VOZ =====
+
+/**
+ * Verifica se o navegador suporta reconhecimento de voz
+ * @returns {boolean} true se suportado
+ */
 function checkVoiceRecognitionSupport() {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        // Exibe aviso se não suportar
         const voiceWarning = document.createElement('div');
         voiceWarning.className = 'alert-warning';
         voiceWarning.innerHTML = `
-                    <strong>⚠️ Comando de Voz Indisponível</strong><br>
-                    Seu navegador não suporta reconhecimento de voz. 
-                    Recomendamos usar Google Chrome para ter acesso a todos os recursos.
-                `;
+            <strong>⚠️ Comando de Voz Indisponível</strong><br>
+            Seu navegador não suporta reconhecimento de voz. 
+            Recomendamos usar Google Chrome para ter acesso a todos os recursos.
+        `;
 
         const settingsDiv = document.getElementById('accessibility-settings');
         if (settingsDiv) {
@@ -1253,15 +1546,22 @@ function checkVoiceRecognitionSupport() {
     return true;
 }
 
+/**
+ * Configura o reconhecimento de voz para comandos
+ * Adiciona botão ao menu lateral
+ */
 function setupVoiceRecognition() {
     if (!checkVoiceRecognitionSupport()) return;
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     recognition.lang = 'pt-BR';
-    recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.continuous = false; // Para após um comando
+    recognition.interimResults = false; // Apenas resultados finais
 
+    /**
+     * Inicia captura de comando de voz
+     */
     function startVoiceCommand() {
         try {
             recognition.start();
@@ -1272,10 +1572,14 @@ function setupVoiceRecognition() {
         }
     }
 
+    /**
+     * Processa comando reconhecido
+     */
     recognition.onresult = function (event) {
         const command = event.results[0][0].transcript.toLowerCase().trim();
         updateStatus(`Comando reconhecido: ${command}`);
 
+        // Mapeamento de comandos de voz para funções
         if (command.includes('editor') || command.includes('texto')) {
             showTextEditor();
         } else if (command.includes('arquivo') || command.includes('documento')) {
@@ -1304,12 +1608,15 @@ function setupVoiceRecognition() {
         }
     };
 
+    /**
+     * Trata erros no reconhecimento de voz
+     */
     recognition.onerror = function (event) {
         updateStatus('Erro no reconhecimento de voz: ' + event.error);
         playErrorSound();
     };
 
-    // Adicionar botão de comando de voz
+    // Adiciona botão de comando de voz ao menu
     const voiceButton = document.createElement('button');
     voiceButton.className = 'menu-button scannable';
     voiceButton.innerHTML = '🎤 Comando de Voz';
@@ -1320,17 +1627,24 @@ function setupVoiceRecognition() {
 }
 
 // ===== INICIALIZAÇÃO DA CALCULADORA =====
+
+/**
+ * Configura event listeners para os botões da calculadora
+ * Atualiza calcFocus quando um botão ganha foco
+ */
 function initCalculator() {
     const calculatorApp = document.getElementById('calculator-app');
     if (!calculatorApp) return;
 
-    // Atualiza calcFocus quando um botão ganha foco
+    // Adiciona listener de foco a cada botão
     document.querySelectorAll('.calc-button').forEach(button => {
         button.addEventListener('focus', function () {
+            // Encontra posição do botão na grade
             for (let row = 0; row < calcGrid.length; row++) {
                 for (let col = 0; col < calcGrid[row].length; col++) {
                     if (calcGrid[row][col] === parseInt(this.getAttribute('tabindex'))) {
                         calcFocus = { row, col };
+                        // Atualiza destaque visual
                         document.querySelectorAll('.calc-button').forEach(btn => btn.classList.remove('navigation-focus'));
                         this.classList.add('navigation-focus');
                         return;
@@ -1341,8 +1655,14 @@ function initCalculator() {
     });
 }
 
-// ===== EVENT LISTENERS GERAL (ÚNICO E CONSOLIDADO) =====
+// ===== EVENT LISTENERS GLOBAIS DE TECLADO =====
+
+/**
+ * Handler principal de eventos de teclado
+ * Gerencia navegação, atalhos e controles especiais
+ */
 document.addEventListener('keydown', function (e) {
+    // Atalho de debug: Ctrl+Shift+D
     if (e.ctrlKey && e.shiftKey && e.key === 'D') {
         e.preventDefault();
         debugScanElements();
@@ -1352,15 +1672,16 @@ document.addEventListener('keydown', function (e) {
     const focused = document.activeElement;
     const isCalcButtonFocused = focused && focused.classList.contains('calc-button');
 
-    // Lógica de navegação da calculadora com setas e outras teclas
+    // ===== NAVEGAÇÃO NA CALCULADORA COM SETAS =====
     if (currentApp === 'calculator-app' && isCalcButtonFocused) {
         const key = e.key;
 
         if (key === 'Tab') {
-            // Permitir navegação normal com Tab
+            // Permite navegação normal com Tab
             return;
         }
 
+        // Navegação com setas
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
             e.preventDefault();
             if (key === 'ArrowRight') moveCalcFocus(0, 1);
@@ -1370,6 +1691,7 @@ document.addEventListener('keydown', function (e) {
             return;
         }
 
+        // Digitação direta de números e operadores
         if ('0123456789.+-*/'.includes(key)) {
             e.preventDefault();
             addToCalc(key);
@@ -1389,10 +1711,11 @@ document.addEventListener('keydown', function (e) {
         }
     }
 
-    // NAVEGAÇÃO NA COMUNICAÇÃO ALTERNATIVA
+    // ===== NAVEGAÇÃO NA COMUNICAÇÃO ALTERNATIVA =====
     else if (currentApp === 'communication-aid-app') {
         const key = e.key;
 
+        // Navegação com setas
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
             e.preventDefault();
 
@@ -1404,29 +1727,29 @@ document.addEventListener('keydown', function (e) {
             return;
         }
 
-        // Tab funciona normalmente para navegação sequencial
+        // Tab para navegação sequencial
         if (key === 'Tab') {
             e.preventDefault();
             if (e.shiftKey) {
-                moveCommFocus(-1); // Tab + Shift: elemento anterior
+                moveCommFocus(-1); // Tab + Shift: anterior
             } else {
-                moveCommFocus(1); // Tab: próximo elemento
+                moveCommFocus(1); // Tab: próximo
             }
             return;
         }
 
-        // ESC volta para categorias se estiver nas frases, ou para controles se estiver nas categorias
+        // ESC volta para nível anterior
         if (key === 'Escape') {
             e.preventDefault();
 
             if (commFocus.section === 'phrases') {
-                // Se estiver nas frases, volta para categorias
+                // Volta para categorias
                 backToCategories();
             } else if (commFocus.section === 'categories') {
-                // Se estiver nas categorias, volta para controles
+                // Volta para controles
                 moveToControls();
             } else if (commFocus.section === 'controls') {
-                // Se estiver nos controles (Falar/Limpar), volta para menu principal
+                // Volta para menu principal
                 showApp('welcome');
                 const firstButton = document.querySelector('.menu-button');
                 if (firstButton) firstButton.focus();
@@ -1434,7 +1757,7 @@ document.addEventListener('keydown', function (e) {
             return;
         }
 
-        // Enter para selecionar
+        // Enter ou Espaço para selecionar
         if (key === 'Enter' || key === ' ') {
             e.preventDefault();
             const focused = document.activeElement;
@@ -1447,24 +1770,24 @@ document.addEventListener('keydown', function (e) {
         }
     }
 
-    // NAVEGAÇÃO NAS CONFIGURAÇÕES
+    // ===== NAVEGAÇÃO NAS CONFIGURAÇÕES =====
     else if (currentApp === 'accessibility-settings-app') {
         const key = e.key;
 
+        // Navegação com setas
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
             e.preventDefault();
 
             if (key === 'ArrowDown' || key === 'ArrowRight') {
-                moveSettingsFocus(1); // Próximo elemento
+                moveSettingsFocus(1); // Próximo
             } else if (key === 'ArrowUp' || key === 'ArrowLeft') {
-                moveSettingsFocus(-1); // Elemento anterior
+                moveSettingsFocus(-1); // Anterior
             }
             return;
         }
 
-        // Tab funciona normalmente para navegação sequencial
+        // Tab atualiza lista de botões
         if (key === 'Tab') {
-            // Atualiza a lista de botões quando o Tab é pressionado
             setTimeout(() => {
                 settingsButtons = Array.from(document.querySelectorAll('#accessibility-settings-app .action-button, #accessibility-settings-app .scannable'));
                 const currentFocused = document.activeElement;
@@ -1477,7 +1800,7 @@ document.addEventListener('keydown', function (e) {
             return;
         }
 
-        // ESC volta para o menu principal
+        // ESC volta ao menu
         if (key === 'Escape') {
             e.preventDefault();
             showApp('welcome');
@@ -1486,7 +1809,7 @@ document.addEventListener('keydown', function (e) {
             return;
         }
 
-        // Enter ou Espaço para ativar o botão focado
+        // Enter/Espaço ativa botão
         if ((key === 'Enter' || key === ' ') &&
             document.activeElement.classList.contains('action-button')) {
             e.preventDefault();
@@ -1495,9 +1818,9 @@ document.addEventListener('keydown', function (e) {
         }
     }
 
-    // CONTINUA COM O RESTO DO CÓDIGO (atalhos Ctrl, varredura, etc.)
+    // ===== ATALHOS GLOBAIS COM CTRL =====
     if (e.ctrlKey) {
-        // Verificar atalhos personalizados primeiro
+        // Verifica atalhos personalizados primeiro
         if (customShortcuts.text && e.key === customShortcuts.text) {
             e.preventDefault();
             showTextEditor();
@@ -1514,7 +1837,7 @@ document.addEventListener('keydown', function (e) {
             return;
         }
 
-        // Atalhos padrão como fallback
+        // Atalhos padrão (fallback)
         switch (e.key) {
             case '1':
                 e.preventDefault();
@@ -1555,7 +1878,9 @@ document.addEventListener('keydown', function (e) {
         }
     }
 
-    // Lógica de varredura automática
+    // ===== CONTROLES DA VARREDURA =====
+    
+    // ENTER seleciona elemento na varredura
     if (scanMode && e.key === 'Enter') {
         e.preventDefault();
         if (selectCurrentScanElement()) {
@@ -1563,7 +1888,7 @@ document.addEventListener('keydown', function (e) {
         }
     }
 
-    // ESC volta ao menu principal
+    // ESC volta ao menu ou desativa varredura
     if (e.key === 'Escape') {
         e.preventDefault();
         if (scanMode) {
@@ -1576,78 +1901,43 @@ document.addEventListener('keydown', function (e) {
         return;
     }
 
-    // Barra de espaço para pausar varredura
+    // ESPAÇO pausa/retoma varredura
     if (scanMode && e.key === ' ') {
         e.preventDefault();
         pauseScanning();
         return;
     }
-
-    // Atalhos de teclado para apps (Ctrl + número)
-    if (e.ctrlKey) {
-        switch (e.key) {
-            case '1':
-                e.preventDefault();
-                showTextEditor();
-                break;
-            case '2':
-                e.preventDefault();
-                showCalculator();
-                break;
-            case '3':
-                e.preventDefault();
-                showSiteLauncher();
-                break;
-            case '4':
-                e.preventDefault();
-                showAccessibilitySettings();
-                break;
-            case '5':
-                e.preventDefault();
-                showHelp();
-                break;
-            case '6':
-                e.preventDefault();
-                showFileManager();
-                break;
-            case '7':
-                e.preventDefault();
-                showCommunicationAid();
-                break;
-            case '8':
-                e.preventDefault();
-                showPdfReader();
-                break;
-            case 's':
-                e.preventDefault();
-                toggleScanMode();
-                break;
-        }
-    }
 });
 
-// ===== INICIALIZAÇÃO =====
+// ===== INICIALIZAÇÃO DO DOM =====
+
+/**
+ * Executado quando o DOM está pronto (antes de imagens/recursos)
+ */
 document.addEventListener('DOMContentLoaded', function () {
-    // Inicializar a calculadora
+    // Inicializa a calculadora
     initCalculator();
 });
 
+/**
+ * Executado quando todos os recursos estão carregados
+ */
 window.addEventListener('load', function () {
-    // Verificar e configurar reconhecimento de voz
+    // Configura reconhecimento de voz
     setupVoiceRecognition();
 
-    // Carregar configurações salvas
+    // Carrega configurações salvas do usuário
     loadUserSettings();
 
     updateStatus('EASYFACE carregado e pronto para uso!');
 
-    // Carregar atalhos personalizados
+    // Carrega atalhos personalizados
     loadShortcuts();
 
-    // Configurar eventos para os novos inputs de arquivo
+    // Configura eventos para inputs de arquivo
     setupFileInputs();
 
-    // Foco inicial no primeiro botão do menu após um delay
+    // Foca no primeiro botão do menu após 1 segundo
     setTimeout(() => {
         if (!scanMode) {
             const firstButton = document.querySelector('.menu-button');
@@ -1656,8 +1946,10 @@ window.addEventListener('load', function () {
     }, 1000);
 });
 
+/**
+ * Configura aria-labels para inputs de arquivo (acessibilidade)
+ */
 function setupFileInputs() {
-    // Configurar aria-labels para inputs de arquivo
     document.getElementById('file-input').setAttribute('aria-label', 'Selecionar arquivo de texto');
     document.getElementById('media-input').setAttribute('aria-label', 'Selecionar arquivo de mídia');
     document.getElementById('pdf-input').setAttribute('aria-label', 'Selecionar arquivo PDF');
