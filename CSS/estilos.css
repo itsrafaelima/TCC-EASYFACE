@@ -208,8 +208,10 @@ body {
 /* Container para botões de ação do editor */
 .file-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px; /* Espaço entre os botões */
     margin-bottom: 15px;
+    align-items: center;
 }
 
 /* Container do conteúdo do arquivo */
@@ -219,11 +221,63 @@ body {
 
 /* Área de informações sobre o arquivo */
 .file-info {
-    padding: 10px;
+    padding: 12px;
     background-color: #f8f9fa; /* Fundo cinza muito claro */
-    border-radius: 5px;
-    margin: 10px 0;
-    min-height: 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+    min-height: 24px;
+    border-left: 4px solid #667eea;
+    font-style: italic;
+}
+
+.file-info.saved {
+    background-color: #e8f5e8;
+    border-left-color: #28a745;
+    color: #155724;
+}
+
+/* Indicador de arquivo carregado */
+.file-loaded .file-info {
+    background-color: #e8f5e8;
+    border-left-color: #28a745;
+}
+
+/* Indicador de alterações não salvas */
+.file-unsaved .file-info {
+    background-color: #fff3cd;
+    border-left-color: #ffc107;
+}
+
+/* Estados do botão Salvar */
+#save-button:disabled {
+    background: linear-gradient(135deg, #cccccc 0%, #999999 100%);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#save-button:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Indicador visual de mudanças não salvas */
+.file-unsaved #save-button:not(:disabled) {
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+    animation: pulse-unsaved 2s infinite;
+}
+
+@keyframes pulse-unsaved {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+/* Info de arquivo com mudanças */
+.file-info.unsaved {
+    background-color: #fff3cd;
+    border-left-color: #ffc107;
+    color: #856404;
+    font-weight: bold;
 }
 
 /* ===== CALCULADORA ===== */
@@ -888,4 +942,17 @@ body {
 .scan-control-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* ===== ESTILOS GERAIS PARA BOTÕES (desabilitados) ===== */
+
+.action-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.action-button:disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
 }

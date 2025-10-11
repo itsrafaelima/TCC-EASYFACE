@@ -2,10 +2,14 @@
 
 // Controle de estado da aplicação
 let currentApp = 'welcome'; // App atualmente ativo na tela
-let calcDisplay = 'Calculadora'; // Texto mostrado no display da calculadora
+let calcDisplay = '0'; // Texto mostrado no display da calculadora
 let calcExpression = ''; // Expressão matemática sendo construída
 let soundsEnabled = true; // Controla se sons de feedback estão ativos
 let highContrast = false; // Controla modo de alto contraste
+let lastSavedContent = ''; // Último conteúdo salvo (para detectar mudanças)
+let currentFileName = null; // Nome do arquivo atual
+let currentFileHandle = null; // Handle para File System Access API
+let currentFileContent = ''; // Conteúdo original para detectar mudanças
 
 // Variáveis para varredura automática (assistive scanning)
 let scanMode = false; // Indica se o modo de varredura está ativo
@@ -314,45 +318,384 @@ function showFileManager() {
 }
 
 /**
- * Event listener para carregamento de arquivos de texto
- * Lê o arquivo e exibe seu conteúdo na textarea
+ * Cria um novo arquivo em branco
+ */
+function createNewFile() {
+    document.getElementById('file-text-area').value = '';
+    currentFileName = null;
+    currentFileHandle = null;
+    currentFileContent = '';
+    document.getElementById('file-info').textContent = 'Novo documento criado';
+    updateSaveButtonState();
+    speakFeedback('Novo documento criado');
+    updateStatus('Novo documento criado - Use "Salvar Como" para nomear o arquivo');
+}
+
+/**
+ * Inicializa o estado do editor de texto
+ */
+function initFileManager() {
+    updateSaveButtonState();
+    // Desabilita o botão Salvar inicialmente
+    document.getElementById('save-button').disabled = true;
+    
+    // Adiciona listener para detectar mudanças no texto
+    document.getElementById('file-text-area').addEventListener('input', function() {
+        updateSaveButtonState();
+        const hasText = this.value.trim() !== '';
+        const saveButton = document.getElementById('save-button');
+        
+        const hasChanges = this.value !== currentFileContent;
+        if (hasChanges && currentFileName) {
+            document.getElementById('file-info').textContent = 
+                `Arquivo "${currentFileName}" - Alterações não salvas`;
+        }
+
+        if (hasText && currentFileName) {
+            saveButton.disabled = false;
+        } else if (hasText && !currentFileName) {
+            // Tem texto mas não tem nome de arquivo - só Salvar Como funciona
+            saveButton.disabled = true;
+        }
+    });
+}
+
+/**
+ * Atualiza o estado visual baseado nas mudanças
+ */
+function updateVisualState() {
+    const textArea = document.getElementById('file-text-area');
+    const hasChanges = textArea.value !== currentFileContent;
+    const appContainer = document.getElementById('file-manager-app');
+    const fileInfo = document.getElementById('file-info');
+    
+    if (currentFileName) {
+        if (hasChanges) {
+            fileInfo.textContent = `Arquivo "${currentFileName}" - ● Alterações não salvas`;
+            fileInfo.className = 'file-info unsaved';
+        } else {
+            fileInfo.textContent = `Arquivo "${currentFileName}" - Todas as alterações salvas`;
+            fileInfo.className = 'file-info saved';
+        }
+    }
+}
+
+// Atualize a função updateSaveButtonState para incluir isso:
+function updateSaveButtonState() {
+    const textArea = document.getElementById('file-text-area');
+    const saveButton = document.getElementById('save-button');
+    const hasChanges = textArea.value !== currentFileContent;
+    const hasText = textArea.value.trim() !== '';
+    
+    saveButton.disabled = !(hasText && (currentFileHandle || currentFileName) && hasChanges);
+    
+    // Atualiza estado visual
+    updateVisualState();
+    
+    // Tooltip
+    if (saveButton.disabled) {
+        if (!hasChanges) {
+            saveButton.title = 'Nenhuma alteração para salvar';
+        } else if (!currentFileName) {
+            saveButton.title = 'Use "Salvar Como" para nomear o arquivo primeiro';
+        }
+    } else {
+        saveButton.title = 'Salvar alterações no arquivo atual';
+    }
+}
+
+/**
+ * Salva o arquivo atual (sobrescreve se já tiver nome)
+ */
+function saveFile() {
+    const text = document.getElementById('file-text-area').value;
+    const textArea = document.getElementById('file-text-area');
+    
+    if (!text.trim()) {
+        document.getElementById('file-info').textContent = 'Nenhum texto para salvar.';
+        speakFeedback('Nenhum texto para salvar');
+        return;
+    }
+    
+    // Se já temos um arquivo carregado, "sobrescreve" criando um novo com mesmo nome
+    if (currentFileName) {
+        // Cria um novo arquivo com o MESMO nome (simula sobrescrever)
+        saveWithDownload(text, currentFileName, true);
+        
+        document.getElementById('file-info').textContent = `Arquivo "${currentFileName}" salvo!`;
+        speakFeedback('Arquivo salvo com sucesso');
+        updateStatus(`Arquivo salvo: ${currentFileName}`);
+        
+    } else {
+        // Se não tem nome, pede um nome (equivale a Salvar Como)
+        saveFileAs();
+    }
+}
+
+function saveFile() {
+    const text = document.getElementById('file-text-area').value;
+    
+    if (!text.trim()) {
+        document.getElementById('file-info').textContent = 'Nenhum texto para salvar.';
+        speakFeedback('Nenhum texto para salvar');
+        return;
+    }
+    
+    if (currentFileName) {
+        // Se já tem nome, salva diretamente
+        saveTextToFile(text, currentFileName);
+    } else {
+        // Se não tem nome, abre Salvar Como
+        saveFileAs();
+    }
+}
+
+/**
+ * Salva o arquivo com um novo nome
+ */
+function saveFileAs() {
+    const text = document.getElementById('file-text-area').value;
+    
+    if (!text.trim()) {
+        document.getElementById('file-info').textContent = 'Nenhum texto para salvar.';
+        speakFeedback('Nenhum texto para salvar');
+        return;
+    }
+    
+    const defaultName = currentFileName || 'documento.txt';
+    const fileName = prompt('Digite o nome para o novo arquivo:', defaultName);
+    
+    if (fileName && fileName.trim() !== '') {
+        let finalFileName = fileName.trim();
+        if (!finalFileName.toLowerCase().endsWith('.txt')) {
+            finalFileName += '.txt';
+        }
+        
+        saveWithDownload(text, finalFileName, false);
+        currentFileName = finalFileName; // Torna este o arquivo atual
+        updateSaveButtonState();
+    }
+}
+
+/**
+ * Salva o texto em um arquivo .txt
+ * @param {string} text - Texto a ser salvo
+ * @param {string} fileName - Nome do arquivo
+ */
+function saveTextToFile(text, fileName) {
+    try {
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        
+        URL.revokeObjectURL(url);
+        
+        document.getElementById('file-info').textContent = `Arquivo "${fileName}" salvo com sucesso!`;
+        speakFeedback(`Arquivo ${fileName} salvo com sucesso`);
+        updateStatus(`Arquivo salvo: ${fileName}`);
+        
+        // Atualiza o botão Salvar
+        document.getElementById('save-button').disabled = false;
+        
+    } catch (error) {
+        console.error('Erro ao salvar arquivo:', error);
+        document.getElementById('file-info').textContent = 'Erro ao salvar arquivo.';
+        speakFeedback('Erro ao salvar arquivo');
+        updateStatus('Erro ao salvar arquivo');
+    }
+}
+
+/**
+ * Salva usando File System Access API (sobrescreve o arquivo original)
+ */
+async function saveWithFileSystemAPI(text) {
+    try {
+        // Cria um escritor para o arquivo
+        const writable = await currentFileHandle.createWritable();
+        await writable.write(text);
+        await writable.close();
+        
+        currentFileContent = text; // Atualiza conteúdo original
+        document.getElementById('file-info').textContent = `Arquivo salvo com sucesso!`;
+        speakFeedback('Arquivo salvo com sucesso');
+        updateStatus(`Arquivo sobrescrito: ${currentFileName}`);
+        updateSaveButtonState();
+        
+    } catch (error) {
+        console.error('Erro ao salvar arquivo:', error);
+        // Fallback para download normal
+        saveWithDownload(text, currentFileName, true);
+    }
+}
+
+/**
+ * Salva usando método de download
+ * @param {string} text - Texto a salvar
+ * @param {string} fileName - Nome do arquivo
+ * @param {boolean} isOverwrite - Se é para sobrescrever
+ */
+function saveWithDownload(text, fileName, isOverwrite) {
+    try {
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        
+        URL.revokeObjectURL(url);
+        
+        // Atualiza estado interno
+        currentFileContent = text;
+        lastSavedContent = text;
+        
+        if (isOverwrite) {
+            document.getElementById('file-info').textContent = `Arquivo "${fileName}" salvo!`;
+            speakFeedback('Arquivo salvo com sucesso');
+        } else {
+            document.getElementById('file-info').textContent = `Novo arquivo "${fileName}" criado!`;
+            speakFeedback('Novo arquivo criado');
+        }
+        
+        updateSaveButtonState();
+        
+    } catch (error) {
+        console.error('Erro ao salvar:', error);
+        document.getElementById('file-info').textContent = 'Erro ao salvar arquivo.';
+        speakFeedback('Erro ao salvar arquivo');
+    }
+}
+
+/**
+ * Salva o arquivo com um novo nome (nunca sobrescreve)
+ */
+function saveFileAs() {
+    const text = document.getElementById('file-text-area').value;
+    
+    if (!text.trim()) {
+        document.getElementById('file-info').textContent = 'Nenhum texto para salvar.';
+        speakFeedback('Nenhum texto para salvar');
+        return;
+    }
+    
+    // Nome padrão mais simples
+    const defaultName = currentFileName ? currentFileName : 'meu_documento.txt';
+    
+    const fileName = prompt('Digite o nome do arquivo (com .txt no final):', defaultName);
+    
+    if (fileName && fileName.trim() !== '') {
+        let finalFileName = fileName.trim();
+        
+        // Garante que tem extensão .txt (mais simples)
+        if (!finalFileName.toLowerCase().endsWith('.txt')) {
+            finalFileName += '.txt';
+        }
+        
+        saveWithDownload(text, finalFileName, false);
+    }
+}
+
+/**
+ * Atualiza o estado do botão Salvar
+ */
+function updateSaveButtonState() {
+    const textArea = document.getElementById('file-text-area');
+    const saveButton = document.getElementById('save-button');
+    const hasChanges = textArea.value !== currentFileContent;
+    const hasText = textArea.value.trim() !== '';
+    
+    // Salvar fica habilitado se tem texto E tem um arquivo atual E tem mudanças
+    saveButton.disabled = !(hasText && currentFileName && hasChanges);
+    
+    // Atualiza visual
+    updateVisualState();
+}
+
+/**
+ * Atualiza o event listener para abrir arquivos
  */
 document.getElementById('file-input').addEventListener('change', function (e) {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function (e) {
-            // Exibe conteúdo do arquivo na textarea
-            document.getElementById('file-text-area').value = e.target.result;
+            const content = e.target.result;
+            document.getElementById('file-text-area').value = content;
+            currentFileName = file.name;
+            currentFileContent = content; // Salva conteúdo original
+            currentFileHandle = null; // Reset handle pois foi carregado via input
+            
             document.getElementById('file-info').textContent = `Arquivo "${file.name}" carregado com sucesso.`;
             speakFeedback(`Arquivo ${file.name} carregado com sucesso`);
+            updateStatus(`Arquivo carregado: ${file.name}`);
+            updateSaveButtonState();
         };
-        reader.readAsText(file); // Lê arquivo como texto
+        reader.readAsText(file);
     }
 });
 
 /**
- * Salva o conteúdo da textarea como arquivo .txt
- * Cria um blob e inicia download
+ * Tenta usar File System Access API para abrir arquivo (melhor experiência)
  */
-function saveTextFile() {
-    const text = document.getElementById('file-text-area').value;
-    if (text.trim()) {
-        // Cria arquivo blob
-        const blob = new Blob([text], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-
-        // Cria link temporário e clica para download
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'documento.txt';
-        a.click();
-
-        document.getElementById('file-info').textContent = 'Arquivo salvo com sucesso!';
-        speakFeedback('Arquivo salvo com sucesso');
-    } else {
-        document.getElementById('file-info').textContent = 'Nenhum texto para salvar.';
+async function openFileWithPicker() {
+    try {
+        // Verifica se a API está disponível
+        if ('showOpenFilePicker' in window) {
+            const [fileHandle] = await window.showOpenFilePicker({
+                types: [{
+                    description: 'Arquivos de texto',
+                    accept: {'text/plain': ['.txt']}
+                }]
+            });
+            
+            const file = await fileHandle.getFile();
+            const content = await file.text();
+            
+            document.getElementById('file-text-area').value = content;
+            currentFileName = file.name;
+            currentFileContent = content;
+            currentFileHandle = fileHandle;
+            
+            document.getElementById('file-info').textContent = `Arquivo "${file.name}" aberto com File System API.`;
+            speakFeedback(`Arquivo ${file.name} aberto`);
+            updateStatus(`Arquivo aberto: ${file.name} - Agora você pode sobrescrever com "Salvar"`);
+            updateSaveButtonState();
+            
+        } else {
+            // Fallback para input file tradicional
+            document.getElementById('file-input').click();
+        }
+    } catch (error) {
+        // Usuário cancelou ou erro - usa fallback
+        if (error.name !== 'AbortError') {
+            document.getElementById('file-input').click();
+        }
     }
+}
+
+/**
+ * Verifica se há alterações não salvas
+ */
+function hasUnsavedChanges() {
+    // Esta função pode ser expandida para detectar mudanças
+    return document.getElementById('file-text-area').value.trim() !== '';
+}
+
+/**
+ * Cria novo documento
+ */
+function createNewFile() {
+    document.getElementById('file-text-area').value = '';
+    currentFileName = null;
+    currentFileContent = '';
+    document.getElementById('file-info').textContent = 'Novo documento - Use "Salvar Como" para nomear';
+    updateSaveButtonState();
+    speakFeedback('Novo documento criado');
 }
 
 // ===== FUNÇÕES REPRODUTOR DE MÍDIA =====
@@ -1993,6 +2336,9 @@ window.addEventListener('load', function () {
 
     // Configura eventos para inputs de arquivo
     setupFileInputs();
+
+    // Inicializa o editor de arquivos
+    initFileManager();
 
     // Foca no primeiro botão do menu após 1 segundo
     setTimeout(() => {

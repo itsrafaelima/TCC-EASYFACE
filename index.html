@@ -109,12 +109,15 @@
 
                 <!-- Controles para abrir e salvar arquivos -->
                 <div class="file-actions">
-                    <!-- Input oculto para seleção de arquivo -->
                     <input type="file" id="file-input" class="hidden" accept=".txt">
+                    <button class="action-button scannable" onclick="createNewFile()" tabindex="16"
+                        aria-label="Criar novo documento em branco">📄 Novo</button>
                     <button class="action-button scannable" onclick="document.getElementById('file-input').click()"
-                        tabindex="16" aria-label="Abrir arquivo de texto">📂 Abrir Arquivo</button>
-                    <button class="action-button scannable" onclick="saveTextFile()" tabindex="17"
-                        aria-label="Salvar arquivo de texto">💾 Salvar Como</button>
+                        tabindex="17" aria-label="Abrir arquivo de texto existente">📂 Abrir</button>
+                    <button class="action-button scannable" onclick="saveFile()" tabindex="18"
+                        aria-label="Salvar alterações no arquivo atual" id="save-button">💾 Salvar</button>
+                    <button class="action-button scannable" onclick="saveFileAs()" tabindex="19"
+                        aria-label="Salvar como novo arquivo com nome diferente">📋 Salvar Como</button>
                 </div>
 
                 <!-- Área de exibição do conteúdo do arquivo -->
@@ -125,7 +128,9 @@
                 </div>
 
                 <!-- Informações sobre o arquivo aberto -->
-                <div id="file-info" class="file-info" aria-live="polite"></div>
+                <div id="file-info" class="file-info" aria-live="polite">
+                    Nenhum arquivo aberto. Digite seu texto ou abra um arquivo existente.
+                </div>
             </div>
 
             <!-- ========== APLICATIVO: CALCULADORA ========== -->
