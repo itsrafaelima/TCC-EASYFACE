@@ -10,7 +10,7 @@
 
 ## Menus Disponíveis na Interface
 - Editor de Texto
-- Gerenciador de Arquivos
+- Editor de Arquivos
 - Calculadora
 - Launcher para Sites Seguros
 - Reprodutor de Mídia

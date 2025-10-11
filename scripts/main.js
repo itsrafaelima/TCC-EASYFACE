@@ -53,18 +53,23 @@ let settingsButtons = []; // Array de botões nas configurações
  */
 function loadUserSettings() {
     try {
-        // Tenta recuperar configurações salvas
+        // Lê configurações salvas (ou objeto vazio se não existir)
         const saved = JSON.parse(localStorage.getItem('easyface-settings') || '{}');
 
-        // Aplica cada configuração se existir
-        if (saved.fontSize) changeFontSize(saved.fontSize);
+        if (saved.fontSize) changeFontSize(saved.fontSize); // Aplica tamanho de fonte salvo
         if (saved.highContrast) toggleContrast();
-        if (saved.soundsEnabled !== undefined) soundsEnabled = saved.soundsEnabled;
+        if (saved.soundsEnabled !== undefined) {
+            soundsEnabled = saved.soundsEnabled;
+            // Atualiza o indicador visual
+            const soundStatus = document.getElementById('sound-status');
+            if (soundStatus) {
+                soundStatus.textContent = soundsEnabled ? '(Ativado)' : '(Desativado)';
+            }
+        }
         if (saved.scanSpeed) scanSpeed = saved.scanSpeed;
 
         updateStatus('Configurações carregadas');
-    } catch (error) {
-        // Se houver erro, usa configurações padrão
+    } catch (error) { // Em caso de erro, aplica configurações padrão
         updateStatus('Configurações padrão aplicadas');
     }
 }
@@ -110,7 +115,7 @@ function getCurrentFontSize() {
  */
 function showApp(appId) {
     const previousApp = currentApp;
-    
+
     // Esconde todos os aplicativos
     const apps = document.querySelectorAll('.app-container');
     apps.forEach(app => {
@@ -122,12 +127,12 @@ function showApp(appId) {
     if (currentAppElement) {
         currentAppElement.classList.remove('hidden');
     }
-    
+
     currentApp = appId;
     playFeedbackSound();
 
     console.log(`Mudando de app: ${previousApp} → ${appId}, ScanMode: ${scanMode}`);
-    
+
     // Reinicia varredura ao mudar de app (se scanMode ativo)
     if (scanMode) {
         console.log(`Reiniciando varredura para: ${appId}`);
@@ -288,10 +293,10 @@ function showHelp() {
     }
 }
 
-// ===== FUNÇÕES GERENCIADOR DE ARQUIVOS =====
+// ===== FUNÇÕES EDITOR DE ARQUIVOS =====
 
 /**
- * Abre o Gerenciador de Arquivos e foca no botão de carregar
+ * Abre o Editor de Arquivos e foca no botão de carregar
  */
 function showFileManager() {
     try {
@@ -304,7 +309,7 @@ function showFileManager() {
         }, 100);
     } catch (error) {
         console.error('Erro em showFileManager:', error);
-        updateStatus('Erro ao abrir gerenciador de arquivos');
+        updateStatus('Erro ao abrir editor de arquivos');
     }
 }
 
@@ -336,13 +341,13 @@ function saveTextFile() {
         // Cria arquivo blob
         const blob = new Blob([text], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
-        
+
         // Cria link temporário e clica para download
         const a = document.createElement('a');
         a.href = url;
         a.download = 'documento.txt';
         a.click();
-        
+
         document.getElementById('file-info').textContent = 'Arquivo salvo com sucesso!';
         speakFeedback('Arquivo salvo com sucesso');
     } else {
@@ -378,7 +383,7 @@ document.getElementById('media-input').addEventListener('change', function (e) {
     const file = e.target.files[0];
     if (file) {
         const url = URL.createObjectURL(file);
-        
+
         // Verifica tipo de arquivo e escolhe player correto
         if (file.type.startsWith('audio/')) {
             document.getElementById('audio-player').classList.remove('hidden');
@@ -389,7 +394,7 @@ document.getElementById('media-input').addEventListener('change', function (e) {
             document.getElementById('audio-player').classList.add('hidden');
             document.getElementById('video-player').src = url;
         }
-        
+
         document.getElementById('media-info').textContent = `Mídia "${file.name}" carregada.`;
         speakFeedback(`Mídia carregada!`);
     }
@@ -442,11 +447,18 @@ document.getElementById('pdf-input').addEventListener('change', function (e) {
  * @param {Uint8Array} data - Dados do PDF em formato binário
  */
 function loadPdf(data) {
-    pdfjsLib.getDocument(data).promise.then(function (pdf) {
+    // Configura o worker com a versão correta
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const loadingTask = pdfjsLib.getDocument({ data: data });
+    loadingTask.promise.then(function (pdf) {
         currentPdf = pdf;
         pdfTotalPages = pdf.numPages;
         currentPage = 1;
-        renderPage(currentPage); // Renderiza primeira página
+        renderPage(currentPage); // Renderiza a primeira página
+    }).catch(function (error) {
+        console.error('Erro ao carregar PDF:', error); // Log de erro detalhado
+        updateStatus('Erro ao carregar PDF');
+        speakFeedback('Erro ao carregar arquivo PDF');
     });
 }
 
@@ -462,7 +474,7 @@ function renderPage(pageNum) {
         const viewport = page.getViewport({ scale: pdfScale });
         const canvas = document.getElementById('pdf-canvas');
         const context = canvas.getContext('2d');
-        
+
         // Ajusta tamanho do canvas
         canvas.height = viewport.height;
         canvas.width = viewport.width;
@@ -744,13 +756,13 @@ function showPhrases(category) {
         button.textContent = phrase;
         button.tabIndex = 50 + index;
         button.setAttribute('aria-label', `Selecionar frase: ${phrase}`);
-        
+
         // Ao clicar, exibe a frase no display
         button.onclick = function () {
             document.getElementById('communication-display').textContent = phrase;
             speakFeedback(`${phrase}`);
         };
-        
+
         container.appendChild(button);
     });
 }
@@ -898,15 +910,29 @@ function speakText() {
  */
 function addToCalc(value) {
     if (calcDisplay === '0' && !isNaN(value)) {
-        // Se display está em zero e valor é número, substitui
+        // Substitui 0 inicial por número
         calcDisplay = value;
     } else {
-        // Caso contrário, adiciona ao final
+        // Adiciona valor ao display
         calcDisplay += value;
     }
-    calcExpression += value; // Adiciona também à expressão completa
+    calcExpression += value; // Mantém expressão para cálculo
     document.getElementById('calc-display').textContent = calcDisplay;
     playFeedbackSound();
+
+    // Feedback de voz para números e operadores
+    if (soundsEnabled) {
+        const voiceMap = {
+            '0': 'zero', '1': 'um', '2': 'dois', '3': 'três', '4': 'quatro',
+            '5': 'cinco', '6': 'seis', '7': 'sete', '8': 'oito', '9': 'nove',
+            '+': 'mais', '-': 'menos', '*': 'multiplicado por', '/': 'dividido por',
+            '.': 'ponto', '=': 'igual'
+        };
+
+        if (voiceMap[value]) {
+            speakFeedback(voiceMap[value]);
+        }
+    }
 }
 
 /**
@@ -921,21 +947,24 @@ function calculateResult() {
     }
 
     try {
-        // Substitui símbolos visuais por operadores JavaScript
+        // Substitui operadores visuais por equivalentes JS
         const expressionToEval = calcExpression
             .replace(/×/g, '*')
             .replace(/÷/g, '/')
             .replace(/−/g, '-');
 
-        const result = eval(expressionToEval); // Calcula resultado
+        const result = eval(expressionToEval); // Avalia a expressão
         calcDisplay = result.toString();
         calcExpression = result.toString();
         document.getElementById('calc-display').textContent = calcDisplay;
-    } catch (error) {
-        // Se houver erro na expressão
+
+        // Feedback do resultado
+        speakFeedback(`Resultado: ${result}`);
+    } catch (error) { // Captura erros de avaliação
         calcDisplay = 'Erro';
         calcExpression = '';
         document.getElementById('calc-display').textContent = calcDisplay;
+        speakFeedback('Erro no cálculo');
     }
 }
 
@@ -1079,10 +1108,19 @@ function toggleContrast() {
  */
 function toggleSounds() {
     soundsEnabled = !soundsEnabled;
-    updateStatus(soundsEnabled ? 'Sons ativados' : 'Sons desativados');
+    const soundToggle = document.getElementById('sound-toggle');
+    const soundStatus = document.getElementById('sound-status');
+    
+    if (soundsEnabled) {
+        soundStatus.textContent = '(Ativado)';
+        updateStatus('Sons ativados');
+        playFeedbackSound();
+    } else {
+        soundStatus.textContent = '(Desativado)';
+        updateStatus('Sons desativados');
+    }
 
     saveUserSettings();
-    if (soundsEnabled) playFeedbackSound();
 }
 
 // ===== FUNÇÕES DE VARREDURA AUTOMÁTICA =====
@@ -1139,24 +1177,24 @@ function startScanning() {
     console.log('=== START SCANNING ===');
     console.log('App atual:', currentApp);
     console.log('ScanMode:', scanMode);
-    
+
     // Define seletor baseado no app atual
     let selector = '.scannable';
     if (currentApp !== 'welcome') {
         selector = `#${currentApp} .scannable`;
     }
-    
+
     console.log('Seletor usado:', selector);
-    
+
     // Filtra apenas elementos visíveis
     scanElements = Array.from(document.querySelectorAll(selector)).filter(el => {
-        const isVisible = !el.disabled && 
-               el.offsetParent !== null &&
-               getComputedStyle(el).visibility !== 'hidden' &&
-               getComputedStyle(el).display !== 'none';
+        const isVisible = !el.disabled &&
+            el.offsetParent !== null &&
+            getComputedStyle(el).visibility !== 'hidden' &&
+            getComputedStyle(el).display !== 'none';
         return isVisible;
     });
-    
+
     console.log(`Elementos encontrados em ${currentApp}:`, scanElements.length);
 
     // Ordena elementos por posição na tela (top-left to bottom-right)
@@ -1190,7 +1228,7 @@ function getAppName(appId) {
     const appNames = {
         'welcome': 'Menu Principal',
         'text-editor-app': 'Editor de Texto',
-        'file-manager-app': 'Gerenciador de Arquivos',
+        'file-manager-app': 'Editor de Arquivos',
         'calculator-app': 'Calculadora',
         'site-launcher-app': 'Sites Seguros',
         'media-player-app': 'Reprodutor de Mídia',
@@ -1260,15 +1298,15 @@ function highlightCurrentElement() {
     if (scanElements[currentScanIndex]) {
         try {
             const element = scanElements[currentScanIndex];
-            
+
             // Aplica destaque visual
             element.classList.add('scan-active');
             element.style.outline = '4px solid #ff6b6b'; // Borda vermelha
             element.style.outlineOffset = '2px';
 
             // Rola a página para mostrar o elemento
-            element.scrollIntoView({ 
-                behavior: 'smooth', 
+            element.scrollIntoView({
+                behavior: 'smooth',
                 block: 'center',
                 inline: 'center'
             });
@@ -1284,7 +1322,7 @@ function highlightCurrentElement() {
             // Atualiza status com descrição do elemento
             const label = element.getAttribute('aria-label') || element.textContent || element.placeholder || 'Elemento';
             updateStatus(`Varredura: ${label.trim()} - Pressione ENTER para selecionar`);
-            
+
         } catch (error) {
             console.error('Erro em highlightCurrentElement:', error);
         }
@@ -1299,21 +1337,21 @@ function selectCurrentScanElement() {
     if (scanElements[currentScanIndex] && scanMode && !scanPaused) {
         const element = scanElements[currentScanIndex];
         const currentElementIndex = currentScanIndex;
-        
+
         try {
             // Remove destaque temporariamente
             element.classList.remove('scan-active');
             element.style.outline = '';
-            
+
             // Dispara evento de clique
             element.dispatchEvent(new MouseEvent('click', {
                 view: window,
                 bubbles: true,
                 cancelable: true
             }));
-            
+
             playFeedbackSound();
-            
+
             // Restaura o destaque após um delay
             setTimeout(() => {
                 if (scanMode && scanElements[currentElementIndex] === element) {
@@ -1322,7 +1360,7 @@ function selectCurrentScanElement() {
                     element.style.outlineOffset = '2px';
                 }
             }, 500);
-            
+
             return true;
         } catch (error) {
             console.error('Erro ao selecionar elemento na varredura:', error);
@@ -1428,19 +1466,19 @@ function debugScanElements() {
 function restartScan() {
     if (scanMode) {
         console.log('🔄 REINICIANDO VARREDURA para:', currentApp);
-        
+
         // Para completamente a varredura atual
         if (scanInterval) {
             clearInterval(scanInterval);
             scanInterval = null;
         }
-        
+
         // Limpa elementos anteriores
         scanElements.forEach(el => {
             el.classList.remove('scan-active');
             el.style.outline = '';
         });
-        
+
         // Pequeno delay para garantir que a DOM atualizou
         setTimeout(() => {
             startScanning();
@@ -1579,20 +1617,20 @@ function setupVoiceRecognition() {
         const command = event.results[0][0].transcript.toLowerCase().trim();
         updateStatus(`Comando reconhecido: ${command}`);
 
-        // Mapeamento de comandos de voz para funções
+        // Comandos para aplicativos
         if (command.includes('editor') || command.includes('texto')) {
             showTextEditor();
         } else if (command.includes('arquivo') || command.includes('documento')) {
             showFileManager();
         } else if (command.includes('calculadora') || command.includes('calcular')) {
             showCalculator();
-        } else if (command.includes('site') || command.includes('internet') || command.includes('navegador')) {
+        } else if (command.includes('site') || command.includes('internet')) {
             showSiteLauncher();
         } else if (command.includes('mídia') || command.includes('vídeo') || command.includes('áudio')) {
             showMediaPlayer();
         } else if (command.includes('pdf') || command.includes('leitor')) {
             showPdfReader();
-        } else if (command.includes('comunicação') || command.includes('mensagem') || command.includes('falar')) {
+        } else if (command.includes('comunicação') || command.includes('mensagem')) {
             showCommunicationAid();
         } else if (command.includes('configurações') || command.includes('configurar')) {
             showAccessibilitySettings();
@@ -1602,8 +1640,27 @@ function setupVoiceRecognition() {
             toggleScanMode();
         } else if (command.includes('início') || command.includes('menu')) {
             showApp('welcome');
+        }
+        // Comandos para ações gerais
+        else if (command.includes('salvar')) {
+            if (currentApp === 'text-editor-app') saveText();
+            else if (currentApp === 'file-manager-app') saveTextFile();
+        } else if (command.includes('limpar')) {
+            if (currentApp === 'text-editor-app') clearText();
+            else if (currentApp === 'communication-aid-app') clearCommunication();
+        } else if (command.includes('ler') || command.includes('falar')) {
+            if (currentApp === 'text-editor-app') speakText();
+            else if (currentApp === 'communication-aid-app') speakCommunication();
+        } else if (command.includes('próxima') && currentApp === 'pdf-reader-app') {
+            nextPage();
+        } else if (command.includes('anterior') && currentApp === 'pdf-reader-app') {
+            prevPage();
+        } else if (command.includes('aumentar zoom') && currentApp === 'pdf-reader-app') {
+            zoomIn();
+        } else if (command.includes('diminuir zoom') && currentApp === 'pdf-reader-app') {
+            zoomOut();
         } else {
-            updateStatus('Comando não reconhecido. Tente: "editor", "calculadora", "configurações"...');
+            updateStatus('Comando não reconhecido. Tente: "editor", "salvar", "ler texto", etc.');
             playErrorSound();
         }
     };
@@ -1879,7 +1936,7 @@ document.addEventListener('keydown', function (e) {
     }
 
     // ===== CONTROLES DA VARREDURA =====
-    
+
     // ENTER seleciona elemento na varredura
     if (scanMode && e.key === 'Enter') {
         e.preventDefault();

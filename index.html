@@ -23,59 +23,59 @@
 
     <!-- CONTAINER PRINCIPAL - Contém sidebar e área de conteúdo -->
     <div class="main-container">
-        
+
         <!-- BARRA LATERAL - Menu de navegação principal -->
         <div class="sidebar">
             <h2>🎯 Menu Principal</h2>
-            
+
             <!-- Botão: Editor de Texto -->
             <button class="menu-button scannable" onclick="showTextEditor()" tabindex="1"
                 aria-label="Abrir Editor de Texto">
                 📝 Editor de Texto
             </button>
-            
-            <!-- Botão: Gerenciador de Arquivos -->
+
+            <!-- Botão: Editor de Arquivos -->
             <button class="menu-button scannable" onclick="showFileManager()" tabindex="2"
-                aria-label="Abrir Gerenciador de Arquivos">
-                📁 Gerenciador de Arquivos
+                aria-label="Abrir Editor de Arquivos">
+                📁 Editor de Arquivos
             </button>
-            
+
             <!-- Botão: Calculadora -->
             <button class="menu-button scannable" onclick="showCalculator()" tabindex="3"
                 aria-label="Abrir Calculadora">
                 🔢 Calculadora
             </button>
-            
+
             <!-- Botão: Sites Seguros -->
             <button class="menu-button scannable" onclick="showSiteLauncher()" tabindex="5"
                 aria-label="Abrir Launcher de Sites">
                 🌐 Sites Seguros
             </button>
-            
+
             <!-- Botão: Reprodutor de Mídia -->
             <button class="menu-button scannable" onclick="showMediaPlayer()" tabindex="6"
                 aria-label="Abrir Reprodutor de Mídia">
                 🎵 Reprodutor de Mídia
             </button>
-            
+
             <!-- Botão: Leitor de PDF -->
             <button class="menu-button scannable" onclick="showPdfReader()" tabindex="7"
                 aria-label="Abrir Leitor de PDF">
                 📄 Leitor de PDF
             </button>
-            
+
             <!-- Botão: Comunicação Alternativa -->
             <button class="menu-button scannable" onclick="showCommunicationAid()" tabindex="8"
                 aria-label="Abrir Ferramenta de Comunicação">
                 💬 Comunicação Alternativa
             </button>
-            
+
             <!-- Botão: Configurações -->
             <button class="menu-button scannable" onclick="showAccessibilitySettings()" tabindex="10"
                 aria-label="Abrir Configurações de Acessibilidade">
                 ⚙️ Configurações
             </button>
-            
+
             <!-- Botão: Ajuda -->
             <button class="menu-button scannable" onclick="showHelp()" tabindex="11" aria-label="Abrir Ajuda">
                 ❓ Ajuda
@@ -84,16 +84,16 @@
 
         <!-- ÁREA DE CONTEÚDO - Onde os aplicativos são exibidos -->
         <div class="content-area" id="main-content" tabindex="-1">
-            
+
             <!-- ========== APLICATIVO: EDITOR DE TEXTO ========== -->
             <div id="text-editor-app" class="app-container hidden">
                 <h2>📝 Editor de Texto</h2>
-                
+
                 <!-- Área de texto para edição -->
                 <textarea id="text-area" class="text-input scannable" rows="10"
                     placeholder="Digite seu texto aqui... Use TAB para navegar pelos botões abaixo." tabindex="12"
                     aria-label="Área de edição de texto"></textarea>
-                
+
                 <!-- Botões de ação do editor -->
                 <button class="action-button scannable" onclick="saveText()" tabindex="13" aria-label="Salvar texto">💾
                     Salvar Texto</button>
@@ -103,10 +103,10 @@
                     aria-label="Ler texto em voz alta">🔊 Ler Texto</button>
             </div>
 
-            <!-- ========== APLICATIVO: GERENCIADOR DE ARQUIVOS ========== -->
+            <!-- ========== APLICATIVO: EDITOR DE ARQUIVOS ========== -->
             <div id="file-manager-app" class="app-container hidden">
-                <h2>📁 Gerenciador de Arquivos</h2>
-                
+                <h2>📁 Editor de Arquivos</h2>
+
                 <!-- Controles para abrir e salvar arquivos -->
                 <div class="file-actions">
                     <!-- Input oculto para seleção de arquivo -->
@@ -116,14 +116,14 @@
                     <button class="action-button scannable" onclick="saveTextFile()" tabindex="17"
                         aria-label="Salvar arquivo de texto">💾 Salvar Como</button>
                 </div>
-                
+
                 <!-- Área de exibição do conteúdo do arquivo -->
                 <div id="file-content" class="file-content">
                     <textarea id="file-text-area" class="text-input scannable" rows="10"
                         placeholder="Conteúdo do arquivo aparecerá aqui..." tabindex="18"
                         aria-label="Conteúdo do arquivo"></textarea>
                 </div>
-                
+
                 <!-- Informações sobre o arquivo aberto -->
                 <div id="file-info" class="file-info" aria-live="polite"></div>
             </div>
@@ -131,10 +131,10 @@
             <!-- ========== APLICATIVO: CALCULADORA ========== -->
             <div id="calculator-app" class="app-container hidden">
                 <h2>🔢 Calculadora</h2>
-                
+
                 <!-- Display da calculadora (mostra números e resultado) -->
                 <div class="calc-display" id="calc-display" aria-live="polite">0</div>
-                
+
                 <!-- Grade de botões da calculadora -->
                 <div class="calculator" id="calculator-grid">
                     <!-- Linha 1: Limpar, Apagar, Divisão, Multiplicação -->
@@ -229,20 +229,20 @@
             <!-- ========== APLICATIVO: REPRODUTOR DE MÍDIA ========== -->
             <div id="media-player-app" class="app-container hidden">
                 <h2>🎵 Reprodutor de Mídia</h2>
-                
+
                 <!-- Controles para selecionar arquivo de mídia -->
                 <div class="media-controls">
                     <input type="file" id="media-input" class="hidden" accept="audio/*,video/*">
                     <button class="action-button scannable" onclick="document.getElementById('media-input').click()"
                         tabindex="19" aria-label="Selecionar arquivo de mídia">📁 Selecionar Mídia</button>
                 </div>
-                
+
                 <!-- Container para player de áudio ou vídeo -->
                 <div class="media-container">
                     <audio id="audio-player" controls class="hidden" aria-label="Reprodutor de áudio"></audio>
                     <video id="video-player" controls class="hidden" aria-label="Reprodutor de vídeo"></video>
                 </div>
-                
+
                 <!-- Informações sobre o arquivo de mídia -->
                 <div id="media-info" class="media-info" aria-live="polite"></div>
             </div>
@@ -250,7 +250,7 @@
             <!-- ========== APLICATIVO: LEITOR DE PDF ========== -->
             <div id="pdf-reader-app" class="app-container hidden">
                 <h2>📄 Leitor de PDF</h2>
-                
+
                 <!-- Controles de navegação do PDF -->
                 <div class="pdf-controls">
                     <input type="file" id="pdf-input" class="hidden" accept=".pdf">
@@ -265,12 +265,12 @@
                     <button class="action-button scannable" onclick="zoomOut()" tabindex="24"
                         aria-label="Diminuir zoom">➖ Zoom -</button>
                 </div>
-                
+
                 <!-- Container onde o PDF é renderizado -->
                 <div id="pdf-container" class="pdf-container">
                     <canvas id="pdf-canvas" aria-label="Visualização do documento PDF"></canvas>
                 </div>
-                
+
                 <!-- Informações sobre página atual -->
                 <div id="pdf-info" class="pdf-info" aria-live="polite">Página 0 de 0</div>
             </div>
@@ -278,13 +278,13 @@
             <!-- ========== APLICATIVO: COMUNICAÇÃO ALTERNATIVA ========== -->
             <div id="communication-aid-app" class="app-container hidden">
                 <h2>💬 Comunicação Alternativa</h2>
-                
+
                 <!-- Área de saída da mensagem -->
                 <div class="communication-output">
                     <div id="communication-display" class="communication-display" aria-live="polite">
                         Sua mensagem aparecerá aqui...
                     </div>
-                    
+
                     <!-- Controles para falar e limpar mensagem -->
                     <div class="communication-controls">
                         <button class="action-button scannable" onclick="speakCommunication()" tabindex="25"
@@ -293,7 +293,7 @@
                             aria-label="Limpar mensagem">🗑️ Limpar</button>
                     </div>
                 </div>
-                
+
                 <!-- Categorias de frases pré-definidas -->
                 <div class="communication-categories">
                     <button class="category-button scannable" onclick="selectCategory('saudacoes')" tabindex="27"
@@ -305,7 +305,7 @@
                     <button class="category-button scannable" onclick="selectCategory('emergencia')" tabindex="30"
                         aria-label="Emergência">🚨 Emergência</button>
                 </div>
-                
+
                 <!-- Container onde as frases aparecem -->
                 <div id="phrases-container" class="phrases-container">
                 </div>
@@ -314,7 +314,7 @@
             <!-- ========== APLICATIVO: CONFIGURAÇÕES DE ACESSIBILIDADE ========== -->
             <div id="accessibility-settings-app" class="app-container hidden">
                 <h2>⚙️ Configurações de Acessibilidade</h2>
-                
+
                 <!-- Seção: Tamanho da Fonte -->
                 <div class="settings-section">
                     <label class="settings-label">Tamanho da Fonte:</label>
@@ -325,21 +325,23 @@
                     <button class="action-button scannable" onclick="changeFontSize('large')" tabindex="39"
                         aria-label="Definir fonte grande">🔘 Grande</button>
                 </div>
-                
+
                 <!-- Seção: Contraste -->
                 <div class="settings-section">
                     <label class="settings-label">Contraste:</label>
                     <button class="action-button scannable" onclick="toggleContrast()" tabindex="40"
                         aria-label="Alternar alto contraste">🎨 Alto Contraste</button>
                 </div>
-                
+
                 <!-- Seção: Sons -->
                 <div class="settings-section">
                     <label class="settings-label">Sons:</label>
-                    <button class="action-button scannable" onclick="toggleSounds()" tabindex="41"
-                        aria-label="Alternar sons de feedback">🔊 Sons de Feedback</button>
+                    <button class="action-button scannable" onclick="toggleSounds()" tabindex="41" id="sound-toggle"
+                        aria-label="Alternar sons de feedback">
+                        🔊 Sons de Feedback <span id="sound-status">(Ativado)</span>
+                    </button>
                 </div>
-                
+
                 <!-- Seção: Varredura Automática -->
                 <div class="settings-section">
                     <label class="settings-label">Varredura Automática:</label>
@@ -352,7 +354,7 @@
                     <button class="action-button scannable" onclick="setScanSpeed(1000)" tabindex="45"
                         aria-label="Definir velocidade rápida de varredura">🏃 Rápida</button>
                 </div>
-                
+
                 <!-- Seção: Personalização de Atalhos -->
                 <div class="settings-section">
                     <h3>⌨️ Personalizar Atalhos</h3>
@@ -364,9 +366,9 @@
                                 aria-label="Atalho para Editor de Texto">
                         </div>
                         <div class="shortcut-item">
-                            <label>Gerenciador de Arquivos:</label>
+                            <label>Editor de Arquivos:</label>
                             <input type="text" class="shortcut-input" id="shortcut-file" maxlength="2" value="2"
-                                aria-label="Atalho para Gerenciador de Arquivos">
+                                aria-label="Atalho para Editor de Arquivos">
                         </div>
                         <div class="shortcut-item">
                             <label>Calculadora:</label>
@@ -413,7 +415,7 @@
             <div id="help-app" class="app-container hidden">
                 <h2>❓ Central de Ajuda</h2>
                 <div class="help-content">
-                    
+
                     <!-- Seção: Navegação por Teclado -->
                     <div class="help-section">
                         <h3>🎯 Navegação por Teclado:</h3>
@@ -428,7 +430,7 @@
                     <div class="help-section">
                         <h3>🛠️ Funcionalidades:</h3>
                         <p><strong>Editor de Texto:</strong> Escreva e salve documentos</p>
-                        <p><strong>Gerenciador de Arquivos:</strong> Abra qualquer arquivo .txt na tela e edite-o</p>
+                        <p><strong>Editor de Arquivos:</strong> Abra qualquer arquivo .txt na tela e edite-o</p>
                         <p><strong>Calculadora:</strong> Realize cálculos matemáticos</p>
                         <p><strong>Sites Seguros:</strong> Acesse 5 sites seguros da internet</p>
                         <p><strong>Reprodutor de Mídia:</strong> Toque arquivos de áudio e vídeo</p>
@@ -498,7 +500,7 @@
 
     <!-- SCRIPTS EXTERNOS -->
     <!-- Biblioteca PDF.js para leitura de PDFs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <!-- Script principal com toda a lógica JavaScript -->
     <script src="scripts/main.js"></script>
 </body>

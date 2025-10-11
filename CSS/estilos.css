@@ -203,9 +203,9 @@ body {
 /* ===== EDITOR DE TEXTO ===== */
 /* Os estilos específicos já estão cobertos pelos estilos gerais de text-input e action-button */
 
-/* ===== GERENCIADOR DE ARQUIVOS ===== */
+/* ===== EDITOR DE ARQUIVOS ===== */
 
-/* Container para botões de ação do gerenciador */
+/* Container para botões de ação do editor */
 .file-actions {
     display: flex;
     gap: 10px; /* Espaço entre os botões */
@@ -433,17 +433,18 @@ body {
     border: 1px solid #ddd;
     border-radius: 8px;
     margin: 15px 0;
-    background: #f0f0f0; /* Fundo cinza claro */
-    min-height: 500px;
+    background: #525659; /* Fundo Cinza */
+    min-height: 600px;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
 }
 
 /* Canvas onde o PDF é desenhado */
 #pdf-canvas {
     margin: 20px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra para simular papel */
+    background: white;
 }
 
 /* Área de informações sobre o PDF (número de página) */
@@ -589,6 +590,22 @@ body {
     padding: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
+}
+
+/* Indicadores de estado nas configurações */
+.settings-status {
+    display: inline-block;
+    margin-left: 10px;
+    font-weight: bold;
+    color: #4a5568;
+}
+
+.settings-status.on {
+    color: #28a745;
+}
+
+.settings-status.off {
+    color: #dc3545;
 }
 
 /* Labels das configurações */
