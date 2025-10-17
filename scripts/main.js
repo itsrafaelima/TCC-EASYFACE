@@ -49,6 +49,10 @@ let communicationPhrases = {
 let settingsFocusIndex = 0; // Índice do elemento focado nas configurações
 let settingsButtons = []; // Array de botões nas configurações
 
+// Variáveis para navegação no leitor de PDF
+let pdfFocusIndex = 0; // Índice do botão focado no PDF
+let pdfButtons = []; // Array de botões do leitor de PDF
+
 // ===== FUNÇÕES DE CONFIGURAÇÃO =====
 
 /**
@@ -747,14 +751,19 @@ document.getElementById('media-input').addEventListener('change', function (e) {
 
 /**
  * Abre o Leitor de PDF e inicializa a biblioteca PDF.js
+ * Configura a navegação por setas
  */
 function showPdfReader() {
     try {
         showApp('pdf-reader-app');
         setTimeout(() => {
+            updatePdfButtons(); // Inicializa navegação por setas
+            pdfFocusIndex = 0;
+            
             const loadButton = document.querySelector('#pdf-reader-app .action-button');
             if (loadButton && !scanMode) {
                 loadButton.focus();
+                highlightPdfElement(loadButton);
             }
         }, 100);
 
@@ -763,6 +772,50 @@ function showPdfReader() {
     } catch (error) {
         console.error('Erro em showPdfReader:', error);
         updateStatus('Erro ao abrir leitor de PDF');
+    }
+}
+
+/**
+ * Atualiza a lista de botões navegáveis no leitor de PDF
+ */
+function updatePdfButtons() {
+    pdfButtons = Array.from(document.querySelectorAll('#pdf-reader-app .action-button, #pdf-reader-app .scannable'));
+}
+
+/**
+ * Move o foco entre os botões do leitor de PDF usando setas
+ * @param {number} direction - 1 para avançar, -1 para retroceder
+ */
+function movePdfFocus(direction) {
+    if (pdfButtons.length === 0) return;
+
+    // Remove destaque do elemento atual
+    if (pdfButtons[pdfFocusIndex]) {
+        pdfButtons[pdfFocusIndex].classList.remove('navigation-focus');
+    }
+
+    // Calcula novo índice (com wrap-around circular)
+    pdfFocusIndex = (pdfFocusIndex + direction + pdfButtons.length) % pdfButtons.length;
+
+    // Aplica foco e destaque ao novo elemento
+    if (pdfButtons[pdfFocusIndex]) {
+        pdfButtons[pdfFocusIndex].focus();
+        highlightPdfElement(pdfButtons[pdfFocusIndex]);
+    }
+}
+
+/**
+ * Destaca visualmente um elemento no leitor de PDF
+ * @param {HTMLElement} element - Elemento a ser destacado
+ */
+function highlightPdfElement(element) {
+    // Remove destaque anterior
+    document.querySelectorAll('#pdf-reader-app .action-button, #pdf-reader-app .scannable').forEach(btn => {
+        btn.classList.remove('navigation-focus');
+    });
+    // Adiciona destaque ao elemento atual
+    if (element) {
+        element.classList.add('navigation-focus');
     }
 }
 
@@ -2218,6 +2271,54 @@ document.addEventListener('keydown', function (e) {
         }
     }
 
+    // ===== NAVEGAÇÃO NO LEITOR DE PDF COM SETAS =====
+    else if (currentApp === 'pdf-reader-app') {
+        const key = e.key;
+
+        // Navegação com setas
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+            e.preventDefault();
+
+            if (key === 'ArrowDown' || key === 'ArrowRight') {
+                movePdfFocus(1); // Próximo elemento
+            } else if (key === 'ArrowUp' || key === 'ArrowLeft') {
+                movePdfFocus(-1); // Elemento anterior
+            }
+            return;
+        }
+
+        // Tab atualiza lista de botões
+        if (key === 'Tab') {
+            setTimeout(() => {
+                updatePdfButtons();
+                const currentFocused = document.activeElement;
+                const newIndex = pdfButtons.indexOf(currentFocused);
+                if (newIndex !== -1) {
+                    pdfFocusIndex = newIndex;
+                    highlightPdfElement(currentFocused);
+                }
+            }, 10);
+            return;
+        }
+
+        // ESC volta ao menu
+        if (key === 'Escape') {
+            e.preventDefault();
+            showApp('welcome');
+            const firstButton = document.querySelector('.menu-button');
+            if (firstButton) firstButton.focus();
+            return;
+        }
+
+        // Enter/Espaço ativa botão
+        if ((key === 'Enter' || key === ' ') && 
+            document.activeElement.classList.contains('action-button')) {
+            e.preventDefault();
+            document.activeElement.click();
+            return;
+        }
+    }
+
     // ===== ATALHOS GLOBAIS COM CTRL =====
     if (e.ctrlKey) {
         // Verifica atalhos personalizados primeiro
@@ -2317,6 +2418,8 @@ document.addEventListener('keydown', function (e) {
 document.addEventListener('DOMContentLoaded', function () {
     // Inicializa a calculadora
     initCalculator();
+    // Configura event listeners para o leitor de PDF
+    setupPdfReader();
 });
 
 /**
@@ -2348,6 +2451,18 @@ window.addEventListener('load', function () {
         }
     }, 1000);
 });
+
+/**
+ * Configura event listeners específicos para o leitor de PDF
+ */
+function setupPdfReader() {
+    // Atualiza lista de botões quando o PDF é carregado
+    document.getElementById('pdf-input').addEventListener('change', function (e) {
+        setTimeout(() => {
+            updatePdfButtons();
+        }, 100);
+    });
+}
 
 /**
  * Configura aria-labels para inputs de arquivo (acessibilidade)

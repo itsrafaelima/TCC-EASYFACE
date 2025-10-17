@@ -478,6 +478,18 @@ body {
     flex-wrap: wrap; /* Permite quebra de linha em telas pequenas */
     gap: 10px;
     margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+/* Estilo para botões do PDF quando estão em foco */
+.pdf-controls .action-button:focus {
+    outline: 3px solid #ffd700;
+    outline-offset: 2px;
+    transform: scale(1.05);
+    transition: all 0.2s ease;
 }
 
 /* Container onde o PDF é renderizado */
@@ -508,6 +520,17 @@ body {
     border-radius: 5px;
     margin: 10px 0;
     min-height: 20px;
+}
+
+/* Estilo especial para botões do PDF em foco durante navegação */
+#pdf-reader-app .action-button.navigation-focus,
+#pdf-reader-app .scannable.navigation-focus {
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
+    color: #333 !important;
+    border: 2px solid #333 !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    font-weight: bold;
 }
 
 /* ===== COMUNICAÇÃO ALTERNATIVA ===== */
