@@ -53,6 +53,10 @@ let settingsButtons = []; // Array de botões nas configurações
 let pdfFocusIndex = 0; // Índice do botão focado no PDF
 let pdfButtons = []; // Array de botões do leitor de PDF
 
+// Variáveis para navegação no editor de arquivos
+let fileManagerFocusIndex = 0;
+let fileManagerButtons = [];
+
 // ===== FUNÇÕES DE CONFIGURAÇÃO =====
 
 /**
@@ -310,14 +314,62 @@ function showFileManager() {
     try {
         showApp('file-manager-app');
         setTimeout(() => {
+            updateFileManagerButtons();
+            fileManagerFocusIndex = 0;
+
             const openFileButton = document.querySelector('#file-manager-app .action-button');
             if (openFileButton && !scanMode) {
                 openFileButton.focus();
+                highlightFileManagerElement(openFileButton);
             }
         }, 100);
     } catch (error) {
         console.error('Erro em showFileManager:', error);
         updateStatus('Erro ao abrir editor de arquivos');
+    }
+}
+
+/**
+ * Atualiza a lista de botões navegáveis no editor de arquivos
+ */
+function updateFileManagerButtons() {
+    fileManagerButtons = Array.from(document.querySelectorAll('#file-manager-app .action-button, #file-manager-app .scannable, #file-manager-app textarea'));
+}
+
+/**
+ * Move o foco entre elementos no editor de arquivos usando setas
+ * @param {number} direction - 1 para avançar, -1 para retroceder
+ */
+function moveFileManagerFocus(direction) {
+    if (fileManagerButtons.length === 0) return;
+
+    // Remove destaque do elemento atual
+    if (fileManagerButtons[fileManagerFocusIndex]) {
+        fileManagerButtons[fileManagerFocusIndex].classList.remove('navigation-focus');
+    }
+
+    // Calcula novo índice (com wrap-around circular)
+    fileManagerFocusIndex = (fileManagerFocusIndex + direction + fileManagerButtons.length) % fileManagerButtons.length;
+
+    // Aplica foco e destaque ao novo elemento
+    if (fileManagerButtons[fileManagerFocusIndex]) {
+        fileManagerButtons[fileManagerFocusIndex].focus();
+        highlightFileManagerElement(fileManagerButtons[fileManagerFocusIndex]);
+    }
+}
+
+/**
+ * Destaca visualmente um elemento no editor de arquivos
+ * @param {HTMLElement} element - Elemento a ser destacado
+ */
+function highlightFileManagerElement(element) {
+    // Remove destaque anterior
+    document.querySelectorAll('#file-manager-app .action-button, #file-manager-app .scannable, #file-manager-app textarea').forEach(el => {
+        el.classList.remove('navigation-focus');
+    });
+    // Adiciona destaque ao elemento atual
+    if (element) {
+        element.classList.add('navigation-focus');
     }
 }
 
@@ -362,6 +414,9 @@ function initFileManager() {
             saveButton.disabled = true;
         }
     });
+
+    // Inicializa navegação por setas
+    updateFileManagerButtons();
 }
 
 /**
@@ -372,7 +427,7 @@ function updateVisualState() {
     const hasChanges = textArea.value !== currentFileContent;
     const appContainer = document.getElementById('file-manager-app');
     const fileInfo = document.getElementById('file-info');
-    
+
     if (currentFileName) {
         if (hasChanges) {
             fileInfo.textContent = `Arquivo "${currentFileName}" - ● Alterações não salvas`;
@@ -390,12 +445,12 @@ function updateSaveButtonState() {
     const saveButton = document.getElementById('save-button');
     const hasChanges = textArea.value !== currentFileContent;
     const hasText = textArea.value.trim() !== '';
-    
+
     saveButton.disabled = !(hasText && (currentFileHandle || currentFileName) && hasChanges);
-    
+
     // Atualiza estado visual
     updateVisualState();
-    
+
     // Tooltip
     if (saveButton.disabled) {
         if (!hasChanges) {
@@ -414,22 +469,22 @@ function updateSaveButtonState() {
 function saveFile() {
     const text = document.getElementById('file-text-area').value;
     const textArea = document.getElementById('file-text-area');
-    
+
     if (!text.trim()) {
         document.getElementById('file-info').textContent = 'Nenhum texto para salvar.';
         speakFeedback('Nenhum texto para salvar');
         return;
     }
-    
+
     // Se já temos um arquivo carregado, "sobrescreve" criando um novo com mesmo nome
     if (currentFileName) {
         // Cria um novo arquivo com o MESMO nome (simula sobrescrever)
         saveWithDownload(text, currentFileName, true);
-        
+
         document.getElementById('file-info').textContent = `Arquivo "${currentFileName}" salvo!`;
         speakFeedback('Arquivo salvo com sucesso');
         updateStatus(`Arquivo salvo: ${currentFileName}`);
-        
+
     } else {
         // Se não tem nome, pede um nome (equivale a Salvar Como)
         saveFileAs();
@@ -438,13 +493,13 @@ function saveFile() {
 
 function saveFile() {
     const text = document.getElementById('file-text-area').value;
-    
+
     if (!text.trim()) {
         document.getElementById('file-info').textContent = 'Nenhum texto para salvar.';
         speakFeedback('Nenhum texto para salvar');
         return;
     }
-    
+
     if (currentFileName) {
         // Se já tem nome, salva diretamente
         saveTextToFile(text, currentFileName);
@@ -459,22 +514,22 @@ function saveFile() {
  */
 function saveFileAs() {
     const text = document.getElementById('file-text-area').value;
-    
+
     if (!text.trim()) {
         document.getElementById('file-info').textContent = 'Nenhum texto para salvar.';
         speakFeedback('Nenhum texto para salvar');
         return;
     }
-    
+
     const defaultName = currentFileName || 'documento.txt';
     const fileName = prompt('Digite o nome para o novo arquivo:', defaultName);
-    
+
     if (fileName && fileName.trim() !== '') {
         let finalFileName = fileName.trim();
         if (!finalFileName.toLowerCase().endsWith('.txt')) {
             finalFileName += '.txt';
         }
-        
+
         saveWithDownload(text, finalFileName, false);
         currentFileName = finalFileName; // Torna este o arquivo atual
         updateSaveButtonState();
@@ -490,21 +545,21 @@ function saveTextToFile(text, fileName) {
     try {
         const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
-        
+
         const a = document.createElement('a');
         a.href = url;
         a.download = fileName;
         a.click();
-        
+
         URL.revokeObjectURL(url);
-        
+
         document.getElementById('file-info').textContent = `Arquivo "${fileName}" salvo com sucesso!`;
         speakFeedback(`Arquivo ${fileName} salvo com sucesso`);
         updateStatus(`Arquivo salvo: ${fileName}`);
-        
+
         // Atualiza o botão Salvar
         document.getElementById('save-button').disabled = false;
-        
+
     } catch (error) {
         console.error('Erro ao salvar arquivo:', error);
         document.getElementById('file-info').textContent = 'Erro ao salvar arquivo.';
@@ -522,13 +577,13 @@ async function saveWithFileSystemAPI(text) {
         const writable = await currentFileHandle.createWritable();
         await writable.write(text);
         await writable.close();
-        
+
         currentFileContent = text; // Atualiza conteúdo original
         document.getElementById('file-info').textContent = `Arquivo salvo com sucesso!`;
         speakFeedback('Arquivo salvo com sucesso');
         updateStatus(`Arquivo sobrescrito: ${currentFileName}`);
         updateSaveButtonState();
-        
+
     } catch (error) {
         console.error('Erro ao salvar arquivo:', error);
         // Fallback para download normal
@@ -546,18 +601,18 @@ function saveWithDownload(text, fileName, isOverwrite) {
     try {
         const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
-        
+
         const a = document.createElement('a');
         a.href = url;
         a.download = fileName;
         a.click();
-        
+
         URL.revokeObjectURL(url);
-        
+
         // Atualiza estado interno
         currentFileContent = text;
         lastSavedContent = text;
-        
+
         if (isOverwrite) {
             document.getElementById('file-info').textContent = `Arquivo "${fileName}" salvo!`;
             speakFeedback('Arquivo salvo com sucesso');
@@ -565,9 +620,9 @@ function saveWithDownload(text, fileName, isOverwrite) {
             document.getElementById('file-info').textContent = `Novo arquivo "${fileName}" criado!`;
             speakFeedback('Novo arquivo criado');
         }
-        
+
         updateSaveButtonState();
-        
+
     } catch (error) {
         console.error('Erro ao salvar:', error);
         document.getElementById('file-info').textContent = 'Erro ao salvar arquivo.';
@@ -580,26 +635,26 @@ function saveWithDownload(text, fileName, isOverwrite) {
  */
 function saveFileAs() {
     const text = document.getElementById('file-text-area').value;
-    
+
     if (!text.trim()) {
         document.getElementById('file-info').textContent = 'Nenhum texto para salvar.';
         speakFeedback('Nenhum texto para salvar');
         return;
     }
-    
+
     // Nome padrão mais simples
     const defaultName = currentFileName ? currentFileName : 'meu_documento.txt';
-    
+
     const fileName = prompt('Digite o nome do arquivo (com .txt no final):', defaultName);
-    
+
     if (fileName && fileName.trim() !== '') {
         let finalFileName = fileName.trim();
-        
+
         // Garante que tem extensão .txt (mais simples)
         if (!finalFileName.toLowerCase().endsWith('.txt')) {
             finalFileName += '.txt';
         }
-        
+
         saveWithDownload(text, finalFileName, false);
     }
 }
@@ -612,10 +667,10 @@ function updateSaveButtonState() {
     const saveButton = document.getElementById('save-button');
     const hasChanges = textArea.value !== currentFileContent;
     const hasText = textArea.value.trim() !== '';
-    
+
     // Salvar fica habilitado se tem texto E tem um arquivo atual E tem mudanças
     saveButton.disabled = !(hasText && currentFileName && hasChanges);
-    
+
     // Atualiza visual
     updateVisualState();
 }
@@ -633,7 +688,7 @@ document.getElementById('file-input').addEventListener('change', function (e) {
             currentFileName = file.name;
             currentFileContent = content; // Salva conteúdo original
             currentFileHandle = null; // Reset handle pois foi carregado via input
-            
+
             document.getElementById('file-info').textContent = `Arquivo "${file.name}" carregado com sucesso.`;
             speakFeedback(`Arquivo ${file.name} carregado com sucesso`);
             updateStatus(`Arquivo carregado: ${file.name}`);
@@ -653,23 +708,23 @@ async function openFileWithPicker() {
             const [fileHandle] = await window.showOpenFilePicker({
                 types: [{
                     description: 'Arquivos de texto',
-                    accept: {'text/plain': ['.txt']}
+                    accept: { 'text/plain': ['.txt'] }
                 }]
             });
-            
+
             const file = await fileHandle.getFile();
             const content = await file.text();
-            
+
             document.getElementById('file-text-area').value = content;
             currentFileName = file.name;
             currentFileContent = content;
             currentFileHandle = fileHandle;
-            
+
             document.getElementById('file-info').textContent = `Arquivo "${file.name}" aberto com File System API.`;
             speakFeedback(`Arquivo ${file.name} aberto`);
             updateStatus(`Arquivo aberto: ${file.name} - Agora você pode sobrescrever com "Salvar"`);
             updateSaveButtonState();
-            
+
         } else {
             // Fallback para input file tradicional
             document.getElementById('file-input').click();
@@ -759,7 +814,7 @@ function showPdfReader() {
         setTimeout(() => {
             updatePdfButtons(); // Inicializa navegação por setas
             pdfFocusIndex = 0;
-            
+
             const loadButton = document.querySelector('#pdf-reader-app .action-button');
             if (loadButton && !scanMode) {
                 loadButton.focus();
@@ -1506,7 +1561,7 @@ function toggleSounds() {
     soundsEnabled = !soundsEnabled;
     const soundToggle = document.getElementById('sound-toggle');
     const soundStatus = document.getElementById('sound-status');
-    
+
     if (soundsEnabled) {
         soundStatus.textContent = '(Ativado)';
         updateStatus('Sons ativados');
@@ -2311,7 +2366,54 @@ document.addEventListener('keydown', function (e) {
         }
 
         // Enter/Espaço ativa botão
-        if ((key === 'Enter' || key === ' ') && 
+        if ((key === 'Enter' || key === ' ') &&
+            document.activeElement.classList.contains('action-button')) {
+            e.preventDefault();
+            document.activeElement.click();
+            return;
+        }
+    }
+
+    else if (currentApp === 'file-manager-app') {
+        const key = e.key;
+
+        // Navegação com setas
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+            e.preventDefault();
+
+            if (key === 'ArrowDown' || key === 'ArrowRight') {
+                moveFileManagerFocus(1); // Próximo elemento
+            } else if (key === 'ArrowUp' || key === 'ArrowLeft') {
+                moveFileManagerFocus(-1); // Elemento anterior
+            }
+            return;
+        }
+
+        // Tab atualiza lista de botões
+        if (key === 'Tab') {
+            setTimeout(() => {
+                updateFileManagerButtons();
+                const currentFocused = document.activeElement;
+                const newIndex = fileManagerButtons.indexOf(currentFocused);
+                if (newIndex !== -1) {
+                    fileManagerFocusIndex = newIndex;
+                    highlightFileManagerElement(currentFocused);
+                }
+            }, 10);
+            return;
+        }
+
+        // ESC volta ao menu
+        if (key === 'Escape') {
+            e.preventDefault();
+            showApp('welcome');
+            const firstButton = document.querySelector('.menu-button');
+            if (firstButton) firstButton.focus();
+            return;
+        }
+
+        // Enter/Espaço ativa botão
+        if ((key === 'Enter' || key === ' ') &&
             document.activeElement.classList.contains('action-button')) {
             e.preventDefault();
             document.activeElement.click();
@@ -2471,4 +2573,8 @@ function setupFileInputs() {
     document.getElementById('file-input').setAttribute('aria-label', 'Selecionar arquivo de texto');
     document.getElementById('media-input').setAttribute('aria-label', 'Selecionar arquivo de mídia');
     document.getElementById('pdf-input').setAttribute('aria-label', 'Selecionar arquivo PDF');
+    // Adiciona classe scannable para inputs de arquivo
+    document.getElementById('file-input').classList.add('scannable');
+    document.getElementById('media-input').classList.add('scannable');
+    document.getElementById('pdf-input').classList.add('scannable');
 }

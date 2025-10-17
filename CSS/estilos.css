@@ -280,6 +280,32 @@ body {
     font-weight: bold;
 }
 
+/* Estilo especial para elementos do editor de arquivos em foco durante navegação */
+#file-manager-app .action-button.navigation-focus,
+#file-manager-app .scannable.navigation-focus,
+#file-manager-app textarea.navigation-focus {
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
+    color: #333 !important;
+    border: 2px solid #333 !important;
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    font-weight: bold;
+}
+
+/* Estilo específico para textarea quando está em foco de navegação */
+#file-manager-app textarea.navigation-focus {
+    border: 3px solid #ffd700 !important;
+    background: #fff9e6 !important;
+}
+
+/* Para botões desabilitados em foco */
+#file-manager-app .action-button:disabled.navigation-focus {
+    background: linear-gradient(135deg, #cccccc 0%, #999999 100%) !important;
+    color: #666 !important;
+    border: 2px solid #666 !important;
+    transform: scale(1.02);
+}
+
 /* ===== CALCULADORA ===== */
 
 /* Botões da calculadora - maiores que botões normais */
