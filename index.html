@@ -238,8 +238,9 @@
                 <!-- Controles para selecionar arquivo de mídia -->
                 <div class="media-controls">
                     <input type="file" id="media-input" class="hidden" accept="audio/*,video/*">
-                    <button class="action-button scannable" onclick="document.getElementById('media-input').click()"
-                        tabindex="19" aria-label="Selecionar arquivo de mídia">📁 Selecionar Mídia</button>
+                    <button class="action-button scannable" onclick="document.getElementById('media-input').click()" tabindex="19" aria-label="Selecionar arquivo de mídia">📁 Selecionar Mídia</button>
+                    <button class="action-button scannable" onclick="playMedia()" tabindex="20" aria-label="Reproduzir mídia" id="play-button">▶️ Reproduzir</button>
+                    <button class="action-button scannable" onclick="pauseMedia()" tabindex="21" aria-label="Pausar mídia" id="pause-button">⏸️ Pausar</button>
                 </div>
 
                 <!-- Container para player de áudio ou vídeo -->

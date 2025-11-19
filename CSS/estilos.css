@@ -496,6 +496,24 @@ body {
     min-height: 20px;
 }
 
+.media-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+    justify-content: center;
+}
+
+/* Estilos para navegação no reprodutor de mídia */
+#media-player-app .action-button.navigation-focus {
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
+    color: #333 !important;
+    border: 2px solid #333 !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    font-weight: bold;
+}
+
 /* ===== LEITOR DE PDF ===== */
 
 /* Container dos controles de navegação do PDF */

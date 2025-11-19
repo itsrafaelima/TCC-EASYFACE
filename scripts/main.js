@@ -36,6 +36,8 @@ let currentPage = 1; // Página atual do PDF
 let pdfTotalPages = 0; // Total de páginas do PDF
 let pdfScale = 1.5; // Nível de zoom do PDF
 let customShortcuts = {}; // Atalhos de teclado personalizados pelo usuário
+let mediaFocusIndex = 0; // Índice do botão focado no player de mídia
+let mediaButtons = []; // Array de botões do player de mídia
 
 // Frases pré-definidas para comunicação alternativa (CAA)
 let communicationPhrases = {
@@ -766,9 +768,13 @@ function showMediaPlayer() {
     try {
         showApp('media-player-app');
         setTimeout(() => {
+            updateMediaButtons(); // Inicializa navegação por setas
+            mediaFocusIndex = 0;
+
             const loadButton = document.querySelector('#media-player-app .action-button');
             if (loadButton && !scanMode) {
                 loadButton.focus();
+                highlightMediaElement(loadButton);
             }
         }, 100);
     } catch (error) {
@@ -781,26 +787,170 @@ function showMediaPlayer() {
  * Event listener para carregamento de arquivos de mídia
  * Detecta se é áudio ou vídeo e carrega no player apropriado
  */
-document.getElementById('media-input').addEventListener('change', function (e) {
+document.getElementById('media-input').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
         const url = URL.createObjectURL(file);
 
         // Verifica tipo de arquivo e escolhe player correto
         if (file.type.startsWith('audio/')) {
-            document.getElementById('audio-player').classList.remove('hidden');
+            const audioPlayer = document.getElementById('audio-player');
+            audioPlayer.classList.remove('hidden');
             document.getElementById('video-player').classList.add('hidden');
-            document.getElementById('audio-player').src = url;
+            audioPlayer.src = url;
+            
+            // Reproduz automaticamente quando o áudio estiver carregado
+            audioPlayer.onloadeddata = function() {
+                audioPlayer.play().catch(error => {
+                    console.log('Reprodução automática bloqueada:', error);
+                    updateStatus('Clique no botão play para reproduzir');
+                });
+            };
+            
         } else if (file.type.startsWith('video/')) {
-            document.getElementById('video-player').classList.remove('hidden');
+            const videoPlayer = document.getElementById('video-player');
+            videoPlayer.classList.remove('hidden');
             document.getElementById('audio-player').classList.add('hidden');
-            document.getElementById('video-player').src = url;
+            videoPlayer.src = url;
+            
+            // Reproduz automaticamente quando o vídeo estiver carregado
+            videoPlayer.onloadeddata = function() {
+                videoPlayer.play().catch(error => {
+                    console.log('Reprodução automática bloqueada:', error);
+                    updateStatus('Clique no botão play para reproduzir');
+                });
+            };
         }
 
-        document.getElementById('media-info').textContent = `Mídia "${file.name}" carregada.`;
-        speakFeedback(`Mídia carregada!`);
+        document.getElementById('media-info').textContent = `Mídia "${file.name}" carregada e reproduzindo automaticamente.`;
+        speakFeedback(`Mídia carregada! Reproduzindo automaticamente`);
     }
 });
+
+/**
+ * Atualiza a lista de botões navegáveis no reprodutor de mídia
+ */
+function updateMediaButtons() {
+    mediaButtons = Array.from(document.querySelectorAll('#media-player-app .action-button'));
+}
+
+/**
+ * Move o foco entre os botões do reprodutor de mídia usando setas
+ * @param {number} direction - 1 para avançar, -1 para retroceder
+ */
+function moveMediaFocus(direction) {
+    if (mediaButtons.length === 0) return;
+
+    // Remove destaque do elemento atual
+    if (mediaButtons[mediaFocusIndex]) {
+        mediaButtons[mediaFocusIndex].classList.remove('navigation-focus');
+    }
+
+    // Calcula novo índice (com wrap-around circular)
+    mediaFocusIndex = (mediaFocusIndex + direction + mediaButtons.length) % mediaButtons.length;
+
+    // Aplica foco e destaque ao novo elemento
+    if (mediaButtons[mediaFocusIndex]) {
+        mediaButtons[mediaFocusIndex].focus();
+        highlightMediaElement(mediaButtons[mediaFocusIndex]);
+    }
+}
+
+/**
+ * Destaca visualmente um elemento no reprodutor de mídia
+ * @param {HTMLElement} element - Elemento a ser destacado
+ */
+function highlightMediaElement(element) {
+    // Remove destaque anterior
+    document.querySelectorAll('#media-player-app .action-button').forEach(btn => {
+        btn.classList.remove('navigation-focus');
+    });
+    // Adiciona destaque ao elemento atual
+    if (element) {
+        element.classList.add('navigation-focus');
+    }
+}
+
+// ===== FUNÇÕES DE CONTROLE DE MÍDIA =====
+
+/**
+ * Reproduz a mídia carregada
+ */
+function playMedia() {
+    const audioPlayer = document.getElementById('audio-player');
+    const videoPlayer = document.getElementById('video-player');
+    
+    if (!audioPlayer.classList.contains('hidden')) {
+        audioPlayer.play().then(() => {
+            updateStatus('Áudio reproduzindo');
+            speakFeedback('Áudio reproduzindo');
+        }).catch(error => {
+            console.log('Erro ao reproduzir áudio:', error);
+            updateStatus('Erro ao reproduzir áudio. Clique no botão play do player.');
+        });
+    } else if (!videoPlayer.classList.contains('hidden')) {
+        videoPlayer.play().then(() => {
+            updateStatus('Vídeo reproduzindo');
+            speakFeedback('Vídeo reproduzindo');
+        }).catch(error => {
+            console.log('Erro ao reproduzir vídeo:', error);
+            updateStatus('Erro ao reproduzir vídeo. Clique no botão play do player.');
+        });
+    } else {
+        updateStatus('Nenhuma mídia carregada para reproduzir');
+        speakFeedback('Selecione uma mídia primeiro');
+    }
+}
+
+/**
+ * Pausa a mídia em reprodução
+ */
+function pauseMedia() {
+    const audioPlayer = document.getElementById('audio-player');
+    const videoPlayer = document.getElementById('video-player');
+    
+    if (!audioPlayer.classList.contains('hidden')) {
+        audioPlayer.pause();
+        updateStatus('Áudio pausado');
+        speakFeedback('Áudio pausado');
+    } else if (!videoPlayer.classList.contains('hidden')) {
+        videoPlayer.pause();
+        updateStatus('Vídeo pausado');
+        speakFeedback('Vídeo pausado');
+    } else {
+        updateStatus('Nenhuma mídia em reprodução');
+    }
+}
+
+/**
+ * Configura os event listeners para os players de mídia
+ */
+function setupMediaPlayers() {
+    const audioPlayer = document.getElementById('audio-player');
+    const videoPlayer = document.getElementById('video-player');
+    
+    // Evento quando a mídia termina de tocar
+    audioPlayer.addEventListener('ended', function() {
+        updateStatus('Áudio concluído');
+        speakFeedback('Áudio concluído');
+    });
+    
+    videoPlayer.addEventListener('ended', function() {
+        updateStatus('Vídeo concluído');
+        speakFeedback('Vídeo concluído');
+    });
+    
+    // Evento quando ocorre erro na reprodução
+    audioPlayer.addEventListener('error', function() {
+        updateStatus('Erro ao carregar áudio');
+        speakFeedback('Erro no arquivo de áudio');
+    });
+    
+    videoPlayer.addEventListener('error', function() {
+        updateStatus('Erro ao carregar vídeo');
+        speakFeedback('Erro no arquivo de vídeo');
+    });
+}
 
 // ===== FUNÇÕES LEITOR DE PDF =====
 
@@ -2440,6 +2590,54 @@ document.addEventListener('keydown', function(e) {
         }
     }
 
+        // ===== NAVEGAÇÃO NO REPRODUTOR DE MÍDIA =====
+    else if (currentApp === 'media-player-app') {
+        const key = e.key;
+
+        // Navegação com setas entre botões
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+            e.preventDefault();
+
+            if (key === 'ArrowDown' || key === 'ArrowRight') {
+                moveMediaFocus(1); // Próximo botão
+            } else if (key === 'ArrowUp' || key === 'ArrowLeft') {
+                moveMediaFocus(-1); // Botão anterior
+            }
+            return;
+        }
+
+        // Tab atualiza lista de botões
+        if (key === 'Tab') {
+            setTimeout(() => {
+                updateMediaButtons();
+                const currentFocused = document.activeElement;
+                const newIndex = mediaButtons.indexOf(currentFocused);
+                if (newIndex !== -1) {
+                    mediaFocusIndex = newIndex;
+                    highlightMediaElement(currentFocused);
+                }
+            }, 10);
+            return;
+        }
+
+        // ESC volta ao menu
+        if (key === 'Escape') {
+            e.preventDefault();
+            showApp('welcome');
+            const firstButton = document.querySelector('.menu-button');
+            if (firstButton) firstButton.focus();
+            return;
+        }
+
+        // Enter/Espaço ativa botão
+        if ((key === 'Enter' || key === ' ') && 
+            document.activeElement.classList.contains('action-button')) {
+            e.preventDefault();
+            document.activeElement.click();
+            return;
+        }
+    }
+
     // ===== NAVEGAÇÃO NA CALCULADORA COM SETAS =====
     if (currentApp === 'calculator-app' && isCalcButtonFocused) {
         const key = e.key;
@@ -2799,6 +2997,9 @@ document.addEventListener('DOMContentLoaded', function () {
 window.addEventListener('load', function() {
     // Configura reconhecimento de voz
     setupVoiceRecognition();
+
+    // Configura os players de mídia
+    setupMediaPlayers();
 
     // Carrega configurações salvas do usuário
     loadUserSettings();
