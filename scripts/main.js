@@ -145,12 +145,12 @@ function showApp(appId) {
 
     console.log(`Mudando de app: ${previousApp} → ${appId}, ScanMode: ${scanMode}`);
 
-    // Reinicia varredura ao mudar de app (se scanMode ativo)
-    if (scanMode) {
-        console.log(`Reiniciando varredura para: ${appId}`);
+    // Se está em modo varredura E mudou de app, reinicia a varredura
+    if (scanMode && previousApp !== appId) {
+        console.log('App mudou durante varredura - reiniciando...');
         setTimeout(() => {
-            restartScan();
-        }, 300);
+            restartScanForCurrentApp();
+        }, 200);
     }
 }
 
@@ -394,16 +394,16 @@ function initFileManager() {
     updateSaveButtonState();
     // Desabilita o botão Salvar inicialmente
     document.getElementById('save-button').disabled = true;
-    
+
     // Adiciona listener para detectar mudanças no texto
-    document.getElementById('file-text-area').addEventListener('input', function() {
+    document.getElementById('file-text-area').addEventListener('input', function () {
         updateSaveButtonState();
         const hasText = this.value.trim() !== '';
         const saveButton = document.getElementById('save-button');
-        
+
         const hasChanges = this.value !== currentFileContent;
         if (hasChanges && currentFileName) {
-            document.getElementById('file-info').textContent = 
+            document.getElementById('file-info').textContent =
                 `Arquivo "${currentFileName}" - Alterações não salvas`;
         }
 
@@ -1478,6 +1478,71 @@ function moveCalcFocus(rowDelta, colDelta) {
     }
 }
 
+// ===== NAVEGAÇÃO POR SETAS NA SIDEBAR =====
+
+// Variáveis para navegação na sidebar
+let sidebarFocusIndex = 0;
+let sidebarButtons = [];
+
+/**
+ * Atualiza a lista de botões navegáveis na sidebar
+ */
+function updateSidebarButtons() {
+    sidebarButtons = Array.from(document.querySelectorAll('.sidebar .menu-button'));
+}
+
+/**
+ * Move o foco entre os botões da sidebar usando setas
+ * @param {number} direction - 1 para avançar, -1 para retroceder
+ */
+function moveSidebarFocus(direction) {
+    if (sidebarButtons.length === 0) return;
+
+    // Remove destaque do elemento atual
+    if (sidebarButtons[sidebarFocusIndex]) {
+        sidebarButtons[sidebarFocusIndex].classList.remove('navigation-focus');
+    }
+
+    // Calcula novo índice (com wrap-around circular)
+    sidebarFocusIndex = (sidebarFocusIndex + direction + sidebarButtons.length) % sidebarButtons.length;
+
+    // Aplica foco e destaque ao novo elemento
+    if (sidebarButtons[sidebarFocusIndex]) {
+        sidebarButtons[sidebarFocusIndex].focus();
+        highlightSidebarElement(sidebarButtons[sidebarFocusIndex]);
+    }
+}
+
+/**
+ * Destaca visualmente um elemento na sidebar
+ * @param {HTMLElement} element - Elemento a ser destacado
+ */
+function highlightSidebarElement(element) {
+    // Remove destaque anterior
+    document.querySelectorAll('.sidebar .menu-button').forEach(btn => {
+        btn.classList.remove('navigation-focus');
+    });
+    // Adiciona destaque ao elemento atual
+    if (element) {
+        element.classList.add('navigation-focus');
+    }
+}
+
+/**
+ * Inicializa a navegação por setas na sidebar
+ */
+function initSidebarNavigation() {
+    updateSidebarButtons();
+    
+    // Adiciona event listeners para foco nos botões da sidebar
+    sidebarButtons.forEach((button, index) => {
+        button.addEventListener('focus', function() {
+            sidebarFocusIndex = index;
+            highlightSidebarElement(this);
+        });
+    });
+}
+
 // ===== FUNÇÕES DO LANÇADOR DE SITES =====
 
 /**
@@ -1591,12 +1656,12 @@ function toggleScanMode() {
     console.log('scanMode será:', scanMode);
 
     if (scanMode) {
-        // Se não estiver no welcome, volta para lá
-        if (currentApp !== 'welcome') {
-            console.log('Forçando volta para welcome...');
-            showApp('welcome');
-        }
+        // Adiciona classe no body
+        document.body.classList.add('scan-mode'); 
+        // Para a varredura atual se estiver rodando
+        stopScanning();
 
+        // Pequeno delay para garantir que a DOM está pronta
         setTimeout(() => {
             console.log('Iniciando varredura após timeout...');
             startScanning();
@@ -1606,8 +1671,12 @@ function toggleScanMode() {
             controls.style.display = 'block';
             updateStatus('Modo de varredura ativado - Use ENTER para selecionar');
             speakFeedback('Modo de varredura ativado');
-        }, 300);
+        }, 100);
+
     } else {
+        // Remove classe do body
+        document.body.classList.remove('scan-mode');
+
         stopScanning();
         button.textContent = '🔄 Ativar Varredura';
         button.setAttribute('aria-label', 'Ativar modo de varredura automática');
@@ -1627,28 +1696,45 @@ function toggleScanMode() {
 function startScanning() {
     console.log('=== START SCANNING ===');
     console.log('App atual:', currentApp);
-    console.log('ScanMode:', scanMode);
+
+    // Para qualquer varredura anterior
+    if (scanInterval) {
+        clearInterval(scanInterval);
+        scanInterval = null;
+    }
+
+    // Remove destaque de elementos anteriores
+    document.querySelectorAll('.scan-active').forEach(el => {
+        el.classList.remove('scan-active');
+        el.style.outline = '';
+    });
 
     // Define seletor baseado no app atual
-    let selector = '.scannable';
-    if (currentApp !== 'welcome') {
-        selector = `#${currentApp} .scannable`;
-    }
+    let selector = '.sidebar .scannable';
 
     console.log('Seletor usado:', selector);
 
-    // Filtra apenas elementos visíveis
+    // Coleta elementos visíveis e habilitados
     scanElements = Array.from(document.querySelectorAll(selector)).filter(el => {
-        const isVisible = !el.disabled &&
-            el.offsetParent !== null &&
-            getComputedStyle(el).visibility !== 'hidden' &&
-            getComputedStyle(el).display !== 'none';
+        const style = getComputedStyle(el);
+        const isVisible = 
+            !el.disabled &&
+            el.offsetWidth > 0 &&
+            el.offsetHeight > 0 &&
+            style.visibility !== 'hidden' &&
+            style.display !== 'none' &&
+            style.opacity !== '0';
+        
         return isVisible;
     });
 
     console.log(`Elementos encontrados em ${currentApp}:`, scanElements.length);
+    scanElements.forEach((el, idx) => {
+        console.log(`${idx}: ${el.tagName}.${el.className} - "${el.textContent?.substring(0, 30) || el.placeholder || 'sem texto'}"`);
+    });
 
-    // Ordena elementos por posição na tela (top-left to bottom-right)
+
+    // Ordena por posição na tela
     scanElements.sort((a, b) => {
         const rectA = a.getBoundingClientRect();
         const rectB = b.getBoundingClientRect();
@@ -1659,14 +1745,18 @@ function startScanning() {
     scanPaused = false;
 
     if (scanElements.length > 0) {
-        if (scanInterval) {
-            clearInterval(scanInterval);
-        }
-        // Inicia loop de varredura
-        scanInterval = setInterval(nextScanElement, scanSpeed);
-        highlightCurrentElement(); // Destaca primeiro elemento
+        // Inicia o loop de varredura
+        scanInterval = setInterval(() => {
+            if (!scanPaused) {
+                nextScanElement();
+            }
+        }, scanSpeed);
+        // Destaca o primeiro elemento imediatamente
+        highlightCurrentElement();
+        updateStatus(`Varredura iniciada no menu - ${scanElements.length} opções - ENTER para selecionar`);
     } else {
-        updateStatus('Nenhum elemento encontrado para varredura');
+        updateStatus('Nenhum elemento encontrado no menu para varredura');
+        console.warn('Nenhum elemento scannable encontrado no menu lateral');
     }
 }
 
@@ -1702,9 +1792,13 @@ function stopScanning() {
     }
 
     // Remove destaque de todos os elementos
-    scanElements.forEach(el => {
+    document.querySelectorAll('.scannable').forEach(el => {
         el.classList.remove('scan-active');
         el.style.outline = '';
+        el.style.outlineOffset = '';
+        el.style.border = '';
+        el.style.background = '';
+        el.style.boxShadow = '';
     });
 
     scanElements = [];
@@ -1722,20 +1816,24 @@ function nextScanElement() {
     try {
         // Remove destaque do elemento atual
         if (scanElements[currentScanIndex]) {
-            scanElements[currentScanIndex].classList.remove('scan-active');
-            scanElements[currentScanIndex].style.outline = '';
+            const currentElement = scanElements[currentScanIndex];
+            currentElement.classList.remove('scan-active');
+            currentElement.style.outline = '';
+            currentElement.style.outlineOffset = '';
         }
 
-        // Avança para o próximo (com wrap-around circular)
+        // Avança para o próximo elemento
         currentScanIndex = (currentScanIndex + 1) % scanElements.length;
+        
+        // Destaca o novo elemento
         highlightCurrentElement();
+        
     } catch (error) {
         console.error('Erro em nextScanElement:', error);
-        // Tenta reiniciar em caso de erro
+        // Reinicia a varredura em caso de erro
         if (scanMode) {
             setTimeout(() => {
                 startScanning();
-                updateStatus('Varredura reiniciada devido a erro');
             }, 1000);
         }
     }
@@ -1749,13 +1847,24 @@ function highlightCurrentElement() {
     if (scanElements[currentScanIndex]) {
         try {
             const element = scanElements[currentScanIndex];
+            
+            // Remove destaque anterior
+            scanElements.forEach(el => {
+                el.classList.remove('scan-active');
+                el.style.outline = '';
+                el.style.outlineOffset = '';
+                el.style.border = '';
+                el.style.boxShadow = '';
+            });
 
-            // Aplica destaque visual
+            // Aplica destaque VERMELHO com estilos inline (maior prioridade)
             element.classList.add('scan-active');
-            element.style.outline = '4px solid #ff6b6b'; // Borda vermelha
-            element.style.outlineOffset = '2px';
+            element.style.outline = '4px solid #ff0000 !important';
+            element.style.outlineOffset = '3px !important';
+            element.style.border = '2px solid #ff0000 !important';
+            element.style.boxShadow = '0 0 20px rgba(255, 0, 0, 0.5) !important';
 
-            // Rola a página para mostrar o elemento
+            // Rola para mostrar o elemento
             element.scrollIntoView({
                 behavior: 'smooth',
                 block: 'center',
@@ -1763,21 +1872,57 @@ function highlightCurrentElement() {
             });
 
             // Foca no elemento para acessibilidade
-            element.focus();
+            element.focus({ preventScroll: true }); // preventScroll evita scroll duplo
 
-            // Toca som de feedback
+            // Feedback sonoro
             if (soundsEnabled) {
                 playDifferentSound(800);
             }
 
-            // Atualiza status com descrição do elemento
-            const label = element.getAttribute('aria-label') || element.textContent || element.placeholder || 'Elemento';
-            updateStatus(`Varredura: ${label.trim()} - Pressione ENTER para selecionar`);
+            // Atualiza status
+            const label = element.getAttribute('aria-label') || 
+                         element.textContent || 
+                         element.placeholder || 
+                         element.value ||
+                         'Elemento';
+            updateStatus(`Varredura: ${label.toString().trim().substring(0, 50)} - Pressione ENTER para selecionar`);
 
         } catch (error) {
             console.error('Erro em highlightCurrentElement:', error);
         }
     }
+}
+
+function debugScanMode() {
+    console.log('=== DEBUG SCAN MODE ===');
+    console.log('scanMode:', scanMode);
+    console.log('currentApp:', currentApp);
+    console.log('scanInterval:', scanInterval);
+    console.log('scanElements length:', scanElements.length);
+    console.log('currentScanIndex:', currentScanIndex);
+    console.log('scanPaused:', scanPaused);
+    console.log('scanSpeed:', scanSpeed);
+    
+    // Verifica elementos atuais
+    let selector = '.scannable';
+    if (currentApp !== 'welcome') {
+        selector = `#${currentApp} .scannable`;
+    }
+    
+    const allScannable = Array.from(document.querySelectorAll(selector));
+    console.log('Todos elementos scannable:', allScannable.length);
+    
+    allScannable.forEach((el, idx) => {
+        const style = getComputedStyle(el);
+        const isVisible = 
+            !el.disabled &&
+            el.offsetWidth > 0 &&
+            el.offsetHeight > 0 &&
+            style.visibility !== 'hidden' &&
+            style.display !== 'none';
+        
+        console.log(`${idx}: ${el.tagName}.${el.className} - Visible: ${isVisible} - Text: "${el.textContent?.substring(0, 30)}"`);
+    });
 }
 
 /**
@@ -1787,7 +1932,7 @@ function highlightCurrentElement() {
 function selectCurrentScanElement() {
     if (scanElements[currentScanIndex] && scanMode && !scanPaused) {
         const element = scanElements[currentScanIndex];
-        const currentElementIndex = currentScanIndex;
+        const appAntesDaSelecao = currentApp; // Salva o app atual ANTES do clique
 
         try {
             // Remove destaque temporariamente
@@ -1795,36 +1940,110 @@ function selectCurrentScanElement() {
             element.style.outline = '';
 
             // Dispara evento de clique
-            element.dispatchEvent(new MouseEvent('click', {
-                view: window,
-                bubbles: true,
-                cancelable: true
-            }));
-
+            element.click();
             playFeedbackSound();
 
             // Restaura o destaque após um delay
             setTimeout(() => {
-                if (scanMode && scanElements[currentElementIndex] === element) {
-                    element.classList.add('scan-active');
-                    element.style.outline = '4px solid #ff6b6b';
-                    element.style.outlineOffset = '2px';
+                if (scanMode && currentApp !== appAntesDaSelecao) {
+                    console.log(`App mudou de ${appAntesDaSelecao} para ${currentApp} - Reiniciando varredura...`);
+                    // Se mudou para um app diferente, reinicia a varredura nos elementos do NOVO app
+                    restartScanForCurrentApp();
+                } else {
+                    // Se ainda está no mesmo app, restaura o destaque no mesmo elemento
+                    if (scanMode && scanElements[currentScanIndex] === element) {
+                        element.classList.add('scan-active');
+                        element.style.outline = '4px solid #ff0000';
+                        element.style.outlineOffset = '3px';
+                    }
                 }
-            }, 500);
+            }, 300);
 
             return true;
         } catch (error) {
             console.error('Erro ao selecionar elemento na varredura:', error);
             // Restaura a varredura mesmo com erro
-            if (scanMode && scanElements[currentElementIndex] === element) {
+            if (scanMode && scanElements[currentScanIndex] === element) {
                 element.classList.add('scan-active');
-                element.style.outline = '4px solid #ff6b6b';
-                element.style.outlineOffset = '2px';
+                element.style.outline = '4px solid #ff0000';
+                element.style.outlineOffset = '3px';
             }
             return false;
         }
     }
     return false;
+}
+
+function restartScanForCurrentApp() {
+    if (!scanMode) return;
+
+    console.log('Reiniciando varredura para o app:', currentApp);
+    
+    // Para a varredura atual
+    if (scanInterval) {
+        clearInterval(scanInterval);
+        scanInterval = null;
+    }
+
+    // Remove destaque de elementos anteriores
+    document.querySelectorAll('.scan-active').forEach(el => {
+        el.classList.remove('scan-active');
+        el.style.outline = '';
+    });
+
+    // Define seletor baseado no NOVO app atual
+    let selector = '.scannable';
+    if (currentApp !== 'welcome') {
+        selector = `#${currentApp} .scannable`;
+    } else {
+        // No menu principal, inclui botões da sidebar
+        selector = '.sidebar .scannable, .welcome-content .scannable';
+    }
+
+    console.log('Novo seletor para o app:', selector);
+
+    // Coleta elementos do NOVO app
+    scanElements = Array.from(document.querySelectorAll(selector)).filter(el => {
+        const style = getComputedStyle(el);
+        const isVisible = 
+            !el.disabled &&
+            el.offsetWidth > 0 &&
+            el.offsetHeight > 0 &&
+            style.visibility !== 'hidden' &&
+            style.display !== 'none' &&
+            style.opacity !== '0';
+        
+        return isVisible;
+    });
+
+    console.log(`Elementos no novo app:`, scanElements.length);
+
+    // Ordena por posição na tela
+    scanElements.sort((a, b) => {
+        const rectA = a.getBoundingClientRect();
+        const rectB = b.getBoundingClientRect();
+        return (rectA.top - rectB.top) || (rectA.left - rectB.left);
+    });
+
+    currentScanIndex = 0;
+    scanPaused = false;
+
+    if (scanElements.length > 0) {
+        // Reinicia o loop de varredura
+        scanInterval = setInterval(() => {
+            if (!scanPaused) {
+                nextScanElement();
+            }
+        }, scanSpeed);
+        
+        // Destaca o primeiro elemento do NOVO app
+        highlightCurrentElement();
+        updateStatus(`Varredura em ${getAppName(currentApp)} - ${scanElements.length} opções - ENTER para selecionar`);
+    } else {
+        // Se não encontrou elementos no novo app, volta para o menu lateral
+        console.log('Nenhum elemento no app atual, voltando para menu lateral...');
+        startScanning(); // Volta para o menu lateral
+    }
 }
 
 /**
@@ -2129,7 +2348,7 @@ function setupVoiceRecognition() {
     voiceButton.className = 'menu-button scannable';
     voiceButton.innerHTML = '🎤 Comando de Voz';
     voiceButton.onclick = startVoiceCommand;
-    voiceButton.tabIndex = 90;
+    voiceButton.tabIndex = 10;
     voiceButton.setAttribute('aria-label', 'Ativar comando de voz - Diga o nome da funcionalidade desejada');
     document.querySelector('.sidebar').appendChild(voiceButton);
 }
@@ -2169,16 +2388,57 @@ function initCalculator() {
  * Handler principal de eventos de teclado
  * Gerencia navegação, atalhos e controles especiais
  */
-document.addEventListener('keydown', function (e) {
+document.addEventListener('keydown', function(e) {
     // Atalho de debug: Ctrl+Shift+D
     if (e.ctrlKey && e.shiftKey && e.key === 'D') {
         e.preventDefault();
-        debugScanElements();
+        debugScanMode();
         return;
     }
 
     const focused = document.activeElement;
+    const isSidebarButtonFocused = focused && focused.classList.contains('menu-button') && focused.closest('.sidebar');
     const isCalcButtonFocused = focused && focused.classList.contains('calc-button');
+
+    // ===== NAVEGAÇÃO NA SIDEBAR COM SETAS =====
+    if (isSidebarButtonFocused) {
+        const key = e.key;
+
+        // Navegação com setas
+        if (['ArrowUp', 'ArrowDown'].includes(key)) {
+            e.preventDefault();
+
+            if (key === 'ArrowDown') {
+                moveSidebarFocus(1); // Próximo botão
+            } else if (key === 'ArrowUp') {
+                moveSidebarFocus(-1); // Botão anterior
+            }
+            return;
+        }
+
+        // Enter ou Espaço para ativar o botão
+        if ((key === 'Enter' || key === ' ') && focused.classList.contains('menu-button')) {
+            e.preventDefault();
+            focused.click();
+            return;
+        }
+
+        // Tab funciona normalmente
+        if (key === 'Tab') {
+            // Atualiza o índice quando o foco muda via Tab
+            setTimeout(() => {
+                const newFocused = document.activeElement;
+                if (newFocused && newFocused.classList.contains('menu-button') && newFocused.closest('.sidebar')) {
+                    const newIndex = sidebarButtons.indexOf(newFocused);
+                    if (newIndex !== -1) {
+                        sidebarFocusIndex = newIndex;
+                        highlightSidebarElement(newFocused);
+                    }
+                }
+            }, 10);
+            return;
+        }
+    }
 
     // ===== NAVEGAÇÃO NA CALCULADORA COM SETAS =====
     if (currentApp === 'calculator-app' && isCalcButtonFocused) {
@@ -2495,7 +2755,16 @@ document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
         e.preventDefault();
         if (scanMode) {
+            if (currentApp !== 'welcome') {
+            // Se não está no menu, volta para o menu
+            showApp('welcome');
+            setTimeout(() => {
+                restartScanForCurrentApp(); // Reinicia varredura no menu
+            }, 200);
+        } else {
+            // Se já está no menu, desativa a varredura
             toggleScanMode();
+        }
         } else {
             showApp('welcome');
             const firstButton = document.querySelector('.menu-button');
@@ -2527,7 +2796,7 @@ document.addEventListener('DOMContentLoaded', function () {
 /**
  * Executado quando todos os recursos estão carregados
  */
-window.addEventListener('load', function () {
+window.addEventListener('load', function() {
     // Configura reconhecimento de voz
     setupVoiceRecognition();
 
@@ -2542,6 +2811,9 @@ window.addEventListener('load', function () {
     // Configura eventos para inputs de arquivo
     setupFileInputs();
 
+    // Inicializa navegação por setas na sidebar
+    initSidebarNavigation();
+
     // Inicializa o editor de arquivos
     initFileManager();
 
@@ -2549,7 +2821,10 @@ window.addEventListener('load', function () {
     setTimeout(() => {
         if (!scanMode) {
             const firstButton = document.querySelector('.menu-button');
-            if (firstButton) firstButton.focus();
+            if (firstButton) {
+                firstButton.focus();
+                highlightSidebarElement(firstButton);
+            }
         }
     }, 1000);
 });
@@ -2578,3 +2853,17 @@ function setupFileInputs() {
     document.getElementById('media-input').classList.add('scannable');
     document.getElementById('pdf-input').classList.add('scannable');
 }
+
+/**
+ * Configura navegação completa da interface
+ */
+function setupNavigation() {
+    initSidebarNavigation();
+    initCalculator();
+}
+
+// Chama a configuração completa quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', function() {
+    setupNavigation();
+    setupPdfReader();
+});

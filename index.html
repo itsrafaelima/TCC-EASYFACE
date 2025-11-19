@@ -47,37 +47,37 @@
             </button>
 
             <!-- Botão: Sites Seguros -->
-            <button class="menu-button scannable" onclick="showSiteLauncher()" tabindex="5"
+            <button class="menu-button scannable" onclick="showSiteLauncher()" tabindex="4"
                 aria-label="Abrir Launcher de Sites">
                 🌐 Sites Seguros
             </button>
 
             <!-- Botão: Reprodutor de Mídia -->
-            <button class="menu-button scannable" onclick="showMediaPlayer()" tabindex="6"
+            <button class="menu-button scannable" onclick="showMediaPlayer()" tabindex="5"
                 aria-label="Abrir Reprodutor de Mídia">
                 🎵 Reprodutor de Mídia
             </button>
 
             <!-- Botão: Leitor de PDF -->
-            <button class="menu-button scannable" onclick="showPdfReader()" tabindex="7"
+            <button class="menu-button scannable" onclick="showPdfReader()" tabindex="6"
                 aria-label="Abrir Leitor de PDF">
                 📄 Leitor de PDF
             </button>
 
             <!-- Botão: Comunicação Alternativa -->
-            <button class="menu-button scannable" onclick="showCommunicationAid()" tabindex="8"
+            <button class="menu-button scannable" onclick="showCommunicationAid()" tabindex="7"
                 aria-label="Abrir Ferramenta de Comunicação">
                 💬 Comunicação Alternativa
             </button>
 
             <!-- Botão: Configurações -->
-            <button class="menu-button scannable" onclick="showAccessibilitySettings()" tabindex="10"
+            <button class="menu-button scannable" onclick="showAccessibilitySettings()" tabindex="8"
                 aria-label="Abrir Configurações de Acessibilidade">
                 ⚙️ Configurações
             </button>
 
             <!-- Botão: Ajuda -->
-            <button class="menu-button scannable" onclick="showHelp()" tabindex="11" aria-label="Abrir Ajuda">
+            <button class="menu-button scannable" onclick="showHelp()" tabindex="9" aria-label="Abrir Ajuda">
                 ❓ Ajuda
             </button>
         </div>
@@ -454,7 +454,7 @@
                         <p><strong>• Feedback Sonoro:</strong> Sons confirmam ações</p>
                         <p><strong>• Alto Contraste:</strong> Melhora visibilidade</p>
                         <p><strong>• Texto Grande:</strong> Facilita leitura</p>
-                        <p><strong>• Varredura Automática:</strong> Navegação sem mouse ou teclado</p>
+                        <p><strong>• Varredura Automática:</strong> Navegação sem mouse</p>
                     </div>
 
                     <!-- Seção: Modo de Varredura Automática -->
@@ -508,6 +508,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <!-- Script principal com toda a lógica JavaScript -->
     <script src="scripts/main.js"></script>
+
+    <!-- Adicione isto antes do fechamento do body -->
+    <div id="scan-debug" style="position: fixed; top: 50px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; display: none; z-index: 10000;">
+    Debug Scan Mode
+    </div>
 </body>
 
 </html>

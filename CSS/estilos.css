@@ -912,16 +912,30 @@ body {
 
 /* Indicador fixo mostrando que o modo de varredura está ativo */
 .scan-mode-indicator {
-    position: fixed; /* Fixo na tela */
+    position: fixed;
     top: 10px;
     right: 10px;
-    background: #ff6b6b; /* Vermelho */
+    background: #ff0000; /* Vermelho sólido */
     color: white;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 25px;
     font-weight: bold;
     z-index: 1000;
-    animation: pulse 1.5s infinite; /* Animação de pulsação */
+    font-size: 16px;
+    border: 2px solid white;
+    animation: indicatorPulse 2s infinite;
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
+}
+
+@keyframes indicatorPulse {
+    0%, 100% { 
+        background: #ff0000;
+        transform: scale(1);
+    }
+    50% { 
+        background: #ff4444;
+        transform: scale(1.05);
+    }
 }
 
 /* Painel de controles da varredura */
@@ -944,33 +958,75 @@ body {
 
 /* Classe aplicada ao elemento atualmente sendo varrido */
 .scan-active {
-    outline: 4px solid #ff6b6b !important; /* Borda vermelha grossa */
-    outline-offset: 2px !important;
-    background: rgba(255, 107, 107, 0.1) !important; /* Fundo vermelho transparente */
-    animation: scanPulse 0.8s ease-in-out; /* Animação de pulsação */
+    outline: 4px solid #ff0000 !important; /* Vermelho sólido e visível */
+    outline-offset: 3px !important;
+    background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho claro */
+    border: 2px solid #ff0000 !important; /* Borda adicional para garantir visibilidade */
+    animation: scanPulse 1s ease-in-out infinite !important; /* Pulsação contínua */
     position: relative;
-    z-index: 999; /* Garante que fica acima de outros elementos */
+    z-index: 999;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5) !important; /* Brilho vermelho */
 }
 
 /* Garante que scan-active sobrescreva outros estilos de foco */
-.scan-active.navigation-focus {
-    outline: 4px solid #ff6b6b !important;
-    background: rgba(255, 107, 107, 0.2) !important;
+.scan-active.navigation-focus,
+.scan-active:focus,
+.scan-active:hover {
+    outline: 4px solid #ff0000 !important;
+    outline-offset: 3px !important;
+    background: rgba(255, 0, 0, 0.2) !important;
+    border: 2px solid #ff0000 !important;
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.7) !important;
+    transform: scale(1.05) !important;
+}
+
+/* Estilos específicos para botões durante a varredura */
+.scan-active.menu-button,
+.scan-active.action-button,
+.scan-active.calc-button {
+    background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%) !important;
+    color: white !important;
+    font-weight: bold !important;
+}
+
+/* Estilos para botões de site durante varredura */
+.scan-active.site-button {
+    background: linear-gradient(135deg, #ff0000 0%, #990000 100%) !important;
+    color: white !important;
+}
+
+/* Estilos para categorias durante varredura */
+.scan-active.category-button {
+    background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%) !important;
+    color: white !important;
+}
+
+/* Estilos para frases durante varredura */
+.scan-active.phrase-button {
+    background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%) !important;
+    color: white !important;
+}
+
+/* Estilos para inputs durante varredura */
+.scan-active.text-input {
+    border: 3px solid #ff0000 !important;
+    background: #fff0f0 !important;
+    color: #000 !important;
 }
 
 /* Animação de pulsação para elemento sendo varrido */
 @keyframes scanPulse {
     0% { 
-        transform: scale(1); 
-        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
     }
     50% { 
-        transform: scale(1.02); /* Aumenta levemente */
-        box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); /* Efeito de onda */
+        transform: scale(1.08);
+        box-shadow: 0 0 0 15px rgba(255, 0, 0, 0.3);
     }
     100% { 
-        transform: scale(1); 
-        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
     }
 }
 
@@ -1004,4 +1060,31 @@ body {
 .action-button:disabled:hover {
     transform: none !important;
     box-shadow: none !important;
+}
+
+/* ===== CORREÇÕES DE ESPECIFICIDADE - VARREDURA ===== */
+
+/* Força a aplicação dos estilos de varredura */
+body .scan-active {
+    outline: 4px solid #ff0000 !important;
+    outline-offset: 3px !important;
+    border: 2px solid #ff0000 !important;
+    animation: scanPulse 1s ease-in-out infinite !important;
+}
+
+/* Remove qualquer outro estilo de foco durante a varredura */
+.scan-mode .scannable:focus,
+.scan-mode .scannable.navigation-focus {
+    outline: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+/* Aplica classe no body durante o modo de varredura */
+body.scan-mode {
+    cursor: not-allowed;
+}
+
+body.scan-mode .scannable {
+    cursor: pointer;
 }
