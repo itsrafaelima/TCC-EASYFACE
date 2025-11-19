@@ -130,6 +130,11 @@ function getCurrentFontSize() {
 function showApp(appId) {
     const previousApp = currentApp;
 
+    // Se estava no reprodutor de mídia e está saindo, para a mídia
+    if (previousApp === 'media-player-app' && appId !== 'media-player-app') {
+        stopMedia();
+    }
+
     // Esconde todos os aplicativos
     const apps = document.querySelectorAll('.app-container');
     apps.forEach(app => {
@@ -792,6 +797,9 @@ document.getElementById('media-input').addEventListener('change', function(e) {
     if (file) {
         const url = URL.createObjectURL(file);
 
+        // Para qualquer mídia que esteja tocando antes de carregar nova
+        stopMedia();
+
         // Verifica tipo de arquivo e escolhe player correto
         if (file.type.startsWith('audio/')) {
             const audioPlayer = document.getElementById('audio-player');
@@ -822,8 +830,8 @@ document.getElementById('media-input').addEventListener('change', function(e) {
             };
         }
 
-        document.getElementById('media-info').textContent = `Mídia "${file.name}" carregada e reproduzindo automaticamente.`;
-        speakFeedback(`Mídia carregada! Reproduzindo automaticamente`);
+        document.getElementById('media-info').textContent = `Mídia "${file.name}" carregada.`;
+        speakFeedback(`Mídia carregada!`);
     }
 });
 
@@ -950,6 +958,25 @@ function setupMediaPlayers() {
         updateStatus('Erro ao carregar vídeo');
         speakFeedback('Erro no arquivo de vídeo');
     });
+}
+
+function stopMedia() {
+    const audioPlayer = document.getElementById('audio-player');
+    const videoPlayer = document.getElementById('video-player');
+    
+    // Para a reprodução
+    audioPlayer.pause();
+    videoPlayer.pause();
+    
+    // Reseta o tempo para o início
+    audioPlayer.currentTime = 0;
+    videoPlayer.currentTime = 0;
+    
+    // Limpa a fonte (opcional - para liberar memória)
+    audioPlayer.src = '';
+    videoPlayer.src = '';
+    
+    console.log('Mídia parada automaticamente');
 }
 
 // ===== FUNÇÕES LEITOR DE PDF =====
@@ -2949,21 +2976,29 @@ document.addEventListener('keydown', function(e) {
         }
     }
 
-    // ESC volta ao menu ou desativa varredura
+        // ESC volta ao menu ou desativa varredura
     if (e.key === 'Escape') {
         e.preventDefault();
         if (scanMode) {
             if (currentApp !== 'welcome') {
-            // Se não está no menu, volta para o menu
-            showApp('welcome');
-            setTimeout(() => {
-                restartScanForCurrentApp(); // Reinicia varredura no menu
-            }, 200);
+                // Se não está no menu, volta para o menu
+                // Para a mídia se estiver no reprodutor
+                if (currentApp === 'media-player-app') {
+                    stopMedia();
+                }
+                showApp('welcome');
+                setTimeout(() => {
+                    restartScanForCurrentApp();
+                }, 200);
+            } else {
+                // Se já está no menu, desativa a varredura
+                toggleScanMode();
+            }
         } else {
-            // Se já está no menu, desativa a varredura
-            toggleScanMode();
-        }
-        } else {
+            // Para a mídia se estiver no reprodutor
+            if (currentApp === 'media-player-app') {
+                stopMedia();
+            }
             showApp('welcome');
             const firstButton = document.querySelector('.menu-button');
             if (firstButton) firstButton.focus();
