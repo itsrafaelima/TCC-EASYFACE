@@ -38,6 +38,10 @@ let pdfScale = 1.5; // Nível de zoom do PDF
 let customShortcuts = {}; // Atalhos de teclado personalizados pelo usuário
 let mediaFocusIndex = 0; // Índice do botão focado no player de mídia
 let mediaButtons = []; // Array de botões do player de mídia
+let siteFocusIndex = 0; // Índice do botão focado no lançador de sites
+let siteButtons = []; // Array de botões do lançador de sites
+let textEditorFocusIndex = 0; // Índice do elemento focado no editor de texto
+let textEditorButtons = []; // Array de botões no editor de texto
 
 // Frases pré-definidas para comunicação alternativa (CAA)
 let communicationPhrases = {
@@ -167,11 +171,14 @@ function showApp(appId) {
 function showTextEditor() {
     try {
         showApp('text-editor-app');
-        // Foca na área de texto quando o editor é aberto (exceto em modo varredura)
         setTimeout(() => {
-            const editorArea = document.querySelector('#text-editor-app textarea, #text-editor-app input, #text-editor-app [contenteditable="true"]');
-            if (editorArea && !scanMode) {
-                editorArea.focus();
+            updateTextEditorButtons(); // Inicializa navegação por setas
+            textEditorFocusIndex = 0;
+
+            const textArea = document.querySelector('#text-editor-app textarea');
+            if (textArea && !scanMode) {
+                textArea.focus();
+                highlightTextEditorElement(textArea);
             }
         }, 100);
     } catch (error) {
@@ -212,9 +219,13 @@ function showSiteLauncher() {
     try {
         showApp('site-launcher-app');
         setTimeout(() => {
+            updateSiteButtons(); // Inicializa navegação por setas
+            siteFocusIndex = 0;
+
             const googleButton = document.querySelector('.site-button[onclick*="google.com"]');
             if (googleButton && !scanMode) {
                 googleButton.focus();
+                highlightSiteElement(googleButton);
             }
         }, 100);
     } catch (error) {
@@ -792,7 +803,7 @@ function showMediaPlayer() {
  * Event listener para carregamento de arquivos de mídia
  * Detecta se é áudio ou vídeo e carrega no player apropriado
  */
-document.getElementById('media-input').addEventListener('change', function(e) {
+document.getElementById('media-input').addEventListener('change', function (e) {
     const file = e.target.files[0];
     if (file) {
         const url = URL.createObjectURL(file);
@@ -806,23 +817,23 @@ document.getElementById('media-input').addEventListener('change', function(e) {
             audioPlayer.classList.remove('hidden');
             document.getElementById('video-player').classList.add('hidden');
             audioPlayer.src = url;
-            
+
             // Reproduz automaticamente quando o áudio estiver carregado
-            audioPlayer.onloadeddata = function() {
+            audioPlayer.onloadeddata = function () {
                 audioPlayer.play().catch(error => {
                     console.log('Reprodução automática bloqueada:', error);
                     updateStatus('Clique no botão play para reproduzir');
                 });
             };
-            
+
         } else if (file.type.startsWith('video/')) {
             const videoPlayer = document.getElementById('video-player');
             videoPlayer.classList.remove('hidden');
             document.getElementById('audio-player').classList.add('hidden');
             videoPlayer.src = url;
-            
+
             // Reproduz automaticamente quando o vídeo estiver carregado
-            videoPlayer.onloadeddata = function() {
+            videoPlayer.onloadeddata = function () {
                 videoPlayer.play().catch(error => {
                     console.log('Reprodução automática bloqueada:', error);
                     updateStatus('Clique no botão play para reproduzir');
@@ -887,7 +898,7 @@ function highlightMediaElement(element) {
 function playMedia() {
     const audioPlayer = document.getElementById('audio-player');
     const videoPlayer = document.getElementById('video-player');
-    
+
     if (!audioPlayer.classList.contains('hidden')) {
         audioPlayer.play().then(() => {
             updateStatus('Áudio reproduzindo');
@@ -916,7 +927,7 @@ function playMedia() {
 function pauseMedia() {
     const audioPlayer = document.getElementById('audio-player');
     const videoPlayer = document.getElementById('video-player');
-    
+
     if (!audioPlayer.classList.contains('hidden')) {
         audioPlayer.pause();
         updateStatus('Áudio pausado');
@@ -936,25 +947,25 @@ function pauseMedia() {
 function setupMediaPlayers() {
     const audioPlayer = document.getElementById('audio-player');
     const videoPlayer = document.getElementById('video-player');
-    
+
     // Evento quando a mídia termina de tocar
-    audioPlayer.addEventListener('ended', function() {
+    audioPlayer.addEventListener('ended', function () {
         updateStatus('Áudio concluído');
         speakFeedback('Áudio concluído');
     });
-    
-    videoPlayer.addEventListener('ended', function() {
+
+    videoPlayer.addEventListener('ended', function () {
         updateStatus('Vídeo concluído');
         speakFeedback('Vídeo concluído');
     });
-    
+
     // Evento quando ocorre erro na reprodução
-    audioPlayer.addEventListener('error', function() {
+    audioPlayer.addEventListener('error', function () {
         updateStatus('Erro ao carregar áudio');
         speakFeedback('Erro no arquivo de áudio');
     });
-    
-    videoPlayer.addEventListener('error', function() {
+
+    videoPlayer.addEventListener('error', function () {
         updateStatus('Erro ao carregar vídeo');
         speakFeedback('Erro no arquivo de vídeo');
     });
@@ -963,19 +974,19 @@ function setupMediaPlayers() {
 function stopMedia() {
     const audioPlayer = document.getElementById('audio-player');
     const videoPlayer = document.getElementById('video-player');
-    
+
     // Para a reprodução
     audioPlayer.pause();
     videoPlayer.pause();
-    
+
     // Reseta o tempo para o início
     audioPlayer.currentTime = 0;
     videoPlayer.currentTime = 0;
-    
+
     // Limpa a fonte (opcional - para liberar memória)
     audioPlayer.src = '';
     videoPlayer.src = '';
-    
+
     console.log('Mídia parada automaticamente');
 }
 
@@ -1622,6 +1633,52 @@ function deleteLast() {
     playFeedbackSound();
 }
 
+// ===== NAVEGAÇÃO NO EDITOR DE TEXTO =====
+
+/**
+ * Atualiza a lista de elementos navegáveis no editor de texto
+ */
+function updateTextEditorButtons() {
+    textEditorButtons = Array.from(document.querySelectorAll('#text-editor-app textarea, #text-editor-app .action-button'));
+}
+
+/**
+ * Move o foco entre elementos no editor de texto usando setas
+ * @param {number} direction - 1 para avançar, -1 para retroceder
+ */
+function moveTextEditorFocus(direction) {
+    if (textEditorButtons.length === 0) return;
+
+    // Remove destaque do elemento atual
+    if (textEditorButtons[textEditorFocusIndex]) {
+        textEditorButtons[textEditorFocusIndex].classList.remove('navigation-focus');
+    }
+
+    // Calcula novo índice (com wrap-around circular)
+    textEditorFocusIndex = (textEditorFocusIndex + direction + textEditorButtons.length) % textEditorButtons.length;
+
+    // Aplica foco e destaque ao novo elemento
+    if (textEditorButtons[textEditorFocusIndex]) {
+        textEditorButtons[textEditorFocusIndex].focus();
+        highlightTextEditorElement(textEditorButtons[textEditorFocusIndex]);
+    }
+}
+
+/**
+ * Destaca visualmente um elemento no editor de texto
+ * @param {HTMLElement} element - Elemento a ser destacado
+ */
+function highlightTextEditorElement(element) {
+    // Remove destaque anterior
+    document.querySelectorAll('#text-editor-app textarea, #text-editor-app .action-button').forEach(el => {
+        el.classList.remove('navigation-focus');
+    });
+    // Adiciona destaque ao elemento atual
+    if (element) {
+        element.classList.add('navigation-focus');
+    }
+}
+
 // ===== NAVEGAÇÃO POR SETAS NA CALCULADORA =====
 
 /**
@@ -1710,10 +1767,10 @@ function highlightSidebarElement(element) {
  */
 function initSidebarNavigation() {
     updateSidebarButtons();
-    
+
     // Adiciona event listeners para foco nos botões da sidebar
     sidebarButtons.forEach((button, index) => {
-        button.addEventListener('focus', function() {
+        button.addEventListener('focus', function () {
             sidebarFocusIndex = index;
             highlightSidebarElement(this);
         });
@@ -1751,6 +1808,50 @@ function launchCustomSite() {
 
     launchSite(finalUrl);
     updateStatus('Site aberto. Cuidado com sites desconhecidos.');
+}
+
+/**
+ * Atualiza a lista de botões navegáveis no launcher de sites
+ */
+function updateSiteButtons() {
+    siteButtons = Array.from(document.querySelectorAll('#site-launcher-app .site-button, #site-launcher-app .action-button, #site-launcher-app .text-input'));
+}
+
+/**
+ * Move o foco entre elementos no launcher de sites usando setas
+ * @param {number} direction - 1 para avançar, -1 para retroceder
+ */
+function moveSiteFocus(direction) {
+    if (siteButtons.length === 0) return;
+
+    // Remove destaque do elemento atual
+    if (siteButtons[siteFocusIndex]) {
+        siteButtons[siteFocusIndex].classList.remove('navigation-focus');
+    }
+
+    // Calcula novo índice (com wrap-around circular)
+    siteFocusIndex = (siteFocusIndex + direction + siteButtons.length) % siteButtons.length;
+
+    // Aplica foco e destaque ao novo elemento
+    if (siteButtons[siteFocusIndex]) {
+        siteButtons[siteFocusIndex].focus();
+        highlightSiteElement(siteButtons[siteFocusIndex]);
+    }
+}
+
+/**
+ * Destaca visualmente um elemento no launcher de sites
+ * @param {HTMLElement} element - Elemento a ser destacado
+ */
+function highlightSiteElement(element) {
+    // Remove destaque anterior
+    document.querySelectorAll('#site-launcher-app .site-button, #site-launcher-app .action-button, #site-launcher-app .text-input').forEach(el => {
+        el.classList.remove('navigation-focus');
+    });
+    // Adiciona destaque ao elemento atual
+    if (element) {
+        element.classList.add('navigation-focus');
+    }
 }
 
 // ===== FUNÇÕES DE ACESSIBILIDADE =====
@@ -1834,7 +1935,7 @@ function toggleScanMode() {
 
     if (scanMode) {
         // Adiciona classe no body
-        document.body.classList.add('scan-mode'); 
+        document.body.classList.add('scan-mode');
         // Para a varredura atual se estiver rodando
         stopScanning();
 
@@ -1894,14 +1995,14 @@ function startScanning() {
     // Coleta elementos visíveis e habilitados
     scanElements = Array.from(document.querySelectorAll(selector)).filter(el => {
         const style = getComputedStyle(el);
-        const isVisible = 
+        const isVisible =
             !el.disabled &&
             el.offsetWidth > 0 &&
             el.offsetHeight > 0 &&
             style.visibility !== 'hidden' &&
             style.display !== 'none' &&
             style.opacity !== '0';
-        
+
         return isVisible;
     });
 
@@ -2001,10 +2102,10 @@ function nextScanElement() {
 
         // Avança para o próximo elemento
         currentScanIndex = (currentScanIndex + 1) % scanElements.length;
-        
+
         // Destaca o novo elemento
         highlightCurrentElement();
-        
+
     } catch (error) {
         console.error('Erro em nextScanElement:', error);
         // Reinicia a varredura em caso de erro
@@ -2024,7 +2125,7 @@ function highlightCurrentElement() {
     if (scanElements[currentScanIndex]) {
         try {
             const element = scanElements[currentScanIndex];
-            
+
             // Remove destaque anterior
             scanElements.forEach(el => {
                 el.classList.remove('scan-active');
@@ -2057,11 +2158,11 @@ function highlightCurrentElement() {
             }
 
             // Atualiza status
-            const label = element.getAttribute('aria-label') || 
-                         element.textContent || 
-                         element.placeholder || 
-                         element.value ||
-                         'Elemento';
+            const label = element.getAttribute('aria-label') ||
+                element.textContent ||
+                element.placeholder ||
+                element.value ||
+                'Elemento';
             updateStatus(`Varredura: ${label.toString().trim().substring(0, 50)} - Pressione ENTER para selecionar`);
 
         } catch (error) {
@@ -2079,25 +2180,25 @@ function debugScanMode() {
     console.log('currentScanIndex:', currentScanIndex);
     console.log('scanPaused:', scanPaused);
     console.log('scanSpeed:', scanSpeed);
-    
+
     // Verifica elementos atuais
     let selector = '.scannable';
     if (currentApp !== 'welcome') {
         selector = `#${currentApp} .scannable`;
     }
-    
+
     const allScannable = Array.from(document.querySelectorAll(selector));
     console.log('Todos elementos scannable:', allScannable.length);
-    
+
     allScannable.forEach((el, idx) => {
         const style = getComputedStyle(el);
-        const isVisible = 
+        const isVisible =
             !el.disabled &&
             el.offsetWidth > 0 &&
             el.offsetHeight > 0 &&
             style.visibility !== 'hidden' &&
             style.display !== 'none';
-        
+
         console.log(`${idx}: ${el.tagName}.${el.className} - Visible: ${isVisible} - Text: "${el.textContent?.substring(0, 30)}"`);
     });
 }
@@ -2155,7 +2256,7 @@ function restartScanForCurrentApp() {
     if (!scanMode) return;
 
     console.log('Reiniciando varredura para o app:', currentApp);
-    
+
     // Para a varredura atual
     if (scanInterval) {
         clearInterval(scanInterval);
@@ -2182,14 +2283,14 @@ function restartScanForCurrentApp() {
     // Coleta elementos do NOVO app
     scanElements = Array.from(document.querySelectorAll(selector)).filter(el => {
         const style = getComputedStyle(el);
-        const isVisible = 
+        const isVisible =
             !el.disabled &&
             el.offsetWidth > 0 &&
             el.offsetHeight > 0 &&
             style.visibility !== 'hidden' &&
             style.display !== 'none' &&
             style.opacity !== '0';
-        
+
         return isVisible;
     });
 
@@ -2212,7 +2313,7 @@ function restartScanForCurrentApp() {
                 nextScanElement();
             }
         }, scanSpeed);
-        
+
         // Destaca o primeiro elemento do NOVO app
         highlightCurrentElement();
         updateStatus(`Varredura em ${getAppName(currentApp)} - ${scanElements.length} opções - ENTER para selecionar`);
@@ -2565,7 +2666,7 @@ function initCalculator() {
  * Handler principal de eventos de teclado
  * Gerencia navegação, atalhos e controles especiais
  */
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function (e) {
     // Atalho de debug: Ctrl+Shift+D
     if (e.ctrlKey && e.shiftKey && e.key === 'D') {
         e.preventDefault();
@@ -2617,7 +2718,140 @@ document.addEventListener('keydown', function(e) {
         }
     }
 
-        // ===== NAVEGAÇÃO NO REPRODUTOR DE MÍDIA =====
+    // ===== NAVEGAÇÃO NO EDITOR DE TEXTO =====
+    else if (currentApp === 'text-editor-app') {
+        const key = e.key;
+        const focused = document.activeElement;
+        const isTextAreaFocused = focused && focused.id === 'text-area';
+
+        // Se estiver na textarea, permite edição normal mas também navegação com Ctrl+setas
+        if (isTextAreaFocused) {
+            // Ctrl + setas para navegar entre elementos
+            if (e.ctrlKey && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+                e.preventDefault();
+
+                if (key === 'ArrowDown' || key === 'ArrowRight') {
+                    moveTextEditorFocus(1); // Próximo elemento
+                } else if (key === 'ArrowUp' || key === 'ArrowLeft') {
+                    moveTextEditorFocus(-1); // Elemento anterior
+                }
+                return;
+            }
+
+            // Permite edição normal na textarea
+            return;
+        }
+
+        // Navegação com setas entre elementos (quando não está na textarea)
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+            e.preventDefault();
+
+            if (key === 'ArrowDown' || key === 'ArrowRight') {
+                moveTextEditorFocus(1); // Próximo elemento
+            } else if (key === 'ArrowUp' || key === 'ArrowLeft') {
+                moveTextEditorFocus(-1); // Elemento anterior
+            }
+            return;
+        }
+
+        // Tab atualiza lista de elementos
+        if (key === 'Tab') {
+            setTimeout(() => {
+                updateTextEditorButtons();
+                const currentFocused = document.activeElement;
+                const newIndex = textEditorButtons.indexOf(currentFocused);
+                if (newIndex !== -1) {
+                    textEditorFocusIndex = newIndex;
+                    highlightTextEditorElement(currentFocused);
+                }
+            }, 10);
+            return;
+        }
+
+        // ESC volta ao menu
+        if (key === 'Escape') {
+            e.preventDefault();
+            showApp('welcome');
+            const firstButton = document.querySelector('.menu-button');
+            if (firstButton) firstButton.focus();
+            return;
+        }
+
+        // Enter/Espaço ativa botão (quando um botão está focado)
+        if ((key === 'Enter' || key === ' ') &&
+            document.activeElement.classList.contains('action-button')) {
+            e.preventDefault();
+            document.activeElement.click();
+            return;
+        }
+
+        // Tecla "E" foca na textarea (atalho rápido)
+        if (key === 'e' || key === 'E') {
+            e.preventDefault();
+            const textArea = document.getElementById('text-area');
+            if (textArea) {
+                textArea.focus();
+                highlightTextEditorElement(textArea);
+                const index = textEditorButtons.indexOf(textArea);
+                if (index !== -1) {
+                    textEditorFocusIndex = index;
+                }
+            }
+            return;
+        }
+    }
+
+
+    // ===== NAVEGAÇÃO NO LAUNCHER DE SITES =====
+    else if (currentApp === 'site-launcher-app') {
+        const key = e.key;
+
+        // Navegação com setas entre elementos
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+            e.preventDefault();
+
+            if (key === 'ArrowDown' || key === 'ArrowRight') {
+                moveSiteFocus(1); // Próximo elemento
+            } else if (key === 'ArrowUp' || key === 'ArrowLeft') {
+                moveSiteFocus(-1); // Elemento anterior
+            }
+            return;
+        }
+
+        // Tab atualiza lista de botões
+        if (key === 'Tab') {
+            setTimeout(() => {
+                updateSiteButtons();
+                const currentFocused = document.activeElement;
+                const newIndex = siteButtons.indexOf(currentFocused);
+                if (newIndex !== -1) {
+                    siteFocusIndex = newIndex;
+                    highlightSiteElement(currentFocused);
+                }
+            }, 10);
+            return;
+        }
+
+        // ESC volta ao menu
+        if (key === 'Escape') {
+            e.preventDefault();
+            showApp('welcome');
+            const firstButton = document.querySelector('.menu-button');
+            if (firstButton) firstButton.focus();
+            return;
+        }
+
+        // Enter/Espaço ativa botão
+        if ((key === 'Enter' || key === ' ') &&
+            (document.activeElement.classList.contains('site-button') ||
+                document.activeElement.classList.contains('action-button'))) {
+            e.preventDefault();
+            document.activeElement.click();
+            return;
+        }
+    }
+
+    // ===== NAVEGAÇÃO NO REPRODUTOR DE MÍDIA =====
     else if (currentApp === 'media-player-app') {
         const key = e.key;
 
@@ -2657,7 +2891,7 @@ document.addEventListener('keydown', function(e) {
         }
 
         // Enter/Espaço ativa botão
-        if ((key === 'Enter' || key === ' ') && 
+        if ((key === 'Enter' || key === ' ') &&
             document.activeElement.classList.contains('action-button')) {
             e.preventDefault();
             document.activeElement.click();
@@ -2976,7 +3210,7 @@ document.addEventListener('keydown', function(e) {
         }
     }
 
-        // ESC volta ao menu ou desativa varredura
+    // ESC volta ao menu ou desativa varredura
     if (e.key === 'Escape') {
         e.preventDefault();
         if (scanMode) {
@@ -3029,7 +3263,7 @@ document.addEventListener('DOMContentLoaded', function () {
 /**
  * Executado quando todos os recursos estão carregados
  */
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     // Configura reconhecimento de voz
     setupVoiceRecognition();
 
@@ -3099,7 +3333,7 @@ function setupNavigation() {
 }
 
 // Chama a configuração completa quando o DOM estiver pronto
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     setupNavigation();
     setupPdfReader();
 });

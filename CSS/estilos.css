@@ -2,19 +2,26 @@
 
 /* Reset básico - remove margens e paddings padrão do navegador */
 * {
-    box-sizing: border-box; /* Inclui padding e border no tamanho total do elemento */
+    box-sizing: border-box;
+    /* Inclui padding e border no tamanho total do elemento */
     margin: 0;
     padding: 0;
 }
 
 /* Estilo do corpo da página */
 body {
-    font-family: Arial, sans-serif; /* Fonte principal */
-    font-size: 18px; /* Tamanho base da fonte */
-    line-height: 1.6; /* Espaçamento entre linhas */
-    background: linear-gradient(135deg, #eaa503 0%, #eaa503 50% , #085e00 100%); /* Gradiente amarelo-verde */
-    color: #333; /* Cor do texto padrão */
-    min-height: 100vh; /* Altura mínima = 100% da altura da tela */
+    font-family: Arial, sans-serif;
+    /* Fonte principal */
+    font-size: 18px;
+    /* Tamanho base da fonte */
+    line-height: 1.6;
+    /* Espaçamento entre linhas */
+    background: linear-gradient(135deg, #eaa503 0%, #eaa503 50%, #085e00 100%);
+    /* Gradiente amarelo-verde */
+    color: #333;
+    /* Cor do texto padrão */
+    min-height: 100vh;
+    /* Altura mínima = 100% da altura da tela */
 }
 
 /* Container base para aplicativos */
@@ -32,7 +39,8 @@ body {
     padding: 0 !important;
     margin: -1px !important;
     overflow: hidden !important;
-    clip: rect(0, 0, 0, 0) !important; /* Recorta o elemento */
+    clip: rect(0, 0, 0, 0) !important;
+    /* Recorta o elemento */
     white-space: nowrap !important;
     border: 0 !important;
 }
@@ -40,7 +48,8 @@ body {
 /* Outra classe para ocultar elementos visualmente (método alternativo) */
 .visually-hidden {
     position: absolute;
-    left: -10000px; /* Move o elemento para fora da tela */
+    left: -10000px;
+    /* Move o elemento para fora da tela */
     top: auto;
     width: 1px;
     height: 1px;
@@ -51,31 +60,39 @@ body {
 
 /* Estilo da barra superior do site */
 .header {
-    background: rgba(255, 255, 255, 0.95); /* Fundo branco semi-transparente */
+    background: rgba(255, 255, 255, 0.95);
+    /* Fundo branco semi-transparente */
     padding: 1rem;
     text-align: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Sombra sutil */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Sombra sutil */
 }
 
 /* Título no cabeçalho */
 .header h1 {
-    color: #4a5568; /* Cinza escuro */
+    color: #4a5568;
+    /* Cinza escuro */
     margin-bottom: 0.5rem;
 }
 
 /* Texto de instruções no cabeçalho */
 .instructions {
-    color: #666; /* Cinza médio */
-    font-size: 0.9rem; /* Texto um pouco menor */
+    color: #666;
+    /* Cinza médio */
+    font-size: 0.9rem;
+    /* Texto um pouco menor */
 }
 
 /* ===== LAYOUT PRINCIPAL ===== */
 
 /* Container que organiza sidebar + área de conteúdo */
 .main-container {
-    display: flex; /* Layout flexível (lado a lado) */
-    min-height: calc(100vh - 120px); /* Altura total menos cabeçalho e rodapé */
-    gap: 1rem; /* Espaço entre sidebar e conteúdo */
+    display: flex;
+    /* Layout flexível (lado a lado) */
+    min-height: calc(100vh - 120px);
+    /* Altura total menos cabeçalho e rodapé */
+    gap: 1rem;
+    /* Espaço entre sidebar e conteúdo */
     padding: 1rem;
 }
 
@@ -83,11 +100,15 @@ body {
 
 /* Barra lateral com menu de navegação */
 .sidebar {
-    width: 280px; /* Largura fixa */
-    background: rgba(255, 255, 255, 0.95); /* Fundo branco semi-transparente */
-    border-radius: 10px; /* Bordas arredondadas */
+    width: 280px;
+    /* Largura fixa */
+    background: rgba(255, 255, 255, 0.95);
+    /* Fundo branco semi-transparente */
+    border-radius: 10px;
+    /* Bordas arredondadas */
     padding: 1.5rem;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Sombra para profundidade */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* Sombra para profundidade */
 }
 
 /* Título da sidebar */
@@ -101,19 +122,22 @@ body {
 
 /* Área principal onde os aplicativos são exibidos */
 .content-area {
-    flex: 1; /* Ocupa todo o espaço restante */
+    flex: 1;
+    /* Ocupa todo o espaço restante */
     background: rgba(255, 255, 255, 0.95);
     border-radius: 10px;
     padding: 2rem;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    overflow-y: auto; /* Permite rolagem vertical se necessário */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    /* Permite rolagem vertical se necessário */
 }
 
 /* ===== BARRA DE STATUS (RODAPÉ) ===== */
 
 /* Barra fixa no rodapé mostrando mensagens de status */
 .status-bar {
-    background: #4a5568; /* Fundo cinza escuro */
+    background: #4a5568;
+    /* Fundo cinza escuro */
     color: white;
     padding: 10px 20px;
     text-align: center;
@@ -123,38 +147,58 @@ body {
 /* ===== BOTÕES GERAIS ===== */
 
 /* Estilo base para todos os tipos de botões */
-.menu-button, .action-button, .calc-button, .key, .scan-control-button {
-    background: linear-gradient(135deg, #d08f26 0%, #58a24b 100%); /* Gradiente laranja-verde */
+.menu-button,
+.action-button,
+.calc-button,
+.key,
+.scan-control-button {
+    background: linear-gradient(135deg, #d08f26 0%, #58a24b 100%);
+    /* Gradiente laranja-verde */
     color: white;
     border: none;
     padding: 12px 20px;
     margin: 5px;
-    border-radius: 8px; /* Bordas arredondadas */
-    cursor: pointer; /* Mostra cursor de mão ao passar */
+    border-radius: 8px;
+    /* Bordas arredondadas */
+    cursor: pointer;
+    /* Mostra cursor de mão ao passar */
     font-size: 16px;
     font-weight: bold;
-    transition: all 0.3s ease; /* Animação suave nas mudanças */
-    min-height: 48px; /* Altura mínima para acessibilidade */
+    transition: all 0.3s ease;
+    /* Animação suave nas mudanças */
+    min-height: 48px;
+    /* Altura mínima para acessibilidade */
 }
 
 /* Botões do menu ocupam toda a largura */
 .menu-button {
     width: 100%;
-    text-align: left; /* Texto alinhado à esquerda */
+    text-align: left;
+    /* Texto alinhado à esquerda */
     margin-bottom: 10px;
 }
 
 /* Efeito hover (quando o mouse passa sobre o botão) */
-.menu-button:hover, .action-button:hover, .calc-button:hover, .key:hover {
-    transform: translateY(-2px); /* Move o botão 2px para cima */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Aumenta a sombra */
+.menu-button:hover,
+.action-button:hover,
+.calc-button:hover,
+.key:hover {
+    transform: translateY(-2px);
+    /* Move o botão 2px para cima */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    /* Aumenta a sombra */
 }
 
 /* Estilo de foco para navegação por teclado (importante para acessibilidade) */
-.menu-button:focus, .action-button:focus, .key:focus, 
-.text-input:focus, .scannable:focus {
-    outline: 3px solid #ffd700; /* Borda amarela de 3px */
-    outline-offset: 2px; /* Espaço entre o elemento e a borda */
+.menu-button:focus,
+.action-button:focus,
+.key:focus,
+.text-input:focus,
+.scannable:focus {
+    outline: 3px solid #ffd700;
+    /* Borda amarela de 3px */
+    outline-offset: 2px;
+    /* Espaço entre o elemento e a borda */
 }
 
 /* ===== INPUTS GERAIS ===== */
@@ -163,7 +207,8 @@ body {
 .text-input {
     width: 100%;
     padding: 15px;
-    border: 2px solid #ddd; /* Borda cinza clara */
+    border: 2px solid #ddd;
+    /* Borda cinza clara */
     border-radius: 8px;
     font-size: 16px;
     margin: 10px 0;
@@ -192,7 +237,8 @@ body {
 
 /* Caixa destacada com instruções iniciais */
 .welcome-box {
-    background: linear-gradient(135deg, #f38a00 0%, #23d100 100%); /* Gradiente laranja-verde */
+    background: linear-gradient(135deg, #f38a00 0%, #23d100 100%);
+    /* Gradiente laranja-verde */
     color: white;
     padding: 2rem;
     border-radius: 15px;
@@ -200,8 +246,33 @@ body {
     max-width: 500px;
 }
 
-/* ===== EDITOR DE TEXTO ===== */
-/* Os estilos específicos já estão cobertos pelos estilos gerais de text-input e action-button */
+/* ===== NAVEGAÇÃO NO EDITOR DE TEXTO ===== */
+
+/* Estilo especial para elementos do editor de texto em foco durante navegação */
+#text-editor-app .action-button.navigation-focus,
+#text-editor-app textarea.navigation-focus {
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
+    color: #333 !important;
+    border: 2px solid #333 !important;
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    font-weight: bold;
+}
+
+/* Estilo específico para textarea quando está em foco de navegação */
+#text-editor-app textarea.navigation-focus {
+    border: 3px solid #ffd700 !important;
+    background: #fff9e6 !important;
+    color: #333 !important;
+}
+
+/* Estilo para botões quando estão em foco de navegação */
+#text-editor-app .action-button.navigation-focus {
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
+    color: #333 !important;
+    border: 2px solid #333 !important;
+    font-weight: bold;
+}
 
 /* ===== EDITOR DE ARQUIVOS ===== */
 
@@ -209,7 +280,8 @@ body {
 .file-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px; /* Espaço entre os botões */
+    gap: 10px;
+    /* Espaço entre os botões */
     margin-bottom: 15px;
     align-items: center;
 }
@@ -222,7 +294,8 @@ body {
 /* Área de informações sobre o arquivo */
 .file-info {
     padding: 12px;
-    background-color: #f8f9fa; /* Fundo cinza muito claro */
+    background-color: #f8f9fa;
+    /* Fundo cinza muito claro */
     border-radius: 8px;
     margin: 15px 0;
     min-height: 24px;
@@ -267,9 +340,17 @@ body {
 }
 
 @keyframes pulse-unsaved {
-    0% { opacity: 1; }
-    50% { opacity: 0.8; }
-    100% { opacity: 1; }
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 /* Info de arquivo com mudanças */
@@ -318,27 +399,33 @@ body {
 
 /* Efeito hover para botões da calculadora */
 .calc-button:hover {
-    filter: brightness(1.1); /* Aumenta o brilho em 10% */
+    filter: brightness(1.1);
+    /* Aumenta o brilho em 10% */
 }
 
 /* Foco nos botões da calculadora */
 .calc-button:focus {
     outline: 3px solid #ffd700;
     outline-offset: 2px;
-    transform: scale(1.05); /* Aumenta o tamanho em 5% */
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); /* Brilho dourado */
+    transform: scale(1.05);
+    /* Aumenta o tamanho em 5% */
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    /* Brilho dourado */
 }
 
 /* Efeito ao clicar (botão pressionado) */
 .calc-button:active {
-    transform: scale(0.95); /* Reduz o tamanho em 5% */
+    transform: scale(0.95);
+    /* Reduz o tamanho em 5% */
     transition: transform 0.1s;
 }
 
 /* Estilo especial para botão em foco durante navegação */
 .calc-button.navigation-focus {
-    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important; /* Gradiente dourado */
-    color: #333 !important; /* Texto escuro */
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
+    /* Gradiente dourado */
+    color: #333 !important;
+    /* Texto escuro */
     font-weight: bold;
     border: 2px solid #333 !important;
 }
@@ -351,7 +438,8 @@ body {
 /* Botão de igual (=) em verde e ocupa 2 linhas */
 .calc-button.equals {
     background: linear-gradient(135deg, #26de81 0%, #20bf6b 100%);
-    grid-row: span 2; /* Ocupa 2 linhas na grade */
+    grid-row: span 2;
+    /* Ocupa 2 linhas na grade */
 }
 
 /* Display da calculadora (mostra números e resultado) */
@@ -359,21 +447,27 @@ body {
     font-size: 2.2rem;
     padding: 15px;
     margin-bottom: 20px;
-    background: #222; /* Fundo preto */
-    color: #0f0; /* Texto verde fosforescente (estilo calculadora antiga) */
-    font-family: 'Courier New', monospace; /* Fonte monoespaçada */
+    background: #222;
+    /* Fundo preto */
+    color: #0f0;
+    /* Texto verde fosforescente (estilo calculadora antiga) */
+    font-family: 'Courier New', monospace;
+    /* Fonte monoespaçada */
     border-radius: 5px;
     min-height: 80px;
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* Alinha números à direita */
+    justify-content: flex-end;
+    /* Alinha números à direita */
 }
 
 /* Grade de botões da calculadora */
 .calculator {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 colunas de tamanho igual */
-    gap: 10px; /* Espaço entre botões */
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 colunas de tamanho igual */
+    gap: 10px;
+    /* Espaço entre botões */
     max-width: 400px;
 }
 
@@ -382,7 +476,8 @@ body {
 /* Grade de botões de sites */
 .sites-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Colunas responsivas */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    /* Colunas responsivas */
     gap: 15px;
     margin: 20px 0;
 }
@@ -390,7 +485,8 @@ body {
 /* Botão individual de site */
 .site-button {
     display: flex;
-    flex-direction: column; /* Ícone em cima, nome embaixo */
+    flex-direction: column;
+    /* Ícone em cima, nome embaixo */
     align-items: center;
     padding: 15px 10px;
     background: linear-gradient(135deg, #d08f26 0%, #58a24b 100%);
@@ -404,8 +500,9 @@ body {
 
 /* Efeito hover para botões de site */
 .site-button:hover {
-    transform: translateY(-3px); /* Move 3px para cima */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transform: translateY(-3px);
+    /* Move 3px para cima */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Ícone do site (emoji) */
@@ -449,7 +546,8 @@ body {
     height: 500px;
     padding: 20px;
     margin-top: 15px;
-    overflow: auto; /* Permite rolagem */
+    overflow: auto;
+    /* Permite rolagem */
 }
 
 /* Iframe para sites externos */
@@ -467,6 +565,32 @@ body {
     margin-top: 100px;
 }
 
+/* Estilo especial para elementos do launcher de sites em foco durante navegação */
+#site-launcher-app .site-button.navigation-focus,
+#site-launcher-app .action-button.navigation-focus,
+#site-launcher-app .text-input.navigation-focus {
+    background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
+    color: #333 !important;
+    border: 2px solid #333 !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    font-weight: bold;
+}
+
+/* Estilo específico para inputs quando estão em foco de navegação */
+#site-launcher-app .text-input.navigation-focus {
+    border: 3px solid #ffd700 !important;
+    background: #fff9e6 !important;
+    color: #333 !important;
+}
+
+/* Estilo para botões de site durante navegação */
+#site-launcher-app .site-button.navigation-focus .site-icon,
+#site-launcher-app .site-button.navigation-focus .site-name {
+    color: #333 !important;
+    font-weight: bold;
+}
+
 /* ===== REPRODUTOR DE MÍDIA ===== */
 
 /* Container dos controles de mídia */
@@ -478,11 +602,13 @@ body {
 .media-container {
     width: 100%;
     max-width: 800px;
-    margin: 0 auto; /* Centraliza horizontalmente */
+    margin: 0 auto;
+    /* Centraliza horizontalmente */
 }
 
 /* Estilo dos elementos de áudio e vídeo */
-.media-container audio, .media-container video {
+.media-container audio,
+.media-container video {
     width: 100%;
     border-radius: 8px;
 }
@@ -519,7 +645,8 @@ body {
 /* Container dos controles de navegação do PDF */
 .pdf-controls {
     display: flex;
-    flex-wrap: wrap; /* Permite quebra de linha em telas pequenas */
+    flex-wrap: wrap;
+    /* Permite quebra de linha em telas pequenas */
     gap: 10px;
     margin-bottom: 15px;
     padding: 10px;
@@ -539,11 +666,13 @@ body {
 /* Container onde o PDF é renderizado */
 .pdf-container {
     width: 100%;
-    overflow: auto; /* Permite rolagem */
+    overflow: auto;
+    /* Permite rolagem */
     border: 1px solid #ddd;
     border-radius: 8px;
     margin: 15px 0;
-    background: #525659; /* Fundo Cinza */
+    background: #525659;
+    /* Fundo Cinza */
     min-height: 600px;
     display: flex;
     justify-content: center;
@@ -553,7 +682,8 @@ body {
 /* Canvas onde o PDF é desenhado */
 #pdf-canvas {
     margin: 20px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra para simular papel */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Sombra para simular papel */
     background: white;
 }
 
@@ -597,13 +727,15 @@ body {
     font-size: 1.2rem;
     display: flex;
     align-items: center;
-    justify-content: center; /* Centraliza o texto */
+    justify-content: center;
+    /* Centraliza o texto */
 }
 
 /* Grade de categorias de frases */
 .communication-categories {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 colunas */
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 colunas */
     gap: 15px;
     margin-bottom: 20px;
 }
@@ -633,13 +765,13 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Efeito hover para botões de categoria */
 .category-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Foco em botões de categoria */
@@ -653,20 +785,23 @@ body {
     background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%) !important;
     color: #333 !important;
     border: 2px solid #333;
-    transform: scale(1.05); /* Aumenta levemente */
+    transform: scale(1.05);
+    /* Aumenta levemente */
 }
 
 /* Container das frases dentro de cada categoria */
 .phrases-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 colunas */
     gap: 12px;
 }
 
 /* Botões individuais de frases */
 .phrase-button {
     padding: 15px 10px;
-    background: linear-gradient(135deg, #cdc54e 0%, #61a044 100%); /* Gradiente amarelo-verde */
+    background: linear-gradient(135deg, #cdc54e 0%, #61a044 100%);
+    /* Gradiente amarelo-verde */
     color: white;
     border: none;
     border-radius: 8px;
@@ -679,13 +814,13 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Efeito hover para botões de frases */
 .phrase-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Foco em botões de frases */
@@ -789,7 +924,8 @@ body {
     padding: 20px;
     background: #f8f9fa;
     border-radius: 8px;
-    border-left: 4px solid #667eea; /* Barra colorida à esquerda */
+    border-left: 4px solid #667eea;
+    /* Barra colorida à esquerda */
 }
 
 /* Títulos das seções de ajuda */
@@ -808,18 +944,21 @@ body {
 /* Link "Pular para conteúdo" (importante para acessibilidade) */
 .skip-link {
     position: absolute;
-    top: -50px; /* Escondido acima da tela por padrão */
+    top: -50px;
+    /* Escondido acima da tela por padrão */
     left: 0;
     background: #000000;
     color: #ffffff !important;
     padding: 14px 24px;
     text-decoration: none;
     border-radius: 0 0 8px 0;
-    z-index: 10000; /* Sempre no topo */
+    z-index: 10000;
+    /* Sempre no topo */
     font-weight: bold;
     font-size: 16px;
     border: 3px solid #ffffff;
-    transition: top 0.3s ease; /* Animação suave */
+    transition: top 0.3s ease;
+    /* Animação suave */
     line-height: 1.4;
     text-align: center;
     min-width: 200px;
@@ -827,7 +966,8 @@ body {
 
 /* Quando o skip-link recebe foco, ele aparece */
 .skip-link:focus {
-    top: 0; /* Move para a posição visível */
+    top: 0;
+    /* Move para a posição visível */
     background: #000000;
     color: #ffffff !important;
     outline: 4px solid #ffd700;
@@ -839,10 +979,11 @@ body {
 @media (prefers-contrast: high) {
     .skip-link {
         background: #000000 !important;
-        color: #ffff00 !important; /* Amarelo brilhante */
+        color: #ffff00 !important;
+        /* Amarelo brilhante */
         border: 3px solid #ffff00 !important;
     }
-    
+
     .skip-link:focus {
         background: #000000 !important;
         color: #ffff00 !important;
@@ -933,7 +1074,8 @@ body {
     position: fixed;
     top: 10px;
     right: 10px;
-    background: #ff0000; /* Vermelho sólido */
+    background: #ff0000;
+    /* Vermelho sólido */
     color: white;
     padding: 12px 24px;
     border-radius: 25px;
@@ -946,11 +1088,14 @@ body {
 }
 
 @keyframes indicatorPulse {
-    0%, 100% { 
+
+    0%,
+    100% {
         background: #ff0000;
         transform: scale(1);
     }
-    50% { 
+
+    50% {
         background: #ff4444;
         transform: scale(1.05);
     }
@@ -964,7 +1109,7 @@ body {
     background: rgba(255, 255, 255, 0.95);
     padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     z-index: 1000;
 }
 
@@ -976,14 +1121,19 @@ body {
 
 /* Classe aplicada ao elemento atualmente sendo varrido */
 .scan-active {
-    outline: 4px solid #ff0000 !important; /* Vermelho sólido e visível */
+    outline: 4px solid #ff0000 !important;
+    /* Vermelho sólido e visível */
     outline-offset: 3px !important;
-    background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho claro */
-    border: 2px solid #ff0000 !important; /* Borda adicional para garantir visibilidade */
-    animation: scanPulse 1s ease-in-out infinite !important; /* Pulsação contínua */
+    background: rgba(255, 0, 0, 0.1) !important;
+    /* Fundo vermelho claro */
+    border: 2px solid #ff0000 !important;
+    /* Borda adicional para garantir visibilidade */
+    animation: scanPulse 1s ease-in-out infinite !important;
+    /* Pulsação contínua */
     position: relative;
     z-index: 999;
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5) !important; /* Brilho vermelho */
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5) !important;
+    /* Brilho vermelho */
 }
 
 /* Garante que scan-active sobrescreva outros estilos de foco */
@@ -1034,15 +1184,17 @@ body {
 
 /* Animação de pulsação para elemento sendo varrido */
 @keyframes scanPulse {
-    0% { 
+    0% {
         transform: scale(1);
         box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
     }
-    50% { 
+
+    50% {
         transform: scale(1.08);
         box-shadow: 0 0 0 15px rgba(255, 0, 0, 0.3);
     }
-    100% { 
+
+    100% {
         transform: scale(1);
         box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
     }
@@ -1050,7 +1202,8 @@ body {
 
 /* Botões de controle da varredura */
 .scan-control-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Gradiente roxo */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Gradiente roxo */
     color: white;
     border: none;
     padding: 10px 15px;
@@ -1064,7 +1217,7 @@ body {
 /* Efeito hover para botões de controle de varredura */
 .scan-control-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* ===== ESTILOS GERAIS PARA BOTÕES (desabilitados) ===== */
